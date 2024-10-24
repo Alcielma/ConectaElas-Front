@@ -1,22 +1,50 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab3.css';
+import React from "react";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import { useAuth } from "../Contexts/AuthContext";
+import { useHistory } from "react-router-dom";
+import "./Tab3.css";
 
 const Tab3: React.FC = () => {
+  const { user, logout } = useAuth();
+  const history = useHistory();
+
+  const handleLogout = () => {
+    logout();
+    history.push("/login");
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 3</IonTitle>
+          <IonTitle>Perfil</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 3</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 3 page" />
+        <div className="profile-page-fullscreen">
+          <div className="profile-header">
+            <h2 className="profile-name">{user?.name}</h2>
+          </div>
+
+          <div className="profile-info">
+            <div className="profile-section">
+              <h3 className="profile-label">Email:</h3>
+              <p className="profile-data">{user?.email}</p>
+            </div>
+          </div>
+
+          <div className="profile-footer">
+            <button className="logout-button" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </div>
       </IonContent>
     </IonPage>
   );

@@ -1,29 +1,21 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 import AuthService from "../Services/AuthService";
 
 interface User {
   id: number;
-  name: string;
+  name: string; // A propriedade 'name' é obrigatória
   email: string;
-}
-
-interface UserPayload {
-  id: number;
-  documentId: string;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  locale?: string;
 }
 
 interface AuthContextType {
-  authToken: string | null;
   user: User | null;
+  authToken: string | null;
   login: (identifier: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
@@ -43,13 +35,18 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [authToken, setAuthToken] = useState<string | null>(
-    localStorage.getItem("authToken")
-  );
-  const [user, setUser] = useState<User | null>(() => {
-    const userString = localStorage.getItem("user");
-    return userString ? JSON.parse(userString) : null;
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Verifica se há um token de autenticação salvo no localStorage
+    const token = localStorage.getItem("authToken");
+    const storedUser = localStorage.getItem("user");
+    if (token && storedUser) {
+      setAuthToken(token);
+      setUser(JSON.parse(storedUser)); // Carrega o usuário do localStorage
+    }
+  }, []);
 
   const login = async (
     identifier: string,
@@ -58,26 +55,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const result = await AuthService.login(identifier, password);
       if (result) {
-        const { jwt: token, user: userPayload } = result;
+        const { jwt, user: userData } = result;
 
-        // Adaptando UserPayload para User, mapeando 'username' para 'name'
         const adaptedUser: User = {
-          id: userPayload.id,
-          name: userPayload.username, // Mapeando 'username' para 'name'
-          email: userPayload.email,
+          id: userData.id,
+          name: userData.username, // Mapeia 'username' para 'name'
+          email: userData.email,
         };
 
-        setAuthToken(token);
+        setAuthToken(jwt);
         setUser(adaptedUser);
-        localStorage.setItem("authToken", token);
+        localStorage.setItem("authToken", jwt);
         localStorage.setItem("user", JSON.stringify(adaptedUser));
-        return true; // Login bem-sucedido
+        return true;
       } else {
-        return false; // Credenciais inválidas
+        return false;
       }
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      return false; // Login falhou
+      return false;
     }
   };
 
@@ -89,7 +85,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authToken, login, logout, user }}>
+    <AuthContext.Provider value={{ user, authToken, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

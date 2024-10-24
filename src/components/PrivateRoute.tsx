@@ -1,22 +1,28 @@
-import React from "react";
-import { Route, Redirect, RouteProps } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
 
-interface PrivateRouteProps extends RouteProps {
+interface PrivateRouteProps {
   component: React.ComponentType<any>;
+  path: string;
+  exact?: boolean;
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { authToken } = useAuth();
+  const { user } = useAuth(); // Obtém o estado do usuário autenticado
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        authToken ? <Component {...props} /> : <Redirect to="/login" />
+        user ? ( // Se o usuário está autenticado, renderiza o componente da rota
+          <Component {...props} />
+        ) : (
+          // Se não estiver autenticado, redireciona para a tela de login
+          <Redirect to="/login" />
+        )
       }
     />
   );
