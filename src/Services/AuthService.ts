@@ -10,6 +10,7 @@ interface LoginPayload {
   jwt: string;
   user: UserPayload;
 }
+
 const AuthService = {
   async login(
     identifier: string,

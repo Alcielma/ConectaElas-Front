@@ -34,8 +34,6 @@ export default function Feed() {
 
   return (
     <div className="feed-container">
-      {/* <h1 className="feed-title">Feed de Postagens</h1> */}
-
       <div className="feed-posts">
         {posts?.map((post) => (
           <Post

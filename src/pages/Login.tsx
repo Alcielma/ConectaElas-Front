@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import "./Login.css";
 
 const Login: React.FC = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth(); // Obtém o estado do usuário autenticado
   const history = useHistory();
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Verifica se o usuário já está autenticado
+  useEffect(() => {
+    if (user) {
+      history.push("/tabs/tab1"); // Redireciona para a Tab1 se o usuário já estiver autenticado
+    }
+  }, [user, history]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +34,7 @@ const Login: React.FC = () => {
 
     setLoading(false);
   };
+
   return (
     <div className="login-container">
       <div className="login-box">

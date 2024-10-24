@@ -24,7 +24,6 @@ const Tab1: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <Feed></Feed>
-        {/* <ExploreContainer name="Tab 1 page" /> */}
       </IonContent>
     </IonPage>
   );

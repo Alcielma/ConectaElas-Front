@@ -8,7 +8,7 @@ import {
   IonLabel,
 } from "@ionic/react";
 import { Redirect, Route } from "react-router-dom";
-import { triangle, ellipse, square } from "ionicons/icons";
+import { alertCircleSharp, homeSharp, personSharp } from "ionicons/icons";
 import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
 import Tab3 from "../pages/Tab3";
@@ -29,16 +29,16 @@ const TabsLayout: React.FC = () => {
 
       <IonTabBar slot="bottom">
         <IonTabButton tab="tab1" href="/tabs/tab1">
-          <IonIcon aria-hidden="true" icon={triangle} />
-          <IonLabel>Tab 1</IonLabel>
+          <IonIcon aria-hidden="true" icon={homeSharp} />
+          <IonLabel>Início</IonLabel>
         </IonTabButton>
         <IonTabButton tab="tab2" href="/tabs/tab2">
-          <IonIcon aria-hidden="true" icon={ellipse} />
-          <IonLabel>Tab 2</IonLabel>
+          <IonIcon aria-hidden="true" icon={alertCircleSharp} />
+          <IonLabel>Emergência</IonLabel>
         </IonTabButton>
         <IonTabButton tab="tab3" href="/tabs/tab3">
-          <IonIcon aria-hidden="true" icon={square} />
-          <IonLabel>Tab 3</IonLabel>
+          <IonIcon aria-hidden="true" icon={personSharp} />
+          <IonLabel>Perfil</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
