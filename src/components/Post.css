@@ -48,6 +48,7 @@
     font-size: 1rem;
 }
 
+/* container do perfil */
 .profile-container {
     display: flex;
     align-items: center;
@@ -55,6 +56,7 @@
     padding-bottom: 10px;
 }
 
+/* imagem do perfil */
 .profile-image {
     width: 40px;
     height: 40px;
@@ -62,16 +64,19 @@
     margin-right: 10px;
 }
 
+/* informações do perfil */
 .profile-info {
     display: flex;
     flex-direction: column;
 }
 
+/* nome do perfil */
 .profile-name {
     font-weight: bold;
     font-size: 14px;
 }
 
+/* email do perfil */
 .profile-email {
     font-size: 12px;
     color: #666;

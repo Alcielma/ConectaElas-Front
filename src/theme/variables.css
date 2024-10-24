@@ -9,14 +9,12 @@ ion-toolbar {
 
 /* Centralizando o IonTitle */
 ion-toolbar ion-title {
-    position: absolute;
-    left: 50%;
-    bottom: 30%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
+    width: 100%;
+    position: relative;
+
 }
+
 
 ion-tab-bar {
     --background: #F5135B;

@@ -9,9 +9,9 @@ interface PostProps {
 
 const Post = ({ title, imageUrl, description }: PostProps) => {
   const finalImageUrl = imageUrl || "https://via.placeholder.com/300";
-  const placeholderName = "John Doe";
-  const placeholderEmail = "john.doe@example.com";
-
+  const placeholderName = "Rafael Alves";
+  const placeholderEmail = "Rafael.alves@exemplo.com";
+  
   return (
     <div className="post-container">
       <div className="profile-container">
