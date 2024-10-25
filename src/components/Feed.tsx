@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Post from "./Post";
-import { getAll } from "../Services/postService.js";
+import SkeletonPost from "./SkeletonPost"; // Importa o skeleton
+import { getAll } from "../Services/postService";
 import "./Feed.css";
 
 interface Post {
@@ -12,20 +13,22 @@ interface Post {
 
 export default function Feed() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       try {
         const response = await getAll();
-        console.log("Posts formatados:", response);
-
-        if (response && Array.isArray(response)) {
-          setPosts(response);
-        } else {
-          console.error("Formato inesperado da resposta:", response);
-        }
+        setTimeout(() => {
+          if (response && Array.isArray(response)) {
+            setPosts(response);
+          }
+          setLoading(false);
+        }, 2000); // !!!!!!!!!!!!!Lembrar de tirar esse setTimeout quando subir pro servidor!!!!!!!!!!!!!!!
       } catch (error) {
         console.error("Erro ao buscar posts:", error);
+        setLoading(false);
       }
     };
 
@@ -34,16 +37,26 @@ export default function Feed() {
 
   return (
     <div className="feed-container">
-      <div className="feed-posts">
-        {posts?.map((post) => (
-          <Post
-            key={post.id}
-            title={post.Titulo}
-            imageUrl={post.imageUrl}
-            description={post.Descricao}
-          />
-        ))}
-      </div>
+      {loading ? (
+        // Exibe skeletons enquanto está carregando
+        <>
+          <SkeletonPost />
+          <SkeletonPost />
+          <SkeletonPost />
+        </>
+      ) : (
+        // Exibe os posts reais quando o carregamento é concluído
+        <div className="feed-posts">
+          {posts.map((post) => (
+            <Post
+              key={post.id}
+              title={post.Titulo}
+              imageUrl={post.imageUrl}
+              description={post.Descricao}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

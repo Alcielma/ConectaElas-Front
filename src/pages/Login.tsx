@@ -27,7 +27,7 @@ const Login: React.FC = () => {
     const loginSuccessful = await login(identifier, password);
 
     if (loginSuccessful) {
-      history.push("/tabs/tab1"); // Redireciona após login bem-sucedido
+      history.push("/tabs"); // Redireciona após login bem-sucedido
     } else {
       setError("Credenciais inválidas. Tente novamente.");
     }
