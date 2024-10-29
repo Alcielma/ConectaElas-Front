@@ -1,31 +1,60 @@
+import React, { useState } from "react";
 import "./Post.css";
-import Perfil from "../../public/Perfil.svg";
 
-interface PostProps {
-  title: string;
-  imageUrl: string | null;
-  description: string;
+interface Comment {
+  id: number;
+  comentario: string;
+  data: string | null;
+  createdAt: string;
 }
 
-const Post = ({ title, imageUrl, description }: PostProps) => {
-  const finalImageUrl = imageUrl || "https://via.placeholder.com/300";
-  const placeholderName = "Rafael Alves";
-  const placeholderEmail = "Rafael.alves@exemplo.com";
+interface PostProps {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  comentarios: Comment[]; // Adiciona os comentários diretamente como uma propriedade do post
+}
+
+const Post: React.FC<PostProps> = ({
+  id,
+  title,
+  description,
+  imageUrl,
+  comentarios,
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div className="post-container">
-      {/* <div className="profile-container">
-        <img className="profile-image" src={Perfil} alt="Profile" />
-        <div className="profile-info">
-          <div className="profile-name">{placeholderName}</div>
-          <div className="profile-email">{placeholderEmail}</div>
-        </div>
-      </div> */}
-      <img className="post-image" src={finalImageUrl} alt={title} />
-      <div className="post-content">
-        <div className="post-title">{title}</div>
-        <p className="post-description">{description}</p>
+      <div className="post-header" onClick={toggleExpand}>
+        <h2>{title}</h2>
+        <p>{description}</p>
+        {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
+        {/* Exibe a quantidade de comentários */}
+        <p className="comments-count">{comentarios.length} Comentário(os) </p>
       </div>
+
+      {isExpanded && (
+        <div className="post-comments">
+          {comentarios.length > 0 ? (
+            comentarios.map((comment) => (
+              <div key={comment.id} className="comment-item">
+                <p>{comment.comentario}</p>
+                <span className="comment-date">
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p>Sem comentários.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

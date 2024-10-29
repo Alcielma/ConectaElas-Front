@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import Post from "./Post";
-import SkeletonPost from "./SkeletonPost"; // Importa o skeleton
+import SkeletonPost from "./SkeletonPost";
 import { getAll } from "../Services/postService";
 import "./Feed.css";
 
-interface Post {
+interface PostData {
   id: number;
   Titulo: string;
   Descricao: string;
   imageUrl: string | null;
+  comentarios: {
+    id: number;
+    comentario: string;
+    data: string | null;
+    createdAt: string;
+  }[];
 }
 
 export default function Feed() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -50,9 +56,11 @@ export default function Feed() {
           {posts.map((post) => (
             <Post
               key={post.id}
+              id={post.id}
               title={post.Titulo}
               imageUrl={post.imageUrl}
               description={post.Descricao}
+              comentarios={post.comentarios} // Passa os comentários para o componente Post
             />
           ))}
         </div>
