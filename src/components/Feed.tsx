@@ -1,3 +1,4 @@
+// Feed.tsx
 import React, { useEffect, useState } from "react";
 import Post from "./Post";
 import SkeletonPost from "./SkeletonPost";
@@ -8,6 +9,7 @@ interface PostData {
   id: number;
   Titulo: string;
   Descricao: string;
+  Categoria: string;
   imageUrl: string | null;
   comentarios: {
     id: number;
@@ -17,7 +19,11 @@ interface PostData {
   }[];
 }
 
-export default function Feed() {
+interface FeedProps {
+  selectedCategory: string | null;
+}
+
+export default function Feed({ selectedCategory }: FeedProps) {
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -31,7 +37,7 @@ export default function Feed() {
             setPosts(response);
           }
           setLoading(false);
-        }, 2000); // !!!!!!!!!!!!!Lembrar de tirar esse setTimeout quando subir pro servidor!!!!!!!!!!!!!!!
+        }, 2000);
       } catch (error) {
         console.error("Erro ao buscar posts:", error);
         setLoading(false);
@@ -41,26 +47,28 @@ export default function Feed() {
     fetchPosts();
   }, []);
 
+  const filteredPosts = selectedCategory
+    ? posts.filter((post) => post.Categoria === selectedCategory)
+    : posts;
+
   return (
     <div className="feed-container">
       {loading ? (
-        // Exibe skeletons enquanto está carregando
         <>
           <SkeletonPost />
           <SkeletonPost />
           <SkeletonPost />
         </>
       ) : (
-        // Exibe os posts reais quando o carregamento é concluído
         <div className="feed-posts">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <Post
               key={post.id}
               id={post.id}
               title={post.Titulo}
               imageUrl={post.imageUrl}
               description={post.Descricao}
-              comentarios={post.comentarios} // Passa os comentários para o componente Post
+              comentarios={post.comentarios}
             />
           ))}
         </div>

@@ -184,8 +184,18 @@
 /* ___________________________________________________ */
 
 .success-message {
-    color: #4caf50;
+    color: green;
     font-size: 0.9rem;
-    margin-top: 10px;
-    transition: opacity 0.5s ease-in-out;
+    padding: 5px 0;
+    animation: fadeOut 2.5s forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }

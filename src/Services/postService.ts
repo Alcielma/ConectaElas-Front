@@ -24,6 +24,7 @@ export async function getAll(): Promise<PostData[]> {
       id: post.id,
       Titulo: post.Title,
       Descricao: post.Description,
+      Categoria: post.Categoria || "", // Inclua a categoria no mapeamento
       imageUrl:
         post.Link ||
         (post.Uploadpost &&
@@ -40,7 +41,10 @@ export async function getAll(): Promise<PostData[]> {
         })) || [],
     }));
 
-    console.log("Posts formatados com comentários:", formattedPosts);
+    console.log(
+      "Posts formatados com comentários e categoria:",
+      formattedPosts
+    );
 
     return formattedPosts;
   } catch (error) {
@@ -48,6 +52,7 @@ export async function getAll(): Promise<PostData[]> {
     return [];
   }
 }
+
 export async function getPostById(id: number) {
   try {
     const response = await api.get(`/posts/${id}?populate[comentarios]=*`);
@@ -56,6 +61,7 @@ export async function getPostById(id: number) {
       id: post.id,
       Title: post.Title,
       Description: post.Description,
+      Categoria: post.Categoria || "",
       imageUrl:
         post.Link ||
         (post.Uploadpost &&

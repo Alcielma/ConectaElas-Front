@@ -28,7 +28,12 @@ const Post: React.FC<PostProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState(comentarios);
+  const [comments, setComments] = useState(
+    [...comentarios].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+  );
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { user } = useAuth();
@@ -56,8 +61,8 @@ const Post: React.FC<PostProps> = ({
       const addedComment = await addComment(commentData);
 
       setComments([
-        ...comments,
         { ...addedComment.data, createdAt: new Date().toISOString() },
+        ...comments,
       ]);
       setNewComment("");
       setShowSuccess(true); //aviso que o comentário foi feito com sucesso

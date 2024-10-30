@@ -1,0 +1,51 @@
+.category-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 18px;
+    margin-bottom: 16px;
+}
+
+.category-button {
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #F5135B;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.category-button:hover {
+    background-color: #e0e0e5;
+
+}
+
+.category-button:focus {
+    background-color: #24CE9E;
+    outline: 3px solid #ffffff;
+    width: 62px;
+    height: 62px;
+}
+
+.category-button IonIcon {
+    color: #6b6b6b;
+    font-size: 20px;
+}
+
+.button-label {
+    font-size: 10px;
+    color: #333;
+    margin-top: 4px;
+    text-align: center;
+    position: absolute;
+    bottom: -15px;
+}
