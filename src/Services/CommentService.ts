@@ -1,26 +1,16 @@
 import api from "./api";
 
-interface Comment {
-  id: number;
+export async function addComment(commentData: {
   comentario: string;
-  data: string | null;
-  createdAt: string;
-}
-
-export const getCommentsByPostId = async (
-  postId: number
-): Promise<Comment[]> => {
+  data: string;
+  users_permissions_user: number;
+  post: number;
+}) {
   try {
-    const response = await api.get(`/posts/${postId}?populate=comentarios`);
-
-    return response.data.data.attributes.comentarios.map((comment: any) => ({
-      id: comment.id,
-      comentario: comment.comentario,
-      data: comment.data,
-      createdAt: comment.createdAt,
-    }));
+    const response = await api.post("/comentarios", { data: commentData });
+    return response.data;
   } catch (error) {
-    console.error("Erro ao buscar comentários:", error);
-    return [];
+    console.error("Erro ao adicionar comentário:", error);
+    throw error;
   }
-};
+}

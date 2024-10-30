@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import { AuthProvider } from "./Contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import TabsLayout from "./components/TabsLayout";
+import PostDetails from "./pages/PostDetails";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -39,26 +40,22 @@ const App: React.FC = () => {
   const [backPressTime, setBackPressTime] = useState(0);
 
   useEffect(() => {
-    // Adiciona listener para o evento de botão de "voltar" no Android
     CapacitorApp.addListener("backButton", (event) => {
       if (window.location.pathname === "/tabs/tab1") {
-        // Usuário está na página principal, precisa pressionar "voltar" duas vezes para sair
         if (backPressTime === 0) {
           setBackPressTime(Date.now());
           alert("Pressione novamente para sair do aplicativo");
         } else if (Date.now() - backPressTime < 2000) {
-          CapacitorApp.exitApp(); // Fecha o app se o usuário pressionar duas vezes em 2 segundos
+          CapacitorApp.exitApp();
         } else {
-          setBackPressTime(0); // Reseta o tempo se passar mais de 2 segundos
+          setBackPressTime(0);
         }
       } else {
-        // Comportamento normal de "voltar" em outras páginas
         window.history.back();
       }
     });
 
     return () => {
-      // Remove o listener quando o componente for desmontado
       CapacitorApp.removeAllListeners();
     };
   }, [backPressTime]);
@@ -75,7 +72,7 @@ const App: React.FC = () => {
 
             {/* Rotas privadas com tabs */}
             <PrivateRoute path="/tabs" component={TabsLayout} />
-
+            <PrivateRoute path="/posts/:id" component={PostDetails} />
             {/* Redireciona para login se o caminho for a raiz */}
             <Route exact path="/">
               <Redirect to="/login" />

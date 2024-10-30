@@ -1,0 +1,26 @@
+.post-details {
+    padding: 20px;
+}
+
+.post-details img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 15px;
+}
+
+.comments-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.comments-list li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.comments-list li span {
+    display: block;
+    font-size: 12px;
+    color: #666;
+}
