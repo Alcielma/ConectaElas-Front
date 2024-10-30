@@ -180,3 +180,12 @@
 .add-comment button:hover {
     background-color: #108d6a;
 }
+
+/* ___________________________________________________ */
+
+.success-message {
+    color: #4caf50;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    transition: opacity 0.5s ease-in-out;
+}

@@ -29,7 +29,7 @@ export async function getAll(): Promise<PostData[]> {
         (post.Uploadpost &&
         post.Uploadpost.length > 0 &&
         post.Uploadpost[0]?.url
-          ? `http://192.168.1.19:1338${post.Uploadpost[0].url}`
+          ? `http://192.168.1.4:1338${post.Uploadpost[0].url}`
           : null),
       comentarios:
         post.comentarios?.map((comment: any) => ({
@@ -61,7 +61,7 @@ export async function getPostById(id: number) {
         (post.Uploadpost &&
         post.Uploadpost.length > 0 &&
         post.Uploadpost[0]?.url
-          ? `http://192.168.1.19:1338${post.Uploadpost[0].url}`
+          ? `http://192.168.1.4:1338${post.Uploadpost[0].url}`
           : null),
       comentarios: post.comentarios.map((comment: any) => ({
         id: comment.id,

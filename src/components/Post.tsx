@@ -29,6 +29,7 @@ const Post: React.FC<PostProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(comentarios);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const { user } = useAuth();
 
@@ -58,7 +59,9 @@ const Post: React.FC<PostProps> = ({
         ...comments,
         { ...addedComment.data, createdAt: new Date().toISOString() },
       ]);
-      setNewComment(""); // Limpa o campo de comentário
+      setNewComment("");
+      setShowSuccess(true); //aviso que o comentário foi feito com sucesso
+      setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       console.error("Erro ao adicionar comentário:", error);
     }
@@ -68,8 +71,8 @@ const Post: React.FC<PostProps> = ({
     <div className="post-container">
       <div className="post-header" onClick={toggleExpand}>
         <h2>{title}</h2>
-        <p>{description}</p>
         {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
+        <p>{description}</p>
 
         <p className="comments-count">{comments.length} Comentário(os) </p>
       </div>
@@ -87,6 +90,8 @@ const Post: React.FC<PostProps> = ({
             Enviar
           </button>
         </div>
+        {showSuccess && <p className="success-message">Comentário enviado!</p>}
+
         {comments.length > 0 ? (
           comments.map((comment) => (
             <CommentItem
