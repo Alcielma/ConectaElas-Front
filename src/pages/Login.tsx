@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useHistory } from "react-router-dom";
+import { IonIcon } from "@ionic/react";
+import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
 
 const Login: React.FC = () => {
@@ -11,6 +13,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -52,13 +55,20 @@ const Login: React.FC = () => {
 
           <div className="input-group">
             <label htmlFor="password">Senha</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="password-input-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <IonIcon
+                icon={showPassword ? eyeOff : eye}
+                onClick={() => setShowPassword(!showPassword)}
+                className="toggle-password-icon"
+              />
+            </div>
           </div>
 
           {error && <p className="error-message">{error}</p>}

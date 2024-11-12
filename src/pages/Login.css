@@ -90,3 +90,21 @@ h2 {
 .signup-link:hover {
     color: #e4124f;
 }
+
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    flex: 1;
+}
+
+.toggle-password-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #6b6b6b;
+    font-size: 1.2rem;
+}
