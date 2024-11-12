@@ -8,6 +8,7 @@ import { AuthProvider } from "./Contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import TabsLayout from "./components/TabsLayout";
 import PostDetails from "./pages/PostDetails";
+import Register from "./pages/Register";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -69,8 +70,8 @@ const App: React.FC = () => {
             <Route exact path="/login">
               <Login />
             </Route>
+            <Route path="/register" component={Register} />
 
-            {/* Rotas privadas com tabs */}
             <PrivateRoute path="/tabs" component={TabsLayout} />
             <PrivateRoute path="/posts/:id" component={PostDetails} />
             {/* Redireciona para login se o caminho for a raiz */}

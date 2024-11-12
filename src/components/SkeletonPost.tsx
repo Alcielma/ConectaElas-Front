@@ -1,5 +1,5 @@
 import React from "react";
-import "./SkeletonPost.css"; // Importa os estilos do skeleton
+import "./SkeletonPost.css";
 
 const SkeletonPost: React.FC = () => {
   return (

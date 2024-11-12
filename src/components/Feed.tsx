@@ -1,4 +1,3 @@
-// Feed.tsx
 import React, { useEffect, useState } from "react";
 import Post from "./Post";
 import SkeletonPost from "./SkeletonPost";
@@ -31,7 +30,7 @@ export default function Feed({ selectedCategory }: FeedProps) {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await getAll();
+        const response: PostData[] = await getAll();
         setTimeout(() => {
           if (response && Array.isArray(response)) {
             setPosts(response);

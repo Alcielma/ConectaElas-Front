@@ -9,7 +9,7 @@ import AuthService from "../Services/AuthService";
 
 interface User {
   id: number;
-  name: string; // A propriedade 'name' é obrigatória
+  name: string;
   email: string;
 }
 
@@ -18,6 +18,11 @@ interface AuthContextType {
   authToken: string | null;
   login: (identifier: string, password: string) => Promise<boolean>;
   logout: () => void;
+  register: (
+    username: string,
+    email: string,
+    password: string
+  ) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,12 +44,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Verifica se há um token de autenticação salvo no localStorage
     const token = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("user");
     if (token && storedUser) {
       setAuthToken(token);
-      setUser(JSON.parse(storedUser)); // Carrega o usuário do localStorage
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
@@ -59,7 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         const adaptedUser: User = {
           id: userData.id,
-          name: userData.username, // Mapeia 'username' para 'name'
+          name: userData.username,
           email: userData.email,
         };
 
@@ -84,8 +88,40 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem("user");
   };
 
+  const register = async (
+    username: string,
+    email: string,
+    password: string
+  ): Promise<boolean> => {
+    try {
+      const data = {
+        username,
+        email,
+        password,
+        role: 1, // Defina o ID da role para o usuário registrado (ex: 1 para "Authenticated")
+      };
+      const response = await AuthService.register(data);
+
+      if (response) {
+        // Adiciona o usuário no estado, pois o cadastro foi bem-sucedido
+        const adaptedUser: User = {
+          id: response.id,
+          name: response.username,
+          email: response.email,
+        };
+        setUser(adaptedUser);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
+      return false;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, authToken, login, logout }}>
+    <AuthContext.Provider value={{ user, authToken, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
-import CommentItem from "./CommentItem"; // Importando o componente CommentItem
+import CommentItem from "./CommentItem";
 import "./Post.css";
 
 interface Comment {
@@ -65,7 +65,7 @@ const Post: React.FC<PostProps> = ({
         ...comments,
       ]);
       setNewComment("");
-      setShowSuccess(true); //aviso que o comentário foi feito com sucesso
+      setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       console.error("Erro ao adicionar comentário:", error);

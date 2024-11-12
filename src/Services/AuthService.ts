@@ -11,6 +11,13 @@ interface LoginPayload {
   user: UserPayload;
 }
 
+interface RegisterPayload {
+  username: string;
+  email: string;
+  password: string;
+  role: number;
+}
+
 const AuthService = {
   async login(
     identifier: string,
@@ -25,9 +32,19 @@ const AuthService = {
         }
       );
 
-      return response.data; // O 'data' contém diretamente o 'jwt' e 'user'
+      return response.data;
     } catch (error) {
       console.error("Erro ao fazer login:", error);
+      return null;
+    }
+  },
+
+  async register(data: RegisterPayload): Promise<UserPayload | null> {
+    try {
+      const response = await api.post<UserPayload>("/users", data);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
       return null;
     }
   },

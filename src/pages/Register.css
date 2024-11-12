@@ -1,4 +1,5 @@
-.login-container {
+/* Register.css */
+.register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,7 +7,7 @@
     background-color: #f5f5f5;
 }
 
-.login-box {
+.register-box {
     padding: 40px;
     border-radius: 10px;
     display: flex;
@@ -47,7 +48,7 @@ h2 {
     outline: none;
 }
 
-.login-button {
+.register-button {
     width: 100%;
     padding: 10px 0;
     background-color: #f5135b;
@@ -59,11 +60,11 @@ h2 {
     transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
+.register-button:hover {
     background-color: #e4124f;
 }
 
-.login-button:disabled {
+.register-button:disabled {
     background-color: #ddd;
     cursor: not-allowed;
 }
@@ -74,19 +75,16 @@ h2 {
     font-size: 14px;
 }
 
-.signup-prompt {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #666;
-}
-
-.signup-link {
-    color: #f5135b;
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
     cursor: pointer;
-    font-weight: bold;
-    text-decoration: underline;
+    color: #333;
+    transition: color 0.3s;
 }
 
-.signup-link:hover {
-    color: #e4124f;
+.back-button:hover {
+    color: #f5135b;
 }

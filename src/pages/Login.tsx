@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import "./Login.css";
 
 const Login: React.FC = () => {
-  const { login, user } = useAuth(); // Obtém o estado do usuário autenticado
+  const { login, user } = useAuth();
   const history = useHistory();
 
   const [identifier, setIdentifier] = useState("");
@@ -12,10 +12,9 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Verifica se o usuário já está autenticado
   useEffect(() => {
     if (user) {
-      history.push("/tabs/tab1"); // Redireciona para a Tab1 se o usuário já estiver autenticado
+      history.push("/tabs/tab1");
     }
   }, [user, history]);
 
@@ -27,7 +26,7 @@ const Login: React.FC = () => {
     const loginSuccessful = await login(identifier, password);
 
     if (loginSuccessful) {
-      history.push("/tabs"); // Redireciona após login bem-sucedido
+      history.push("/tabs");
     } else {
       setError("Credenciais inválidas. Tente novamente.");
     }
@@ -68,6 +67,15 @@ const Login: React.FC = () => {
             {loading ? "Entrando..." : "Login"}
           </button>
         </form>
+        <p className="signup-prompt">
+          Ainda não tem uma conta?{" "}
+          <span
+            className="signup-link"
+            onClick={() => history.push("/register")}
+          >
+            Cadastre-se aqui
+          </span>
+        </p>
       </div>
     </div>
   );

@@ -11,18 +11,13 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const { user } = useAuth(); // Obtém o estado do usuário autenticado
+  const { user } = useAuth();
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        user ? ( // Se o usuário está autenticado, renderiza o componente da rota
-          <Component {...props} />
-        ) : (
-          // Se não estiver autenticado, redireciona para a tela de login
-          <Redirect to="/login" />
-        )
+        user ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   );
