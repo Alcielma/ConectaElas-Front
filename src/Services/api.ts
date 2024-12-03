@@ -8,7 +8,6 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
 
-    // Verifica se o URL não é o de login
     if (token && config.url !== "/auth/local") {
       config.headers.Authorization = `Bearer ${token}`;
     }

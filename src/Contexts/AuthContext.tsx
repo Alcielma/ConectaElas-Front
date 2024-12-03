@@ -98,12 +98,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         username,
         email,
         password,
-        role: 1, // Defina o ID da role para o usuário registrado (ex: 1 para "Authenticated")
+        role: 1,
       };
       const response = await AuthService.register(data);
 
       if (response) {
-        // Adiciona o usuário no estado, pois o cadastro foi bem-sucedido
         const adaptedUser: User = {
           id: response.id,
           name: response.username,
