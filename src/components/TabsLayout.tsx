@@ -8,16 +8,10 @@ import {
   IonLabel,
 } from "@ionic/react";
 import { Redirect, Route } from "react-router-dom";
-import {
-  alertCircleSharp,
-  chatboxSharp,
-  homeSharp,
-  personSharp,
-} from "ionicons/icons";
+import { chatboxSharp, homeSharp, personSharp } from "ionicons/icons";
 import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
 import Tab3 from "../pages/Tab3";
-import Tab4 from "../pages/Tab4";
 
 const TabsLayout: React.FC = () => {
   return (
@@ -26,7 +20,6 @@ const TabsLayout: React.FC = () => {
         <Route exact path="/tabs/tab1" component={Tab1} />
         <Route exact path="/tabs/tab2" component={Tab2} />
         <Route path="/tabs/tab3" component={Tab3} />
-        <Route path="/tabs/tab4" component={Tab4} />
 
         {/* Redireciona "/tabs" para a primeira tab */}
         <Route exact path="/tabs">
@@ -39,13 +32,13 @@ const TabsLayout: React.FC = () => {
           <IonIcon aria-hidden="true" icon={homeSharp} />
           <IonLabel>Início</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="tab2" href="/tabs/tab2">
+        {/* <IonTabButton tab="tab2" href="/tabs/tab2">
           <IonIcon aria-hidden="true" icon={alertCircleSharp} />
           <IonLabel>Emergência</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="tab4" href="/tabs/tab4">
+        </IonTabButton> */}
+        <IonTabButton tab="tab2" href="/tabs/tab2">
           <IonIcon aria-hidden="true" icon={chatboxSharp} />
-          <IonLabel>Chat</IonLabel>
+          <IonLabel>Comunicação</IonLabel>
         </IonTabButton>
         <IonTabButton tab="tab3" href="/tabs/tab3">
           <IonIcon aria-hidden="true" icon={personSharp} />

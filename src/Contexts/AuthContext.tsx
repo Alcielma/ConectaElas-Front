@@ -11,6 +11,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  tipo: string;
 }
 
 interface AuthContextType {
@@ -23,6 +24,7 @@ interface AuthContextType {
     email: string,
     password: string
   ) => Promise<boolean>;
+  isAssistant: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -65,6 +67,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           id: userData.id,
           name: userData.username,
           email: userData.email,
+          tipo: userData.Tipo,
         };
 
         setAuthToken(jwt);
@@ -98,7 +101,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         username,
         email,
         password,
-        role: 1,
       };
       const response = await AuthService.register(data);
 
@@ -107,6 +109,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           id: response.id,
           name: response.username,
           email: response.email,
+          tipo: "Autenticado",
         };
         setUser(adaptedUser);
         return true;
@@ -120,7 +123,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, authToken, login, logout, register }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        authToken,
+        login,
+        logout,
+        register,
+        isAssistant: user?.tipo === "Assistente",
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

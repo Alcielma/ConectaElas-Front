@@ -4,6 +4,7 @@ interface UserPayload {
   id: number;
   username: string;
   email: string;
+  Tipo: string;
 }
 
 interface LoginPayload {
@@ -15,7 +16,6 @@ interface RegisterPayload {
   username: string;
   email: string;
   password: string;
-  role: number;
 }
 
 const AuthService = {
@@ -27,8 +27,8 @@ const AuthService = {
       const response = await api.post<{ jwt: string; user: UserPayload }>(
         "/auth/local",
         {
-          identifier: identifier,
-          password: password,
+          identifier,
+          password,
         }
       );
 
