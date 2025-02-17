@@ -2,20 +2,20 @@ import React, { useState } from "react";
 import "./CommentItem.css";
 
 interface CommentProps {
-  comentario: string;
-  createdAt: string;
+  comentario?: string;
+  createdAt?: string;
 }
 
-const Comment: React.FC<CommentProps> = ({ comentario, createdAt }) => {
+const Comment: React.FC<CommentProps> = ({ comentario = "", createdAt }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const MAX_LENGTH = 50;
+  const MAX_LENGTH = 200;
 
   const shouldTruncate = comentario.length > MAX_LENGTH;
 
   return (
     <div className="comment-item">
       <span className="comment-date">
-        {new Date(createdAt).toLocaleDateString()}
+        {createdAt ? new Date(createdAt).toLocaleString() : "Data desconhecida"}
       </span>
       <p className={`comment-text ${isExpanded ? "expanded" : ""}`}>
         {isExpanded || !shouldTruncate

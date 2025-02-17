@@ -12,6 +12,8 @@ import { chatboxSharp, homeSharp, personSharp } from "ionicons/icons";
 import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
 import Tab3 from "../pages/Tab3";
+import UserChat from "../pages/UserChat";
+import AssistantChatList from "../pages/AssistantChatList";
 
 const TabsLayout: React.FC = () => {
   return (
@@ -19,23 +21,20 @@ const TabsLayout: React.FC = () => {
       <IonRouterOutlet>
         <Route exact path="/tabs/tab1" component={Tab1} />
         <Route exact path="/tabs/tab2" component={Tab2} />
-        <Route path="/tabs/tab3" component={Tab3} />
+        <Route exact path="/tabs/tab3" component={Tab3} />
+        <Route exact path="/tabs/chat" component={UserChat} />
+        <Route exact path="/tabs/chats" component={AssistantChatList} />
 
-        {/* Redireciona "/tabs" para a primeira tab */}
         <Route exact path="/tabs">
           <Redirect to="/tabs/tab1" />
         </Route>
       </IonRouterOutlet>
 
-      <IonTabBar slot="bottom">
+      <IonTabBar slot="bottom" selectedTab="tab2">
         <IonTabButton tab="tab1" href="/tabs/tab1">
           <IonIcon aria-hidden="true" icon={homeSharp} />
           <IonLabel>Início</IonLabel>
         </IonTabButton>
-        {/* <IonTabButton tab="tab2" href="/tabs/tab2">
-          <IonIcon aria-hidden="true" icon={alertCircleSharp} />
-          <IonLabel>Emergência</IonLabel>
-        </IonTabButton> */}
         <IonTabButton tab="tab2" href="/tabs/tab2">
           <IonIcon aria-hidden="true" icon={chatboxSharp} />
           <IonLabel>Comunicação</IonLabel>

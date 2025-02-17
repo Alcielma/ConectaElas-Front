@@ -1,14 +1,17 @@
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { App as CapacitorApp } from "@capacitor/app"; // Plugin Capacitor para manipular o botão de voltar
+import { App as CapacitorApp } from "@capacitor/app";
 import { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import { AuthProvider } from "./Contexts/AuthContext";
+import { ChatProvider } from "./Contexts/ChatContext";
 import PrivateRoute from "./components/PrivateRoute";
 import TabsLayout from "./components/TabsLayout";
-import PostDetails from "./pages/PostDetails";
 import Register from "./pages/Register";
+import AssistantChat from "./pages/AssistantChat";
+import AssistantChatList from "./pages/AssistantChatList";
+import UserChat from "./pages/UserChat";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -63,23 +66,29 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
+      z
       <AuthProvider>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            {/* Rota pública para login */}
-            <Route exact path="/login">
-              <Login />
-            </Route>
-            <Route path="/register" component={Register} />
+        <ChatProvider>
+          {" "}
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register} />
+              <PrivateRoute path="/tabs" component={TabsLayout} />
+              <PrivateRoute path="/tabs" component={TabsLayout} />
+              <PrivateRoute path="/tabs/chat" component={UserChat} />
+              {/* <PrivateRoute path="/tabs/chats" component={AssistantChatList} /> */}
+              <PrivateRoute
+                path="/tabs/chat/:chatId"
+                component={AssistantChat}
+              />
 
-            <PrivateRoute path="/tabs" component={TabsLayout} />
-            <PrivateRoute path="/posts/:id" component={PostDetails} />
-            {/* Redireciona para login se o caminho for a raiz */}
-            <Route exact path="/">
-              <Redirect to="/login" />
-            </Route>
-          </IonRouterOutlet>
-        </IonReactRouter>
+              <Route exact path="/">
+                <Redirect to="/login" />
+              </Route>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </ChatProvider>
       </AuthProvider>
     </IonApp>
   );

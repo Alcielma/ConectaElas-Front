@@ -6,6 +6,7 @@ import {
   IonToolbar,
   IonIcon,
 } from "@ionic/react";
+import { useHistory } from "react-router-dom";
 import {
   chatbubbleEllipsesSharp,
   megaphoneSharp,
@@ -16,6 +17,7 @@ import "./Tab2.css";
 
 const Tab2: React.FC = () => {
   const { isAssistant } = useAuth();
+  const history = useHistory();
 
   return (
     <IonPage>
@@ -28,21 +30,28 @@ const Tab2: React.FC = () => {
       <IonContent fullscreen>
         <div className="tab2-content">
           {isAssistant ? (
-            //  assistentes
+            // Assistentes
             <div className="card-container">
-              <div className="card">
+              <div
+                className="card"
+                onClick={() => {
+                  console.log("Clicou no botão de Chats Ativos!");
+                  history.push("/tabs/chats");
+                }}
+              >
                 <IonIcon icon={peopleSharp} className="card-icon" />
                 <p>Chats ativos</p>
               </div>
+
               <div className="card">
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
                 <p>Históricos de chats</p>
               </div>
             </div>
           ) : (
-            // usuários comuns
+            // Usuários comuns
             <div className="card-container">
-              <div className="card">
+              <div className="card" onClick={() => history.push("/tabs/chat")}>
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
                 <p>Chat com Assistente</p>
               </div>

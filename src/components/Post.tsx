@@ -52,18 +52,35 @@ const Post: React.FC<PostProps> = ({
 
     try {
       const commentData = {
-        comentario: newComment,
-        data: new Date().toISOString(),
-        users_permissions_user: user.id,
-        post: id,
+        data: {
+          comentario: newComment,
+          data: new Date().toISOString(),
+          id_usuario: { id: user.id },
+          post: { id: id },
+        },
       };
 
-      const addedComment = await addComment(commentData);
+      console.log("Enviando comentário:", commentData);
+
+      const response = await addComment(commentData);
+
+      if (!response || !response.data || !response.data.id) {
+        console.error("Resposta inválida do backend:", response);
+        return;
+      }
+
+      console.log("Comentário adicionado:", response.data);
 
       setComments([
-        { ...addedComment.data, createdAt: new Date().toISOString() },
+        {
+          id: response.data.id,
+          comentario: response.data.comentario || "Comentário não disponível",
+          data: response.data.data || new Date().toISOString(),
+          createdAt: response.data.createdAt || new Date().toISOString(),
+        },
         ...comments,
       ]);
+
       setNewComment("");
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2000);

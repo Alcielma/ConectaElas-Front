@@ -1,16 +1,19 @@
 import api from "./api";
 
-export async function addComment(commentData: {
+interface CommentData {
   comentario: string;
   data: string;
-  users_permissions_user: number;
-  post: number;
-}) {
+  id_usuario: { id: number };
+  post: { id: number };
+}
+
+export const addComment = async (commentData: any) => {
   try {
     const response = await api.post("/comentarios", { data: commentData });
+
     return response.data;
-  } catch (error) {
-    console.error("Erro ao adicionar comentário:", error);
+  } catch (error: any) {
+    console.error("Erro ao enviar comentário:", error.response?.data || error);
     throw error;
   }
-}
+};
