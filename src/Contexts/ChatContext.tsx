@@ -1,20 +1,19 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import ChatService from "../Services/ChatService";
 import { useAuth } from "./AuthContext";
+import api from "../Services/api";
 
 interface Message {
   id: number;
   Mensagem: string;
-  Tipo_Remetente: string;
   Data_Envio: string;
-  remetente: { id: number };
 }
 
 interface Chat {
   id: number;
   ProtocoloID: string;
-  Status_Protocolo: string;
   mensagens: Message[];
+  usuario: { id: number };
 }
 
 interface ChatContextType {
@@ -23,7 +22,7 @@ interface ChatContextType {
   fetchChats: () => void;
   startChat: (message: string) => Promise<Chat | null>;
   sendMessage: (chatId: number, message: string) => Promise<void>;
-  selectChat: (chat: Chat) => void;
+  selectChat: (chatId: number) => Promise<void>;
   generateRandomName: (userId: number) => string;
 }
 
@@ -45,115 +44,103 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
 
   const fetchChats = async () => {
-    console.log("Buscando...");
-    const chatList = await ChatService.getChats();
+    if (!user) return;
 
-    setChats(
-      chatList.map((chat: Chat) => ({
-        ...chat,
-        mensagens: chat.mensagens || [],
-      }))
-    );
+    try {
+      const response = await ChatService.getChats(user.id);
+      const userChats = response || [];
+
+      setChats(userChats);
+    } catch (error) {
+      setChats([]);
+    }
   };
 
   const startChat = async (message: string): Promise<Chat | null> => {
     if (!user) return null;
 
-    let existingChat = chats.find((chat) =>
-      chat.mensagens.some((msg) => msg.remetente.id === user.id)
-    );
+    await fetchChats();
 
-    if (existingChat) {
-      console.log("Chat existente encontrado!", existingChat);
-      setActiveChat(existingChat);
-      return existingChat;
+    let chat = chats.find((c) => c.usuario.id === user.id) ?? null;
+
+    if (chat) {
+      await selectChat(chat.id);
+      return chat;
     }
 
-    console.log("Criando novo chat...");
-    const newChat = await ChatService.createChat();
+    const newChat = await ChatService.createChat(user.id);
     if (!newChat) return null;
 
-    await ChatService.sendMessage(newChat.id, user.id, message);
+    await ChatService.sendMessage(newChat.id, message);
 
-    const chatComMensagens = { ...newChat, mensagens: [] };
-    setChats((prev) => [...prev, chatComMensagens]);
-    setActiveChat(chatComMensagens);
-    return chatComMensagens;
+    chat = { ...newChat, mensagens: [] };
+
+    if (chat) {
+      setChats((prev) => [...prev, chat]);
+      setActiveChat(chat);
+    }
+
+    return chat;
   };
 
   const sendMessage = async (chatId: number, message: string) => {
     if (!user) return;
 
-    const newMessage = await ChatService.sendMessage(chatId, user.id, message);
+    const newMessage = await ChatService.sendMessage(chatId, message);
 
     if (!newMessage) {
-      console.log("Erro ao enviar mensagem");
       return;
     }
-    console.log("Mensagem enviada com sucesso:", newMessage);
 
     setChats((prevChats) =>
       prevChats.map((chat) =>
         chat.id === chatId
-          ? { ...chat, mensagens: [...(chat.mensagens || []), newMessage] }
+          ? { ...chat, mensagens: [...chat.mensagens, newMessage] }
           : chat
       )
     );
 
     setActiveChat((prev) =>
       prev?.id === chatId
-        ? { ...prev, mensagens: [...(prev.mensagens || []), newMessage] }
+        ? { ...prev, mensagens: [...prev.mensagens, newMessage] }
         : prev
     );
-
-    console.log("Estado do activeChat atualizado!", activeChat);
   };
 
-  const selectChat = (chat: Chat) => {
-    if (!chat) {
-      console.error("erro: chat inválido.");
-      return;
-    }
+  const selectChat = async (chatId: number) => {
+    try {
+      const response = await api.get(
+        `/protocolos?filters[id][$eq]=${chatId}&populate[mensagens][fields]=Mensagem,Data_Envio`
+      );
 
-    setActiveChat(null);
-    setTimeout(
-      () => setActiveChat({ ...chat, mensagens: chat.mensagens || [] }),
-      0
-    );
+      if (!response.data || response.data.data.length === 0) {
+        return;
+      }
 
-    console.log("✅ Chat selecionado:", chat);
-  };
+      const selectedChat = response.data.data[0];
 
-  const colors = [
-    "Azul",
-    "Vermelho",
-    "Verde",
-    "Roxo",
-    "Amarelo",
-    "Laranja",
-    "Rosa",
-    "Preto",
-  ];
-  const animals = [
-    "Tatu",
-    "Coruja",
-    "Gato",
-    "Cachorro",
-    "Panda",
-    "Raposa",
-    "Tigre",
-    "Lobo",
-  ];
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.id === chatId
+            ? { ...chat, mensagens: selectedChat.mensagens }
+            : chat
+        )
+      );
 
-  const generateRandomName = (userId: number) => {
-    const color = colors[userId % colors.length];
-    const animal = animals[userId % animals.length];
-    return `${animal} ${color}`;
+      setActiveChat({
+        id: selectedChat.id,
+        ProtocoloID: selectedChat.ProtocoloID,
+        mensagens: selectedChat.mensagens || [],
+        usuario: selectedChat.usuario,
+      });
+    } catch (error) {}
   };
 
   useEffect(() => {
-    fetchChats();
-  }, []);
+    if (user) {
+      fetchChats();
+    }
+  }, [user]);
 
   return (
     <ChatContext.Provider
@@ -164,7 +151,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         startChat,
         sendMessage,
         selectChat,
-        generateRandomName,
+        generateRandomName: (userId: number) => `User ${userId % 100}`,
       }}
     >
       {children}

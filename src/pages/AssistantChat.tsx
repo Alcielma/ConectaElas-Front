@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonPage,
   IonHeader,
@@ -11,63 +11,53 @@ import {
   IonButton,
 } from "@ionic/react";
 import { useChat } from "../Contexts/ChatContext";
-import { useAuth } from "../Contexts/AuthContext";
+import { useParams } from "react-router-dom";
 
 const AssistantChat: React.FC = () => {
-  const { user } = useAuth();
-  const [message, setMessage] = React.useState("");
-  const { activeChat, sendMessage, generateRandomName } = useChat();
+  const [message, setMessage] = useState("");
+  const { activeChat, sendMessage, selectChat } = useChat();
+  const { chatId } = useParams<{ chatId: string }>();
+
+  useEffect(() => {
+    if (chatId) {
+      selectChat(Number(chatId));
+    }
+  }, [chatId]);
 
   if (!activeChat) {
     return (
       <IonPage>
         <IonContent>
-          <p>Selecione um chat para visualizar as mensagens.</p>
+          <p>Carregando mensagens...</p>
         </IonContent>
       </IonPage>
     );
   }
 
   const handleSendMessage = () => {
-    if (message.trim() && activeChat) {
-      sendMessage(activeChat.id, message);
-      setMessage("");
-    }
+    if (message.trim() === "") return;
+    sendMessage(activeChat.id, message);
+    setMessage("");
   };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Chat com {generateRandomName(activeChat.id)}</IonTitle>
+          <IonTitle>Chat</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <div className="messages-container">
-          {activeChat?.mensagens?.map((msg) => (
-            <div
-              key={msg.id}
-              className={`message-bubble ${
-                msg.remetente?.id === user?.id ? "sent" : "received"
-              }`}
-            >
-              <strong>
-                {msg.remetente?.id !== user?.id
-                  ? generateRandomName(msg.remetente?.id)
-                  : "Você"}
-              </strong>
-
-              <p>{msg.Mensagem}</p>
-              <span className="timestamp">
-                {new Date(msg.Data_Envio).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </span>
-            </div>
-          ))}
-        </div>
+        {activeChat?.mensagens?.length > 0 ? (
+          activeChat.mensagens.map((msg) => (
+            <IonItem key={msg.id}>
+              <IonLabel>{msg.Mensagem}</IonLabel>
+            </IonItem>
+          ))
+        ) : (
+          <p>Nenhuma mensagem ainda.</p>
+        )}
 
         <IonItem>
           <IonInput

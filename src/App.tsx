@@ -66,7 +66,6 @@ const App: React.FC = () => {
 
   return (
     <IonApp>
-      z
       <AuthProvider>
         <ChatProvider>
           {" "}

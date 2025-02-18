@@ -13,6 +13,7 @@ import {
   peopleSharp,
 } from "ionicons/icons";
 import { useAuth } from "../Contexts/AuthContext";
+
 import "./Tab2.css";
 
 const Tab2: React.FC = () => {
@@ -30,12 +31,10 @@ const Tab2: React.FC = () => {
       <IonContent fullscreen>
         <div className="tab2-content">
           {isAssistant ? (
-            // Assistentes
             <div className="card-container">
               <div
                 className="card"
                 onClick={() => {
-                  console.log("Clicou no botão de Chats Ativos!");
                   history.push("/tabs/chats");
                 }}
               >
@@ -49,7 +48,6 @@ const Tab2: React.FC = () => {
               </div>
             </div>
           ) : (
-            // Usuários comuns
             <div className="card-container">
               <div className="card" onClick={() => history.push("/tabs/chat")}>
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
