@@ -119,6 +119,13 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const selectedChat = response.data.data[0];
 
+      setActiveChat((prev) => ({
+        id: selectedChat.id,
+        ProtocoloID: selectedChat.ProtocoloID,
+        mensagens: selectedChat.mensagens || [],
+        usuario: selectedChat.usuario,
+      }));
+
       setChats((prevChats) =>
         prevChats.map((chat) =>
           chat.id === chatId
@@ -126,15 +133,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
             : chat
         )
       );
-
-      setActiveChat({
-        id: selectedChat.id,
-        ProtocoloID: selectedChat.ProtocoloID,
-        mensagens: selectedChat.mensagens || [],
-        usuario: selectedChat.usuario,
-      });
-    } catch (error) {}
+    } catch (error) {
+      console.error("Erro ao buscar mensagens do chat:", error);
+    }
   };
+
+  console.log("agora está assim:", activeChat);
 
   useEffect(() => {
     if (user) {

@@ -22,7 +22,7 @@ const AssistantChat: React.FC = () => {
     if (chatId) {
       selectChat(Number(chatId));
     }
-  }, [chatId]);
+  }, [chatId, selectChat]);
 
   if (!activeChat) {
     return (

@@ -11,7 +11,7 @@ const ChatService = {
       });
       return response.data.data;
     } catch (error) {
-      console.error("❌ Erro ao criar chat:", error);
+      console.error("Erro ao criar chat:", error);
       return null;
     }
   },
@@ -23,7 +23,7 @@ const ChatService = {
       );
       return response.data.data || [];
     } catch (error) {
-      console.error("❌ Erro ao buscar chats:", error);
+      console.error("Erro ao buscar chats:", error);
       return [];
     }
   },
@@ -39,7 +39,7 @@ const ChatService = {
       });
       return response.data.data;
     } catch (error) {
-      console.error("❌ Erro ao enviar mensagem:", error);
+      console.error("Erro ao enviar mensagem:", error);
       return null;
     }
   },

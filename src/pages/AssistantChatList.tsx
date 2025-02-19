@@ -18,8 +18,8 @@ const AssistantChatList: React.FC = () => {
           <IonItem
             key={chat.id}
             button
-            onClick={() => {
-              selectChat(chat.id);
+            onClick={async () => {
+              await selectChat(chat.id);
               history.push(`/tabs/chat/${chat.id}`);
             }}
           >

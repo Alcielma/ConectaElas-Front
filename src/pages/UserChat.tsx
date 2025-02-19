@@ -18,10 +18,17 @@ const UserChat: React.FC = () => {
   const { user } = useAuth();
   const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const { selectChat } = useChat();
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [activeChat?.mensagens]);
+    if (!activeChat) {
+      console.log("Nenhum chat ativo. Criando novo...");
+      startChat(message);
+    } else {
+      selectChat(activeChat.id);
+    }
+  }, []);
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
@@ -60,7 +67,7 @@ const UserChat: React.FC = () => {
                 <div
                   key={msg.id}
                   className={`message-bubble ${
-                    msg.remetente?.id === user?.id ? "sent" : "received"
+                    user?.id === activeChat?.usuario?.id ? "sent" : "received"
                   }`}
                 >
                   <p>{msg.Mensagem}</p>
