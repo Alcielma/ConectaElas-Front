@@ -14,17 +14,17 @@ import { useAuth } from "../Contexts/AuthContext";
 import "./UserChat.css";
 
 const UserChat: React.FC = () => {
-  const { activeChat, startChat, sendMessage } = useChat();
+  const { activeChat, startChat, sendMessage, selectChat } = useChat();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
-  const { selectChat } = useChat();
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
     if (!activeChat) {
-      console.log("Nenhum chat ativo. Criando novo...");
-      startChat(message);
+      console.log("Nenhum chat ativo. Buscando ou criando novo...");
+      startChat("");
     } else {
       selectChat(activeChat.id);
     }
