@@ -14,21 +14,39 @@ import { useAuth } from "../Contexts/AuthContext";
 import "./UserChat.css";
 
 const UserChat: React.FC = () => {
-  const { activeChat, startChat, sendMessage, selectChat } = useChat();
+  const { activeChat, startChat, sendMessage, selectChat, fetchMessages } =
+    useChat();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const [messages, setMessages] = useState<[]>([]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-
+    console.log("executou o useffect");
     if (!activeChat) {
       console.log("Nenhum chat ativo. Buscando ou criando novo...");
       startChat("");
     } else {
+      console.log("activechat.id", activeChat.id);
       selectChat(activeChat.id);
     }
   }, []);
+
+  useEffect(() => {
+    if (!activeChat) return;
+
+    const fetchMessageActiveChat = async () => {
+      const messages = await fetchMessages(activeChat.id);
+      setMessages(messages);
+    };
+
+    const intervalId = setInterval(fetchMessageActiveChat, 2000);
+
+    fetchMessageActiveChat();
+
+    return () => clearInterval(intervalId);
+  }, [activeChat]);
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
@@ -56,18 +74,18 @@ const UserChat: React.FC = () => {
       </IonHeader>
       <IonContent className="chat-content">
         <div className="messages-container">
-          {activeChat?.mensagens?.length ? (
-            activeChat.mensagens
+          {messages.length ? (
+            messages
               .sort(
-                (a, b) =>
+                (a: any, b: any) =>
                   new Date(a.Data_Envio).getTime() -
                   new Date(b.Data_Envio).getTime()
               )
-              .map((msg) => (
+              .map((msg: any) => (
                 <div
                   key={msg.id}
                   className={`message-bubble ${
-                    user?.id === activeChat?.usuario?.id ? "sent" : "received"
+                    user?.id === msg.remetente.id ? "sent" : "received"
                   }`}
                 >
                   <p>{msg.Mensagem}</p>
@@ -80,7 +98,11 @@ const UserChat: React.FC = () => {
                 </div>
               ))
           ) : (
-            <p className="no-messages">Aguardando mensagens...</p>
+            <p className="no-messages">
+              {" "}
+              Envie uma mensagem para iniciar seu chat com um dos nossos
+              assistentes!
+            </p>
           )}
           <div ref={chatEndRef} />
         </div>

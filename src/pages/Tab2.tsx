@@ -5,6 +5,7 @@ import {
   IonTitle,
   IonToolbar,
   IonIcon,
+  IonRouterLink,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import {
@@ -32,15 +33,10 @@ const Tab2: React.FC = () => {
         <div className="tab2-content">
           {isAssistant ? (
             <div className="card-container">
-              <div
-                className="card"
-                onClick={() => {
-                  history.push("/tabs/chats");
-                }}
-              >
+              <IonRouterLink className="card" href="/assistantChats">
                 <IonIcon icon={peopleSharp} className="card-icon" />
                 <p>Chats ativos</p>
-              </div>
+              </IonRouterLink>
 
               <div className="card">
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />

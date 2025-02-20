@@ -28,19 +28,32 @@ const ChatService = {
     }
   },
 
-  async sendMessage(chatId: number, message: string) {
+  async sendMessage(chatId: number, message: string, userId: number) {
     try {
       const response = await api.post("/mensagens", {
         data: {
           Mensagem: message,
           Data_Envio: new Date().toISOString(),
           protocolo: { id: chatId },
+          remetente: { id: userId },
         },
       });
       return response.data.data;
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
       return null;
+    }
+  },
+
+  async fetchMessages(chatId: number) {
+    try {
+      const response = await api.get(
+        `/mensagens/?filters[protocolo][id][$eq]=${chatId}&populate=*`
+      );
+      return response.data.data || [];
+    } catch (error) {
+      console.error("Erro ao buscar mensagens:", error);
+      return [];
     }
   },
 };

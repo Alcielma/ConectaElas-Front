@@ -37,6 +37,7 @@ import "@ionic/react/css/display.css";
  */
 import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
+import Teste from "./pages/teste";
 
 setupIonicReact();
 
@@ -74,11 +75,13 @@ const App: React.FC = () => {
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
               <PrivateRoute path="/tabs" component={TabsLayout} />
-              <PrivateRoute path="/tabs" component={TabsLayout} />
-              <PrivateRoute path="/tabs/chat" component={UserChat} />
-              {/* <PrivateRoute path="/tabs/chats" component={AssistantChatList} /> */}
+              <Route
+                exact
+                path="/assistantChats"
+                component={AssistantChatList}
+              />
               <PrivateRoute
-                path="/tabs/chat/:chatId"
+                path="/assistantChats/:chatId"
                 component={AssistantChat}
               />
 

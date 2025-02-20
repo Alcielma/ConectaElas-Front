@@ -23,6 +23,7 @@ interface ChatContextType {
   startChat: (message: string) => Promise<Chat | null>;
   sendMessage: (chatId: number, message: string) => Promise<void>;
   selectChat: (chatId: number) => Promise<void>;
+  fetchMessages: (chatId: number) => Promise<[]>;
   generateRandomName: (userId: number) => string;
 }
 
@@ -71,7 +72,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     const newChat = await ChatService.createChat(user.id);
     if (!newChat) return null;
 
-    await ChatService.sendMessage(newChat.id, message);
+    if (message != "")
+      await ChatService.sendMessage(newChat.id, message, user.id);
 
     chat = { ...newChat, mensagens: [] };
 
@@ -86,7 +88,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const sendMessage = async (chatId: number, message: string) => {
     if (!user) return;
 
-    const newMessage = await ChatService.sendMessage(chatId, message);
+    const newMessage = await ChatService.sendMessage(chatId, message, user.id);
 
     if (!newMessage) {
       return;
@@ -110,7 +112,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const selectChat = async (chatId: number) => {
     try {
       const response = await api.get(
-        `/protocolos?filters[id][$eq]=${chatId}&populate[mensagens][fields]=Mensagem,Data_Envio`
+        `/protocolos?filters[id][$eq]=${chatId}&populate[mensagens][fields]=Mensagem,Data_Envio&populate[usuario][fields][0]=id`
       );
 
       if (!response.data || response.data.data.length === 0) {
@@ -138,13 +140,65 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  console.log("agora está assim:", activeChat);
+  const generateRandomName = (userId: number) => {
+    const colors = [
+      "Vermelho",
+      "Azul",
+      "Verde",
+      "Amarelo",
+      "Roxo",
+      "Laranja",
+      "Rosa",
+      "Marrom",
+      "Preto",
+      "Branco",
+      "Cinza",
+      "Ciano",
+      "Magenta",
+      "Prateado",
+      "Bronze",
+    ];
+
+    const animals = [
+      "Leão",
+      "Tigre",
+      "Urso",
+      "Lobo",
+      "Águia",
+      "Tubarão",
+      "Pantera",
+      "Falcão",
+      "Raposa",
+      "Gavião",
+      "Coelho",
+      "Tartaruga",
+      "Guepardo",
+      "Onça",
+      "Pinguim",
+    ];
+
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+    const numeroAleatorio = Math.floor(Math.random() * 1000);
+
+    return `${randomAnimal} ${randomColor}#${numeroAleatorio}`;
+  };
+
+  const fetchMessages = async (chatId: number) => {
+    if (!user) return;
+    const messages = await ChatService.fetchMessages(chatId);
+    console.log("daskdoask", messages);
+    if (messages.length === 0) return [];
+    return messages;
+  };
 
   useEffect(() => {
     if (user) {
       fetchChats();
-    }
+    } else setActiveChat(null);
   }, [user]);
+
+  console.log("chatAtivo", activeChat);
 
   return (
     <ChatContext.Provider
@@ -155,7 +209,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         startChat,
         sendMessage,
         selectChat,
-        generateRandomName: (userId: number) => `User ${userId % 100}`,
+        generateRandomName,
+        fetchMessages,
       }}
     >
       {children}
