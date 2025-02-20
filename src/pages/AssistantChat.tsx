@@ -15,6 +15,8 @@ import {
 import { useChat } from "../Contexts/ChatContext";
 import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
+import { IonIcon } from "@ionic/react";
+import { send } from "ionicons/icons";
 
 const AssistantChat: React.FC = () => {
   const [message, setMessage] = useState("");
@@ -40,7 +42,7 @@ const AssistantChat: React.FC = () => {
       setMessages(messages);
     };
 
-    const intervalId = setInterval(fetchMessageActiveChat, 2000);
+    const intervalId = setInterval(fetchMessageActiveChat, 5000);
 
     fetchMessageActiveChat();
 
@@ -106,12 +108,20 @@ const AssistantChat: React.FC = () => {
       </IonContent>
       <IonFooter>
         <IonToolbar className="chat-input-toolbar">
-          <IonInput
-            value={message}
-            placeholder="Digite sua mensagem..."
-            onIonChange={(e) => setMessage(e.detail.value!)}
-          />
-          <IonButton onClick={handleSendMessage}>Enviar</IonButton>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <IonInput
+              value={message}
+              placeholder="Digite sua mensagem..."
+              onIonChange={(e) => setMessage(e.detail.value!)}
+              style={{ flex: 1 }}
+            />
+            <IonIcon
+              icon={send}
+              size="large"
+              style={{ cursor: "pointer", color: "white", marginLeft: "8px" }}
+              onClick={handleSendMessage}
+            />
+          </div>
         </IonToolbar>
       </IonFooter>
     </IonPage>
