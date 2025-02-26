@@ -53,11 +53,13 @@ export default function Feed({ selectedCategory }: FeedProps) {
   return (
     <div className="feed-container">
       {loading ? (
-        <>
-          <SkeletonPost />
-          <SkeletonPost />
-          <SkeletonPost />
-        </>
+        <div className="feed-posts">
+          <>
+            <SkeletonPost />
+            <SkeletonPost />
+            <SkeletonPost />
+          </>
+        </div>
       ) : (
         <div className="feed-posts">
           {filteredPosts.map((post) => (
