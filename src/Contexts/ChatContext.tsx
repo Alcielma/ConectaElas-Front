@@ -187,7 +187,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchMessages = async (chatId: number) => {
     if (!user) return;
     const messages = await ChatService.fetchMessages(chatId);
-    console.log("daskdoask", messages);
+    // console.log("mensagem:", messages);
     if (messages.length === 0) return [];
     return messages;
   };
@@ -198,7 +198,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     } else setActiveChat(null);
   }, [user]);
 
-  console.log("chatAtivo", activeChat);
+  // console.log("chatAtivo", activeChat);
 
   return (
     <ChatContext.Provider

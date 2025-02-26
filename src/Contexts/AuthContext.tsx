@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  console.log("user", user);
+  // console.log("user", user);
 
   return (
     <AuthContext.Provider

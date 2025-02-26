@@ -9,8 +9,7 @@ interface CommentData {
 
 export const addComment = async (commentData: any) => {
   try {
-    const response = await api.post("/comentarios", { data: commentData });
-
+    const response = await api.post("/comentarios", commentData);
     return response.data;
   } catch (error: any) {
     console.error("Erro ao enviar comentário:", error.response?.data || error);
