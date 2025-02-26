@@ -97,23 +97,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ): Promise<boolean> => {
     try {
-      const data = {
-        username,
-        email,
-        password,
-      };
+      const data = { username, email, password };
       const response = await AuthService.register(data);
 
-      if (response) {
+      if (response && response.jwt && response.user) {
+        const { jwt, user } = response;
+
         const adaptedUser: User = {
-          id: response.id,
-          name: response.username,
-          email: response.email,
-          tipo: "Autenticado",
+          id: user.id,
+          name: user.username,
+          email: user.email,
+          tipo: user.Tipo || "Autenticado",
         };
+
+        localStorage.setItem("authToken", jwt);
+        localStorage.setItem("user", JSON.stringify(adaptedUser));
+
+        setAuthToken(jwt);
         setUser(adaptedUser);
+
         return true;
       } else {
+        console.error("Resposta inválida do backend:", response);
         return false;
       }
     } catch (error) {
@@ -122,7 +127,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // console.log("user", user);
+  console.log("user", user);
 
   return (
     <AuthContext.Provider

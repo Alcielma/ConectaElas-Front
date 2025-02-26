@@ -39,12 +39,24 @@ const AuthService = {
     }
   },
 
-  async register(data: RegisterPayload): Promise<UserPayload | null> {
+  async register(data: RegisterPayload): Promise<LoginPayload | null> {
     try {
-      const response = await api.post<UserPayload>("/users", data);
+      const response = await api.post<LoginPayload>(
+        "/auth/local/register",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       return response.data;
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
+    } catch (error: any) {
+      console.error(
+        "Erro ao cadastrar usuário:",
+        error.response?.data || error
+      );
       return null;
     }
   },
