@@ -29,7 +29,7 @@ const Tab3: React.FC = () => {
       <IonContent fullscreen>
         <div className="profile-page-fullscreen">
           <div className="profile-header">
-            <h2 className="profile-name">{user?.name}</h2>
+            <h2 className="profile-name">{"Usuário:  " + user?.name}</h2>
           </div>
 
           <div className="profile-info">

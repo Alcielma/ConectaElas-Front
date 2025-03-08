@@ -1,0 +1,149 @@
+[33mcommit 6e2282db6864cb437636b7d7c0c2a444e6e6e52b[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Feb 26 16:01:33 2025 -0300
+
+    Cadastro consertado
+
+[33mcommit 7de706b95b0d85010393c471a03c87228b6f2151[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Feb 26 15:32:10 2025 -0300
+
+    correção no Skeleton
+
+[33mcommit 6db2801045adad9dc60856a121865ab6884c10a9[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Feb 26 15:07:10 2025 -0300
+
+    comentários consertados
+
+[33mcommit e7e923e1cfc0550c153d1d347933e23e9fb0e79e[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Thu Feb 20 15:03:59 2025 -0300
+
+    estilização chat
+
+[33mcommit 1f28d199beaf1332f87f19e35c9a6256ec01ca19[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Thu Feb 20 14:49:34 2025 -0300
+
+    reestruturação total  no chat
+
+[33mcommit 659d7b38375deb28cc7bd5d665e9c47ad718dc4b[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Feb 18 23:20:09 2025 -0300
+
+    pequenas melhorias no código para evitar chamadas desnecessárias
+
+[33mcommit 396b46b769edc8ca58cf8be7fd5f8dfb58480f88[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Feb 18 23:17:46 2025 -0300
+
+    correção na renderização das mensagens no chat
+
+[33mcommit 31b09df986b6159856b4bfaf40edfb4284e1fdd2[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Feb 18 20:21:39 2025 -0300
+
+    correções no funcionamento do chat com assistente
+
+[33mcommit 81b35d2993b93e341341dc769ce0ce5604c4fbd3[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Mon Feb 17 20:04:32 2025 -0300
+
+    estruturação do chat
+
+[33mcommit f680a71f8915163a34d7886fe4e57cac3ed82677[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Feb 11 14:59:29 2025 -0300
+
+    criação da tela de comunicação para os dois tipos de usuário(comum e assistente)
+
+[33mcommit a1b4c0734219dba887decfdad16e5d1a8474df77[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Jan 8 16:14:42 2025 -0300
+
+    teste
+
+[33mcommit 1686da40f89f2191f8e099e6ebc082121f3a57a9[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Dec 3 17:02:34 2024 -0300
+
+    Correções e atualizações
+
+[33mcommit c2dcea5edf0ef5d5d6af915f7ce5bb3f8226a1b5[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Nov 12 16:25:47 2024 -0300
+
+    Tratamento de erros no cadastro
+
+[33mcommit a4265dff9b5c31c5abf2a7269b8b307a0b9400af[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Nov 12 15:52:57 2024 -0300
+
+    correções no feed e Funcionalidade de cadastro de usuário
+
+[33mcommit 99ee1599ae3786e09a203bed1a0538b61ea7bb68[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Oct 30 18:33:34 2024 -0300
+
+    criação de um feed flexivel por meio da seleção da categoria dos posts
+
+[33mcommit 44589116eb4dcc6715fd11f8bcda3f3957062c5a[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Oct 30 16:21:04 2024 -0300
+
+    mensagem de aviso ao enviar comentário e correções
+
+[33mcommit 8bce1ea766d770d6df2faa0580747af6c44384a1[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Oct 29 22:54:31 2024 -0300
+
+    Implementada funcionalidade de comentar em um post e ajustes na estilização
+
+[33mcommit b1b46fd40d77d601fdd5901d994b3568626f78dd[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Oct 29 19:13:31 2024 -0300
+
+    adicionado listagem de comentários e sua quantidade em um post
+
+[33mcommit f2bbfe5afd6f1067790f0bf6eed7fb28894357a9[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Thu Oct 24 21:50:06 2024 -0300
+
+    Criação de um Skeleton Loading no Feed de postagens
+
+[33mcommit 64a681d8b02fd604fcaa1560dc7c23a47a6e4ddf[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Thu Oct 24 17:45:42 2024 -0300
+
+    Correções no login, criação do logout e da tela de Perfil(versão inicial)
+
+[33mcommit a87a812738c64c65442c395df754712d24e9bef7[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Thu Oct 24 16:39:46 2024 -0300
+
+    Ajustes no menu de navegação e na privacidade de rotas
+
+[33mcommit c95b6da04dd5d2bc2ddcd5a9ac53d3409f91071a[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Thu Oct 24 16:38:01 2024 -0300
+
+    correções na requisição de listar posts
+
+[33mcommit 5521a86a4058a78ea76a0d5e060196af42987acc[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Oct 23 21:30:39 2024 -0300
+
+    configurações iniciais, feed de Publicações, Autenticação e Login
+
+[33mcommit 5e900dce5ff040fcbed8e15142d93035e42130ed[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Wed Oct 9 01:51:07 2024 -0300
+
+    first commit
+
+[33mcommit 2dacee796fafdca4db35e5e70833d44b9b9b2c1e[m
+Author: Rafael-acm1 <rafael-acm1@hotmail.com>
+Date:   Tue Oct 8 23:09:30 2024 -0300
+
+    Initial commit

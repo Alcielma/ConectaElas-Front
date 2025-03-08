@@ -1,0 +1,20 @@
+.carrossel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 20px 0;
+}
+
+.imagem-arredondada {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.imagem-arredondada:hover {
+    transform: scale(1.1);
+}

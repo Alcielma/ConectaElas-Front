@@ -15,6 +15,7 @@ import {
 } from "ionicons/icons";
 import "./Tab1.css";
 import Feed from "../components/Feed";
+import Carrossel from "../components/Carrossel";
 
 const Tab1: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -26,15 +27,16 @@ const Tab1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tela inicial</IonTitle>
+          <IonTitle>Conecta Elas</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Tela inicial</IonTitle>
+            <IonTitle size="large">Conecta Elas</IonTitle>
           </IonToolbar>
         </IonHeader>
+
         <div className="category-buttons">
           <button
             onClick={() => handleCategoryClick(null)}
@@ -65,6 +67,7 @@ const Tab1: React.FC = () => {
             <span className="button-label">Relato</span>
           </button>
         </div>
+
         <Feed selectedCategory={selectedCategory} />
       </IonContent>
     </IonPage>
