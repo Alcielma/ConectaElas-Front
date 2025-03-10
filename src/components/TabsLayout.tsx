@@ -13,8 +13,10 @@ import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
 import Tab3 from "../pages/Tab3";
 import UserChat from "../pages/UserChat";
+import ReportChannels from "../pages/ReportChannels";
 import AssistantChatList from "../pages/AssistantChatList";
 import Teste from "../pages/teste";
+import AngelContact from "../pages/AngelContact";
 
 const TabsLayout: React.FC = () => {
   return (
@@ -24,6 +26,8 @@ const TabsLayout: React.FC = () => {
         <Route exact path="/tabs/tab2" component={Tab2} />
         <Route exact path="/tabs/tab3" component={Tab3} />
         <Route exact path="/tabs/chat" component={UserChat} />
+        <Route exact path="/tabs/ReportChannels" component={ReportChannels} />
+        <Route exact path="/tabs/AngelContact" component={AngelContact} />
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom" selectedTab="tab2">

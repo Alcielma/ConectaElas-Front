@@ -12,6 +12,7 @@ import {
   chatbubbleEllipsesSharp,
   megaphoneSharp,
   peopleSharp,
+  sparkles,
 } from "ionicons/icons";
 import { useAuth } from "../Contexts/AuthContext";
 
@@ -49,9 +50,21 @@ const Tab2: React.FC = () => {
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
                 <p>Chat com Assistente</p>
               </div>
-              <div className="card">
-                <IonIcon icon={megaphoneSharp} className="card-icon" />
-                <p>Canais de Denúncia</p>
+              <div className="card-down">
+                <div
+                  className="card"
+                  onClick={() => history.push("/tabs/ReportChannels")}
+                >
+                  <IonIcon icon={megaphoneSharp} className="card-icon" />
+                  <p id="canais">Canais de Denúncia</p>
+                </div>
+                <div
+                  className="card"
+                  onClick={() => history.push("/tabs/AngelContact")}
+                >
+                  <IonIcon icon={sparkles} className="card-icon" />
+                  <p>Contato do Anjo</p>
+                </div>
               </div>
             </div>
           )}

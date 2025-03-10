@@ -7,15 +7,15 @@
 
 .card-container {
     display: flex;
-    width: 90%;
+    width: 70%;
     flex-direction: column;
     gap: 20px;
     align-items: center;
 }
 
 .card {
-    width: 80%;
-    max-width: 300px;
+    width: 100%;
+    max-width: 400px;
     height: 120px;
     background-color: white;
     border-radius: 15px;
@@ -25,13 +25,12 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 15px;
+    padding: 0px;
 }
 
 .card-icon {
     font-size: 32px;
     color: #6a1b9a;
-    /* Cor semelhante à da imagem */
     margin-bottom: 8px;
 }
 
@@ -39,4 +38,11 @@
     font-size: 16px;
     font-weight: bold;
     color: black;
+}
+
+.card-down {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 10px;
 }
