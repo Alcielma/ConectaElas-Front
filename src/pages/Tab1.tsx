@@ -30,13 +30,14 @@ const Tab1: React.FC = () => {
           <IonTitle>Conecta Elas</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen className="custom-background">
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">Conecta Elas</IonTitle>
           </IonToolbar>
         </IonHeader>
 
+        <Carrossel />
         <div className="category-buttons">
           <button
             onClick={() => handleCategoryClick(null)}

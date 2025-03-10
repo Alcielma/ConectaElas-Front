@@ -1,3 +1,8 @@
+.custom-background {
+    --background: #f7fafc;
+
+}
+
 .container {
     display: flex;
     flex-direction: column;
