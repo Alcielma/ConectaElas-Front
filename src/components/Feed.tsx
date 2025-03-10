@@ -62,6 +62,11 @@ export default function Feed({ selectedCategory }: FeedProps) {
         </div>
       ) : (
         <div className="feed-posts">
+          {/* <img
+            src="src/Assets/3e13c1fb-add4-4dcc-ab90-c8a00cbb33de.png"
+            className="background-image-feed"
+            alt="Arte abstrata"
+          /> */}
           {filteredPosts.map((post) => (
             <Post
               key={post.id}

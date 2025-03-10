@@ -38,6 +38,7 @@ const Tab1: React.FC = () => {
         </IonHeader>
 
         <Carrossel />
+
         <div className="category-buttons">
           <button
             onClick={() => handleCategoryClick(null)}
