@@ -42,11 +42,7 @@ const AssistantChat: React.FC = () => {
       setMessages(messages);
     };
 
-    const intervalId = setInterval(fetchMessageActiveChat, 5000);
-
     fetchMessageActiveChat();
-
-    return () => clearInterval(intervalId);
   }, [activeChat]);
 
   if (!activeChat) {

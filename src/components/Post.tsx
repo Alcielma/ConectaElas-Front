@@ -60,16 +60,12 @@ const Post: React.FC<PostProps> = ({
         },
       };
 
-      console.log("Enviando comentário:", commentData);
-
       const response = await addComment(commentData);
 
       if (!response || !response.data || !response.data.id) {
         console.error("Resposta inválida do backend:", response);
         return;
       }
-
-      console.log("Comentário adicionado:", response.data);
 
       setComments([
         {

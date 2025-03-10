@@ -16,7 +16,6 @@ const AssistantChatList: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    console.log("AssistantChatList montado");
     fetchChats();
   }, []);
 

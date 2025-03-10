@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import ChatService from "../Services/ChatService";
 import { useAuth } from "./AuthContext";
 import api from "../Services/api";
+import socket from "../Services/Socket";
 
 interface Message {
   id: number;
@@ -79,7 +80,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (chat) {
       setChats((prev) => [...prev, chat]);
-      setActiveChat(chat);
+      setActiveChat((prev) => ({ ...newChat, mensagens: [] }));
     }
 
     return chat;
@@ -87,26 +88,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const sendMessage = async (chatId: number, message: string) => {
     if (!user) return;
+    if (!activeChat) return;
 
-    const newMessage = await ChatService.sendMessage(chatId, message, user.id);
+    const ProtocoloID = activeChat.ProtocoloID;
 
-    if (!newMessage) {
-      return;
-    }
-
-    setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat.id === chatId
-          ? { ...chat, mensagens: [...chat.mensagens, newMessage] }
-          : chat
-      )
-    );
-
-    setActiveChat((prev) =>
-      prev?.id === chatId
-        ? { ...prev, mensagens: [...prev.mensagens, newMessage] }
-        : prev
-    );
+    socket.emit("send_message", { ProtocoloID, message });
   };
 
   const selectChat = async (chatId: number) => {
@@ -139,6 +125,45 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Erro ao buscar mensagens do chat:", error);
     }
   };
+
+  function updateChatMessages(chatId: number, newMessage: any) {
+    setChats((prevChats) =>
+      prevChats.map((chat) =>
+        chat.id === chatId
+          ? { ...chat, mensagens: [...chat.mensagens, newMessage] }
+          : chat
+      )
+    );
+
+    setActiveChat((prev) =>
+      prev?.id === chatId
+        ? { ...prev, mensagens: [...prev.mensagens, newMessage] }
+        : prev
+    );
+  }
+
+  function initializeSocket() {
+    if (!socket.connected) {
+      console.warn("Socket não conectado. Tentando reconectar...");
+      socket.connect();
+    }
+
+    console.log("Socket não conectado");
+
+    if (!activeChat) {
+      console.log(activeChat);
+      console.error("ERROR - ACTIVE CHAT NÃO EXISTE");
+      return;
+    }
+
+    socket.emit("join_chat", activeChat.ProtocoloID);
+
+    socket.off("receive_message");
+
+    socket.on("receive_message", (msg: Message) => {
+      updateChatMessages(activeChat.id, msg);
+    });
+  }
 
   const generateRandomName = (userId: number) => {
     const colors = [
@@ -187,7 +212,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchMessages = async (chatId: number) => {
     if (!user) return;
     const messages = await ChatService.fetchMessages(chatId);
-    // console.log("mensagem:", messages);
     if (messages.length === 0) return [];
     return messages;
   };
@@ -198,7 +222,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     } else setActiveChat(null);
   }, [user]);
 
-  // console.log("chatAtivo", activeChat);
+  useEffect(() => {
+    if (activeChat) {
+      initializeSocket();
+    }
+  }, [activeChat]);
 
   return (
     <ChatContext.Provider

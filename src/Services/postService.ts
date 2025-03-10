@@ -18,8 +18,6 @@ interface PostData {
 export async function getAll() {
   try {
     const response = await api.get("/posts?populate=*");
-    console.log("Resposta da API:", response.data);
-
     const formattedPosts = response.data.data.map((post: any) => ({
       id: post.id,
       Titulo: post.Title,
@@ -30,7 +28,7 @@ export async function getAll() {
         (post.Uploadpost &&
         post.Uploadpost.length > 0 &&
         post.Uploadpost[0]?.url
-          ? `http://192.168.18.170:1338${post.Uploadpost[0].url}`
+          ? `http://192.168.18.231:1338${post.Uploadpost[0].url}`
           : null),
       comentarios:
         post.comentarios?.map((comment: any) => ({
@@ -40,11 +38,6 @@ export async function getAll() {
           createdAt: comment.createdAt,
         })) || [],
     }));
-
-    console.log(
-      "Posts formatados com comentários e categoria:",
-      formattedPosts
-    );
 
     return formattedPosts;
   } catch (error) {
@@ -67,7 +60,7 @@ export async function getPostById(id: number) {
         (post.Uploadpost &&
         post.Uploadpost.length > 0 &&
         post.Uploadpost[0]?.url
-          ? `http://192.168.18.170:1338${post.Uploadpost[0].url}`
+          ? `http://192.168.18.231:1338${post.Uploadpost[0].url}`
           : null),
       comentarios: post.comentarios.map((comment: any) => ({
         id: comment.id,

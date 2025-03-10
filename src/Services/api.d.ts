@@ -1,5 +1,3 @@
-// api.d.ts
-
 declare module "api" {
   import { AxiosInstance } from "axios";
 

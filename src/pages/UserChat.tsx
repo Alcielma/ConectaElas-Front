@@ -25,12 +25,9 @@ const UserChat: React.FC = () => {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    console.log("executou o useffect");
     if (!activeChat) {
-      console.log("Nenhum chat ativo. Buscando ou criando novo...");
       startChat("");
     } else {
-      console.log("activechat.id", activeChat.id);
       selectChat(activeChat.id);
     }
   }, []);
@@ -43,27 +40,17 @@ const UserChat: React.FC = () => {
       setMessages(messages);
     };
 
-    const intervalId = setInterval(fetchMessageActiveChat, 5000);
-
     fetchMessageActiveChat();
-
-    return () => clearInterval(intervalId);
   }, [activeChat]);
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
 
-    console.log("Enviando mensagem:", message);
-
     if (!activeChat) {
-      console.log("Nenhum chat ativo. Criando novo...");
       await startChat(message);
     } else {
-      console.log("Enviando para chat ID:", activeChat.id);
       await sendMessage(activeChat.id, message);
     }
-
-    console.log("✅ Mensagem enviada!");
     setMessage("");
   };
 
