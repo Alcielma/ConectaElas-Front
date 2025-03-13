@@ -101,7 +101,7 @@
     background: #1cb488;
 }
 
-/* Modal */
+
 .modal-container {
     padding: 20px;
     text-align: center;
@@ -120,6 +120,7 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
+    color: #24ce9e;
 }
 
 .form-group {
@@ -140,6 +141,11 @@
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 8px;
+    background-color: white;
+}
+
+.ion-page {
+    background-color: #f0f0f0;
 }
 
 .save-contact-btn {

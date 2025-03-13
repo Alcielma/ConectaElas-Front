@@ -88,9 +88,9 @@ const Post: React.FC<PostProps> = ({
   return (
     <div className="post-container">
       <div className="post-header" onClick={toggleExpand}>
-        <h2>{title}</h2>
+        <h2 className="post-title">{title}</h2>
         {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
-        <p>{description}</p>
+        <p className="post-description ">{description}</p>
 
         <p className="comments-count">{comments.length} Comentário(os) </p>
       </div>

@@ -148,7 +148,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       socket.connect();
     }
 
-    console.log("Socket não conectado");
+    console.log("Socket conectado");
 
     if (!activeChat) {
       console.log(activeChat);

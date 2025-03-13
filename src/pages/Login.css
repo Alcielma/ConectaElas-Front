@@ -25,6 +25,11 @@ h2 {
 .input-group {
     margin-bottom: 15px;
     text-align: left;
+    color: #333;
+}
+
+.input-group input {
+    color: #333;
 }
 
 .input-group label {
@@ -46,6 +51,11 @@ h2 {
     border-color: #24ce9e;
     outline: none;
 }
+
+/* .Input-Login {
+    color: #333 !important;
+} */
+
 
 .login-button {
     width: 100%;

@@ -47,6 +47,7 @@ const Login: React.FC = () => {
             <input
               type="text"
               id="identifier"
+              className="Input-Login"
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               required
@@ -59,6 +60,7 @@ const Login: React.FC = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
+                className="Input-Login"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
