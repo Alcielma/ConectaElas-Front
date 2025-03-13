@@ -1,0 +1,159 @@
+.angel-contact-content {
+    background: #f8ebf3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.angel-contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.aviso {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    width: 100%;
+}
+
+.contact-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.contact-card:hover {
+    transform: scale(1.05);
+    background-color: #f0f0f0;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+}
+
+.contact-icon {
+    font-size: 24px;
+    color: #24ce9e;
+    margin-right: 15px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-btn ion-icon {
+    font-size: 24px;
+    color: rgb(255, 115, 72);
+}
+
+.delete-btn:hover {
+    background: darkred;
+}
+
+.add-contact-btn {
+    margin-top: 20px;
+    background: #24ce9e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-contact-btn:hover {
+    background: #1cb488;
+}
+
+/* Modal */
+.modal-container {
+    padding: 20px;
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.save-contact-btn {
+    margin-top: 20px;
+    background: #24ce9e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.save-contact-btn:hover {
+    background: #1cb488;
+}

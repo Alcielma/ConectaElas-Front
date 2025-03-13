@@ -35,3 +35,8 @@ ion-tab-button {
     --ripple-color: rgba(255, 255, 255, 0.3);
     /* Cor do efeito ripple */
 }
+
+:host(.button-solid) {
+    --background: #24CE9E;
+    --color: var(--ion-color-primary-contrast, #fff);
+}

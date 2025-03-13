@@ -26,7 +26,9 @@ const Tab2: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>{isAssistant ? "Área do Assistente" : "Chat"}</IonTitle>
+          <IonTitle>
+            {isAssistant ? "Área do Assistente" : "Comunicação"}
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
 
