@@ -6,6 +6,8 @@ import {
   IonTitle,
   IonToolbar,
   IonIcon,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/react";
 import { callSharp } from "ionicons/icons";
 import "./ReportChannels.css";
@@ -23,7 +25,14 @@ const ReportChannels: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Canais de Denúncia</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/home" />
+          </IonButtons>
+          <IonTitle className="center-title">Canais de Denúncia</IonTitle>
+          {/* Botão invisível*/}
+          <IonButtons slot="end">
+            <div style={{ width: "44px" }} />{" "}
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 

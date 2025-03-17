@@ -9,6 +9,8 @@ import {
   IonLoading,
   IonModal,
   IonToast,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/react";
 import {
   callSharp,
@@ -91,7 +93,14 @@ const AngelContactPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Contatos do Anjo</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/home" />
+          </IonButtons>
+          <IonTitle className="center-title">Contatos do anjo</IonTitle>
+          {/* Botão invisível*/}
+          <IonButtons slot="end">
+            <div style={{ width: "44px" }} />{" "}
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 

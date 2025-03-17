@@ -7,7 +7,8 @@ import {
   IonToolbar,
   IonFooter,
   IonInput,
-  IonButton,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/react";
 import { useChat } from "../Contexts/ChatContext";
 import { useAuth } from "../Contexts/AuthContext";
@@ -58,9 +59,17 @@ const UserChat: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Chat com Assistente</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/home" />
+          </IonButtons>
+          <IonTitle className="center-title">Chat com Assistente</IonTitle>
+          {/* Botão invisível*/}
+          <IonButtons slot="end">
+            <div style={{ width: "44px" }} />{" "}
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="chat-content">
         <div className="messages-container">
           {messages.length ? (
