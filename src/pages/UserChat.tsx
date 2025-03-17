@@ -88,7 +88,13 @@ const UserChat: React.FC = () => {
                 >
                   <p>{msg.Mensagem}</p>
                   <span className="timestamp">
-                    {new Date(msg.Data_Envio).toLocaleTimeString([], {
+                    {new Date(msg.Data_Envio).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}{" "}
+                    às{" "}
+                    {new Date(msg.Data_Envio).toLocaleTimeString("pt-BR", {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
