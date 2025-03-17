@@ -1,8 +1,9 @@
 .carrossel-container {
-    width: 23rem;
+    max-width: 47vh;
+    width: 23rm;
     margin: 0 auto 20px;
     margin-top: 40px;
-    padding: 0 0px;
+    padding: 23px 15px;
     position: relative;
 }
 

@@ -1,9 +1,9 @@
 /* contêiner principal*/
 .feed-container {
     min-height: 100vh;
-    /* background-color: #f7fafc; */
     padding: 1.5rem;
     align-items: center;
+
 }
 
 /*título principal */
