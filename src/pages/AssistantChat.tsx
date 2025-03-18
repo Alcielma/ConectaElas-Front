@@ -8,9 +8,10 @@ import {
   IonItem,
   IonLabel,
   IonInput,
-  IonButton,
+  IonButtons,
   IonFooter,
   IonList,
+  IonBackButton,
 } from "@ionic/react";
 import { useChat } from "../Contexts/ChatContext";
 import { useHistory, useParams } from "react-router-dom";
@@ -65,7 +66,13 @@ const AssistantChat: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Chat</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/tabs/tab1" />
+          </IonButtons>
+          <IonTitle className="center-title">Chat</IonTitle>
+          <IonButtons slot="end">
+            <div style={{ width: "44px" }} />{" "}
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="chat-content">
@@ -106,7 +113,6 @@ const AssistantChat: React.FC = () => {
         </div>
       </IonContent>
       <IonFooter>
-        `z`
         <IonToolbar className="chat-input-toolbar">
           <div style={{ display: "flex", alignItems: "center" }}>
             <IonInput

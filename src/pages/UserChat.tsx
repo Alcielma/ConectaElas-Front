@@ -60,10 +60,9 @@ const UserChat: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
           <IonTitle className="center-title">Chat com Assistente</IonTitle>
-          {/* Botão invisível*/}
           <IonButtons slot="end">
             <div style={{ width: "44px" }} />{" "}
           </IonButtons>

@@ -26,10 +26,9 @@ const ReportChannels: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
           <IonTitle className="center-title">Canais de Denúncia</IonTitle>
-          {/* Botão invisível*/}
           <IonButtons slot="end">
             <div style={{ width: "44px" }} />{" "}
           </IonButtons>
