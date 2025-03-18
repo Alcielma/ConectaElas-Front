@@ -25,6 +25,7 @@ interface AuthContextType {
     password: string
   ) => Promise<boolean>;
   isAssistant: boolean;
+  updateUser: (updatedUser: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -127,6 +128,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const updateUser = (updatedUser: Partial<User>) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+      const newUser = { ...prevUser, ...updatedUser };
+      localStorage.setItem("user", JSON.stringify(newUser));
+      return newUser;
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -135,6 +145,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         login,
         logout,
         register,
+        updateUser,
         isAssistant: user?.tipo === "Assistente",
       }}
     >

@@ -60,6 +60,47 @@ const AuthService = {
       return null;
     }
   },
+  async updateEmail(userId: number, newEmail: string, authToken: string) {
+    try {
+      const response = await api.put(
+        `/users/${userId}`,
+        {
+          email: newEmail,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      return response.status === 200;
+    } catch (error) {
+      console.error("Erro ao atualizar o e-mail:", error);
+      return false;
+    }
+  },
+
+  async updateUsername(userId: number, newUsername: string, authToken: string) {
+    try {
+      const response = await api.put(
+        `/users/${userId}`,
+        {
+          username: newUsername,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      return response.status === 200;
+    } catch (error) {
+      console.error("Erro ao atualizar o nome de usuário:", error);
+      return false;
+    }
+  },
 };
 
 export default AuthService;
