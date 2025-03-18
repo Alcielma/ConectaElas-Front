@@ -22,7 +22,7 @@ import { useAuth } from "../Contexts/AuthContext";
 import AngelContactService, {
   AngelContact,
 } from "../Services/AngelContactService";
-
+import Modal from "../components/Modal";
 import "./AngelContact.css";
 
 const AngelContactPage: React.FC = () => {
@@ -30,6 +30,13 @@ const AngelContactPage: React.FC = () => {
   const [contacts, setContacts] = useState<AngelContact[]>([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedContactId, setSelectedContactId] = useState<string | null>(
+    null
+  );
+  const [selectedContactName, setSelectedContactName] = useState<string | null>(
+    null
+  );
   const [nome, setNome] = useState("");
   const [numero, setNumero] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -67,23 +74,21 @@ const AngelContactPage: React.FC = () => {
     }
   };
 
-  const handleDeleteContact = async (contactId: number) => {
-    if (!user) return;
+  const handleDeleteContact = async () => {
+    if (!selectedContactId || !user) return;
 
-    console.log(`Tentando excluir o contato com ID: ${contactId}`);
+    setShowDeleteModal(false);
 
     const success = await AngelContactService.deleteContact(
       authToken!,
-      contactId
+      selectedContactId
     );
     if (success) {
-      console.log("Contato excluído com sucesso!");
-
-      const updatedContacts = await AngelContactService.fetchContacts(
-        authToken!,
-        user.id
+      setContacts((prevContacts) =>
+        prevContacts.filter(
+          (contact) => contact.documentId !== selectedContactId
+        )
       );
-      setContacts(updatedContacts);
     } else {
       console.error("Falha ao excluir o contato!");
     }
@@ -127,7 +132,12 @@ const AngelContactPage: React.FC = () => {
                   className="delete-btn"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleDeleteContact(contact.id);
+                    console.log(
+                      `Abrindo modal para excluir: ${contact.Nome} (ID: ${contact.documentId})`
+                    );
+                    setSelectedContactId(contact.documentId);
+                    setSelectedContactName(contact.Nome);
+                    setShowDeleteModal(true);
                   }}
                 >
                   <IonIcon icon={trash} />
@@ -177,6 +187,15 @@ const AngelContactPage: React.FC = () => {
             </button>
           </div>
         </IonModal>
+
+        <Modal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteContact}
+          title={`Você deseja excluir ${selectedContactName}?`}
+        >
+          {/* <p>Tem certeza de que deseja excluir este contato?</p> */}
+        </Modal>
 
         <IonToast
           isOpen={showToast}

@@ -2,6 +2,7 @@ import api from "./api";
 
 export interface AngelContact {
   id: number;
+  documentId: string;
   Nome: string;
   Numero: string;
 }
@@ -19,13 +20,17 @@ const AngelContactService = {
         }
       );
 
-      return response.data.data || [];
+      return response.data.data.map((item: any) => ({
+        id: item.id,
+        documentId: item.documentId,
+        Nome: item.Nome,
+        Numero: item.Numero,
+      }));
     } catch (error) {
       console.error("Erro ao buscar contatos do anjo:", error);
       return [];
     }
   },
-
   async addContact(
     authToken: string,
     nome: string,
@@ -55,13 +60,14 @@ const AngelContactService = {
     }
   },
 
-  async deleteContact(authToken: string, contactId: number): Promise<boolean> {
+  async deleteContact(authToken: string, documentId: string): Promise<boolean> {
     try {
-      console.log(`Enviando DELETE para /api/contato-do-anjos/${contactId}`);
+      console.log(`Enviando DELETE para /contato-do-anjos/${documentId}`);
 
-      await api.delete(`contato-do-anjos/${contactId}`, {
+      await api.delete(`/contato-do-anjos/${documentId}`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
+
       console.log("Contato removido com sucesso da API!");
       return true;
     } catch (error) {
