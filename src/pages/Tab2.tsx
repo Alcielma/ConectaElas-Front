@@ -51,10 +51,10 @@ const Tab2: React.FC = () => {
                 <p>Chats ativos</p>
               </IonRouterLink>
 
-              <div className="card">
+              {/* <div className="card">
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
                 <p>Históricos de chats</p>
-              </div>
+              </div> */}
             </div>
           ) : (
             <div className="card-container">

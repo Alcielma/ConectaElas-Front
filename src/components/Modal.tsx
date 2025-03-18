@@ -1,12 +1,14 @@
 import React from "react";
 import "./Modal.css";
+import { closeSharp } from "ionicons/icons";
+import { IonIcon } from "@ionic/react";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  title: string;
-  children: React.ReactNode;
+  title?: string;
+  children?: React.ReactNode;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -24,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({
         <div className="modal-header">
           <h3>{title}</h3>
           <button className="close-btn" onClick={onClose}>
-            X
+            <IonIcon icon={closeSharp} className="close-icon" />
           </button>
         </div>
         <div className="modal-body">{children}</div>
