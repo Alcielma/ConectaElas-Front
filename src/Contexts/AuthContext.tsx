@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import AuthService from "../Services/AuthService";
+import socket from "../Services/Socket";
 
 interface User {
   id: number;
@@ -90,6 +91,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(null);
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
+
+    if (socket.connected) {
+      socket.disconnect();
+      console.log("orangotango");
+    }
   };
 
   const register = async (

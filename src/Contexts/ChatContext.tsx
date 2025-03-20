@@ -156,7 +156,24 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    socket.emit("join_chat", activeChat.ProtocoloID);
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      console.error("Token de autenticação não encontrado!");
+      return;
+    }
+
+    socket.emit("auth", token);
+
+    socket.once("auth_response", (response) => {
+      if (response.success) {
+        console.log("Autenticação bem-sucedida:", response.message);
+        socket.emit("join_chat", activeChat.ProtocoloID);
+      } else {
+        console.error("Falha na autenticação:", response.message);
+        return;
+      }
+    });
 
     socket.off("receive_message");
 
