@@ -5,9 +5,6 @@ import {
   IonTitle,
   IonToolbar,
   IonIcon,
-  IonButton,
-  IonLoading,
-  IonModal,
   IonToast,
   IonButtons,
   IonBackButton,
@@ -17,6 +14,7 @@ import {
   addCircleOutline,
   closeOutline,
   trash,
+  pencilSharp,
 } from "ionicons/icons";
 import { useAuth } from "../Contexts/AuthContext";
 import AngelContactService, {
@@ -24,6 +22,7 @@ import AngelContactService, {
 } from "../Services/AngelContactService";
 import Modal from "../components/Modal";
 import "./AngelContact.css";
+import { IonLoading } from "@ionic/react";
 
 const AngelContactPage: React.FC = () => {
   const { authToken, user } = useAuth();
@@ -31,12 +30,16 @@ const AngelContactPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false); // Modal de edição
   const [selectedContactId, setSelectedContactId] = useState<string | null>(
     null
   );
   const [selectedContactName, setSelectedContactName] = useState<string | null>(
     null
   );
+  const [selectedContactNumber, setSelectedContactNumber] = useState<
+    string | null
+  >(null); // Número do contato
   const [nome, setNome] = useState("");
   const [numero, setNumero] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -94,6 +97,40 @@ const AngelContactPage: React.FC = () => {
     }
   };
 
+  const handleEditContact = async () => {
+    if (!selectedContactId || !user || !nome || !numero) return;
+
+    const success = await AngelContactService.updateContact(
+      authToken!,
+      selectedContactId,
+      nome,
+      numero,
+      user.id
+    );
+
+    if (success) {
+      setShowToast(true);
+      setShowEditModal(false);
+
+      const updatedContacts = await AngelContactService.fetchContacts(
+        authToken!,
+        user.id
+      );
+      setContacts(updatedContacts);
+    } else {
+      console.error("Falha ao atualizar o contato");
+    }
+  };
+
+  const openEditModal = (contact: AngelContact) => {
+    setSelectedContactId(contact.documentId);
+    setSelectedContactName(contact.Nome);
+    setSelectedContactNumber(contact.Numero);
+    setNome(contact.Nome);
+    setNumero(contact.Numero);
+    setShowEditModal(true);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -102,9 +139,6 @@ const AngelContactPage: React.FC = () => {
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
           <IonTitle className="center-title">Contatos do anjo</IonTitle>
-          <IonButtons slot="end">
-            <div style={{ width: "44px" }} />{" "}
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
@@ -123,25 +157,33 @@ const AngelContactPage: React.FC = () => {
               <a href={`tel:${contact.Numero}`} className="contact-link">
                 <div className="contact-info">
                   <IonIcon icon={callSharp} className="contact-icon" />
-                  <div>
+                  <div className="info-card-angel">
                     <h3>{contact.Nome}</h3>
                     <p>{contact.Numero}</p>
                   </div>
                 </div>
-                <button
-                  className="delete-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    console.log(
-                      `Abrindo modal para excluir: ${contact.Nome} (ID: ${contact.documentId})`
-                    );
-                    setSelectedContactId(contact.documentId);
-                    setSelectedContactName(contact.Nome);
-                    setShowDeleteModal(true);
-                  }}
-                >
-                  <IonIcon icon={trash} />
-                </button>
+                <div className="buttons-card-angel">
+                  <button
+                    className="edit-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openEditModal(contact);
+                    }}
+                  >
+                    <IonIcon icon={pencilSharp} />
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedContactId(contact.documentId);
+                      setSelectedContactName(contact.Nome);
+                      setShowDeleteModal(true);
+                    }}
+                  >
+                    <IonIcon icon={trash} />
+                  </button>
+                </div>
               </a>
             </div>
           ))}
@@ -155,38 +197,49 @@ const AngelContactPage: React.FC = () => {
           </button>
         </div>
 
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-          <div className="modal-container">
-            <button className="close-btn" onClick={() => setShowModal(false)}>
-              <IonIcon icon={closeOutline} />
-            </button>
-            <h2>Adicionar Contato do Anjo</h2>
+        <Modal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onConfirm={handleAddContact}
+          title="Adicionar Contato do Anjo"
+        >
+          <input
+            type="text"
+            className="modal-input"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            placeholder="Nome"
+          />
+          <input
+            type="tel"
+            className="modal-input"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+            placeholder="Número"
+          />
+        </Modal>
 
-            <div className="form-group">
-              <label>Nome</label>
-              <input
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Digite o nome"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Número</label>
-              <input
-                type="tel"
-                value={numero}
-                onChange={(e) => setNumero(e.target.value)}
-                placeholder="Digite o número"
-              />
-            </div>
-
-            <button className="save-contact-btn" onClick={handleAddContact}>
-              Salvar Contato
-            </button>
-          </div>
-        </IonModal>
+        <Modal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onConfirm={handleEditContact}
+          title={`Editar Contato: ${selectedContactName}`}
+        >
+          <input
+            type="text"
+            className="modal-input"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            placeholder="Nome"
+          />
+          <input
+            type="tel"
+            className="modal-input"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+            placeholder="Número"
+          />
+        </Modal>
 
         <Modal
           isOpen={showDeleteModal}
@@ -194,12 +247,12 @@ const AngelContactPage: React.FC = () => {
           onConfirm={handleDeleteContact}
           title={`Você deseja excluir ${selectedContactName}?`}
         >
-          {/* <p>Tem certeza de que deseja excluir este contato?</p> */}
+          <p>Tem certeza que deseja excluir este contato?</p>
         </Modal>
 
         <IonToast
           isOpen={showToast}
-          message="Contato adicionado!"
+          message="Alteração realizada com sucesso!"
           duration={1500}
         />
       </div>

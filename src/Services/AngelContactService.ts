@@ -60,6 +60,36 @@ const AngelContactService = {
     }
   },
 
+  async updateContact(
+    authToken: string,
+    documentId: string,
+    nome: string,
+    numero: string,
+    userId: number
+  ): Promise<boolean> {
+    try {
+      await api.put(
+        `/contato-do-anjos/${documentId}`,
+        {
+          data: {
+            Nome: nome,
+            Numero: numero,
+            usuario: {
+              id: userId,
+            },
+          },
+        },
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
+      return true;
+    } catch (error) {
+      console.error("Erro ao atualizar o contato do anjo:", error);
+      return false;
+    }
+  },
+
   async deleteContact(authToken: string, documentId: string): Promise<boolean> {
     try {
       console.log(`Enviando DELETE para /contato-do-anjos/${documentId}`);

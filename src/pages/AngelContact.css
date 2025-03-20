@@ -79,9 +79,38 @@
     color: rgb(255, 115, 72);
 }
 
-.delete-btn:hover {
-    background: darkred;
+.delete-btn ion-icon:hover {
+    color: darkred;
+    ;
 }
+
+/* .delete-btn:hover {
+    background: darkred;
+} */
+
+.edit-btn {
+    background: none;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn ion-icon {
+    font-size: 24px;
+    color: #24ce9e;
+}
+
+.edit-btn ion-icon:hover {
+    color: #167e60;
+}
+
+/* .edit-btn:hover {
+    background: #167e60;
+} */
 
 .add-contact-btn {
     margin-top: 20px;
@@ -163,4 +192,10 @@
 
 .save-contact-btn:hover {
     background: #1cb488;
+}
+
+.info-card-angel {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
 }

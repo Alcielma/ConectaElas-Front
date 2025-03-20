@@ -14,14 +14,14 @@ const Comment: React.FC<CommentProps> = ({ comentario = "", createdAt }) => {
 
   return (
     <div className="comment-item">
-      <span className="comment-date">
-        {createdAt ? new Date(createdAt).toLocaleString() : "Data desconhecida"}
-      </span>
       <p className={`comment-text ${isExpanded ? "expanded" : ""}`}>
         {isExpanded || !shouldTruncate
           ? comentario
           : `${comentario.slice(0, MAX_LENGTH)}...`}
       </p>
+      <span className="comment-date">
+        {createdAt ? new Date(createdAt).toLocaleString() : "Data desconhecida"}
+      </span>
       {shouldTruncate && (
         <button
           className="toggle-expand"

@@ -48,6 +48,7 @@
     color: #474747;
     font-weight: 400;
     font-size: 1rem;
+    text-align: start;
 }
 
 
@@ -124,6 +125,7 @@
     font-weight: 400;
     line-height: normal;
     margin: 12px 0px 0px;
+    text-align: start;
 }
 
 /* Contêiner de comentários fechado */

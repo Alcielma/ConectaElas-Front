@@ -44,7 +44,7 @@ const ReportChannels: React.FC = () => {
               className="report-card"
             >
               <IonIcon icon={callSharp} className="report-icon" />
-              <div>
+              <div className="info-card-channel">
                 <h3>{channel.name}</h3>
                 <p>{channel.number}</p>
               </div>
