@@ -138,7 +138,10 @@ const AngelContactPage: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
-          <IonTitle className="center-title">Contatos do anjo</IonTitle>
+          <IonTitle className="center-title">Contato do Anjo</IonTitle>
+          <IonButtons slot="end">
+            <div style={{ width: "44px" }} />{" "}
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 

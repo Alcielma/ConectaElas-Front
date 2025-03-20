@@ -1,7 +1,14 @@
 .chat-content {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    /* height: 100%; */
+    overflow-y: auto;
+    background-color: #f1f1f1;
+}
+
+.chat-content::-webkit-scrollbar {
+    display: none;
+
 }
 
 .messages-container {
@@ -10,9 +17,16 @@
     flex-direction: column;
     padding: 10px;
     overflow-y: auto;
-    justify-content: flex-end;
     height: 100%;
+    justify-content: flex-end;
     background-color: #f1f1f1;
+}
+
+
+
+.messages-container::-webkit-scrollbar {
+    display: none;
+
 }
 
 .message-bubble {
@@ -25,18 +39,29 @@
 }
 
 .sent {
-    align-self: flex-end;
+    align-self: flex-end !important;
     background-color: #007aff;
     color: white;
     border-top-right-radius: 0;
 }
 
+
 .received {
-    align-self: flex-start;
+    align-self: flex-start !important;
     background-color: #f1f1f1;
     color: black;
     border-top-left-radius: 0;
 }
+
+.received p {
+    text-align: start;
+}
+
+.sent p {
+    color: white !important;
+    text-align: end;
+}
+
 
 .timestamp {
     font-size: 10px;
