@@ -163,22 +163,24 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    socket.emit("auth", token);
-
-    socket.once("auth_response", (response) => {
-      if (response.success) {
-        console.log("Autenticação bem-sucedida:", response.message);
-        socket.emit("join_chat", activeChat.ProtocoloID);
-      } else {
-        console.error("Falha na autenticação:", response.message);
-        return;
-      }
-    });
-
     socket.off("receive_message");
 
-    socket.on("receive_message", (msg: Message) => {
-      updateChatMessages(activeChat.id, msg);
+    socket.emit("authenticate", token);
+
+    socket.on("authenticated", (response: any) => {
+      if (response.success) {
+        socket.emit("join_chat", activeChat.ProtocoloID);
+
+        socket.on("receive_message", (msg: Message) => {
+          updateChatMessages(activeChat.id, msg);
+        });
+        return;
+      }
+
+      if (response.error) {
+        console.error("Falha ao autenticar socket:", response.error.message);
+        return;
+      }
     });
   }
 
