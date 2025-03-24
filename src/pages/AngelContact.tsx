@@ -43,6 +43,7 @@ const AngelContactPage: React.FC = () => {
   const [nome, setNome] = useState("");
   const [numero, setNumero] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [isHiding, setIsHiding] = useState(false);
 
   useEffect(() => {
     if (!authToken || !user) return;
@@ -53,6 +54,24 @@ const AngelContactPage: React.FC = () => {
       setLoading(false);
     });
   }, [authToken, user]);
+
+  useEffect(() => {
+    if (showToast) {
+      const hideTimer = setTimeout(() => {
+        setIsHiding(true);
+      }, 1500);
+
+      const removeTimer = setTimeout(() => {
+        setShowToast(false);
+        setIsHiding(false);
+      }, 2000);
+
+      return () => {
+        clearTimeout(hideTimer);
+        clearTimeout(removeTimer);
+      };
+    }
+  }, [showToast]);
 
   const handleAddContact = async () => {
     if (!nome || !numero || !user) return;
@@ -253,11 +272,11 @@ const AngelContactPage: React.FC = () => {
           <p>Tem certeza que deseja excluir este contato?</p>
         </Modal>
 
-        <IonToast
-          isOpen={showToast}
-          message="Alteração realizada com sucesso!"
-          duration={1500}
-        />
+        {showToast && (
+          <div className={`toast ${isHiding ? "hide" : ""}`}>
+            Alteração realizada com sucesso!
+          </div>
+        )}
       </div>
     </IonPage>
   );
