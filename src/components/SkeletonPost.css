@@ -3,8 +3,9 @@
     justify-content: center;
     align-items: center;
     gap: 40px;
-    width: 23rem;
-    height: 23rem;
+    width: 100%;
+    max-width: 45vh;
+    height: auto;
     padding: 25px 23px;
     flex-direction: column;
     flex-shrink: 0;
