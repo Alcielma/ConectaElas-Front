@@ -1,3 +1,13 @@
+.Chat-root {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+}
+
+/* 
+.Chat-header {} */
+
 .chat-content {
     display: flex;
     flex-direction: column;
@@ -48,7 +58,7 @@
 
 .received {
     align-self: flex-start !important;
-    background-color: #f1f1f1;
+    background-color: #d4d4d4;
     color: black;
     border-top-left-radius: 0;
 }

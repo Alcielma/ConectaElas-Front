@@ -20,7 +20,9 @@ const Comment: React.FC<CommentProps> = ({ comentario = "", createdAt }) => {
           : `${comentario.slice(0, MAX_LENGTH)}...`}
       </p>
       <span className="comment-date">
-        {createdAt ? new Date(createdAt).toLocaleString() : "Data desconhecida"}
+        {createdAt
+          ? new Date(createdAt).toLocaleString("pt-BR")
+          : "Data desconhecida"}
       </span>
       {shouldTruncate && (
         <button

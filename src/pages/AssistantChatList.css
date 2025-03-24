@@ -1,4 +1,3 @@
-/* Contêiner principal */
 .chat-list-container {
     display: flex;
     flex-direction: column;
@@ -7,7 +6,7 @@
     padding: 20px;
 }
 
-/* Estilo para o cabeçalho */
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -30,13 +29,13 @@
     font-weight: bold;
 }
 
-/* Estilo para a lista de chats */
+
 .chat-list {
     margin-top: 20px;
     padding: 0;
 }
 
-/* Estilo para cada item de chat */
+
 .chat-item {
     background-color: white;
     padding: 15px;
@@ -47,13 +46,13 @@
     transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
-/* Efeito de hover para cada item */
+
 .chat-item:hover {
     transform: scale(1.02);
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilo para as informações do chat */
+
 .chat-info {
     display: flex;
     flex-direction: column;
@@ -69,9 +68,14 @@
 .chat-message {
     font-size: 14px;
     color: #777;
+    text-align: start;
 }
 
-/* Estilo para a mensagem quando não houver chats */
+.chat-message p {
+    text-align: start in !important;
+}
+
+
 .no-chats {
     font-size: 16px;
     color: #777;

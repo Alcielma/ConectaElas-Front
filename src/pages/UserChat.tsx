@@ -56,8 +56,8 @@ const UserChat: React.FC = () => {
   };
 
   return (
-    <IonPage>
-      <IonHeader>
+    <IonPage className="Chat-root">
+      <IonHeader className="Chat-header">
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />

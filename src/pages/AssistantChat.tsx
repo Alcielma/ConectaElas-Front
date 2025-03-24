@@ -63,7 +63,7 @@ const AssistantChat: React.FC = () => {
   };
 
   return (
-    <IonPage>
+    <IonPage className="Chat-root">
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
