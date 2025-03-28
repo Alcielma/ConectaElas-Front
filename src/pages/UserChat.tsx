@@ -24,15 +24,16 @@ const UserChat: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<[]>([]);
 
+  // Quando a tela for carregada, rola até o final para mostrar as mensagens mais recentes
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     if (!activeChat) {
-      startChat("");
+      startChat(""); // Inicia o chat se não houver um chat ativo
     } else {
-      selectChat(activeChat.id);
+      selectChat(activeChat.id); // Seleciona o chat ativo se já existir
     }
-  }, []);
+  }, [activeChat]);
 
+  // Busca as mensagens do chat ativo sempre que ele mudar
   useEffect(() => {
     if (!activeChat) return;
 
@@ -44,15 +45,22 @@ const UserChat: React.FC = () => {
     fetchMessageActiveChat();
   }, [activeChat]);
 
+  // Rola até o final sempre que as mensagens mudam
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]); // Quando as mensagens mudarem, rola até o final
+
   const handleSendMessage = async () => {
-    if (!message.trim()) return;
+    if (!message.trim()) return; // Não envia mensagens vazias
 
     if (!activeChat) {
-      await startChat(message);
+      await startChat(message); // Inicia o chat caso não haja chat ativo
     } else {
-      await sendMessage(activeChat.id, message);
+      await sendMessage(activeChat.id, message); // Envia a mensagem para o chat ativo
     }
-    setMessage("");
+    setMessage(""); // Limpa o campo de mensagem após o envio
   };
 
   return (
@@ -64,7 +72,7 @@ const UserChat: React.FC = () => {
           </IonButtons>
           <IonTitle className="center-title">Chat com Assistente</IonTitle>
           <IonButtons slot="end">
-            <div style={{ width: "44px" }} />{" "}
+            <div style={{ width: "44px" }} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -102,7 +110,6 @@ const UserChat: React.FC = () => {
               ))
           ) : (
             <p className="no-messages">
-              {" "}
               Envie uma mensagem para iniciar seu chat com um dos nossos
               assistentes!
             </p>
@@ -110,6 +117,7 @@ const UserChat: React.FC = () => {
           <div ref={chatEndRef} />
         </div>
       </IonContent>
+
       <IonFooter>
         <IonToolbar className="chat-input-toolbar">
           <div style={{ display: "flex", alignItems: "center" }}>
