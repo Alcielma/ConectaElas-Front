@@ -12,6 +12,7 @@ ion-toolbar ion-title {
     text-align: center;
     width: 100%;
     position: relative;
+    font-weight: 800;
 
 }
 

@@ -50,7 +50,7 @@ const Register: React.FC = () => {
         <IonIcon icon={arrowBack} />
       </div>
       <div className="register-box">
-        <h2>Cadastro</h2>
+        <h2 className="login-title">Cadastro</h2>
         <form onSubmit={handleRegister}>
           <div className="input-group">
             <label htmlFor="username">Username</label>
@@ -64,7 +64,7 @@ const Register: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">E-mail</label>
             <input
               type="email"
               id="email"
