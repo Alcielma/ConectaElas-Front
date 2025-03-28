@@ -44,26 +44,26 @@ setupIonicReact();
 const App: React.FC = () => {
   const [backPressTime, setBackPressTime] = useState(0);
 
-  useEffect(() => {
-    CapacitorApp.addListener("backButton", (event) => {
-      if (window.location.pathname === "/tabs/tab1") {
-        if (backPressTime === 0) {
-          setBackPressTime(Date.now());
-          alert("Pressione novamente para sair do aplicativo");
-        } else if (Date.now() - backPressTime < 2000) {
-          CapacitorApp.exitApp();
-        } else {
-          setBackPressTime(0);
-        }
-      } else {
-        window.history.back();
-      }
-    });
+  // useEffect(() => {
+  //   CapacitorApp.addListener("backButton", (event) => {
+  //     if (window.location.pathname === "/tabs/tab1") {
+  //       if (backPressTime === 0) {
+  //         setBackPressTime(Date.now());
+  //         alert("Pressione novamente para sair do aplicativo");
+  //       } else if (Date.now() - backPressTime < 2000) {
+  //         CapacitorApp.exitApp();
+  //       } else {
+  //         setBackPressTime(0);
+  //       }
+  //     } else {
+  //       window.history.back();
+  //     }
+  //   });
 
-    return () => {
-      CapacitorApp.removeAllListeners();
-    };
-  }, [backPressTime]);
+  //   return () => {
+  //     CapacitorApp.removeAllListeners();
+  //   };
+  // }, [backPressTime]);
 
   return (
     <IonApp>

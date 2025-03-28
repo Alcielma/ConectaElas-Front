@@ -16,7 +16,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && window.location.pathname === "/login") {
       history.push("/tabs/tab1");
     }
   }, [user, history]);

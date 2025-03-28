@@ -8,6 +8,7 @@ interface Message {
   id: number;
   Mensagem: string;
   Data_Envio: string;
+  Leitura: boolean;
 }
 
 interface Chat {
@@ -26,6 +27,7 @@ interface ChatContextType {
   selectChat: (chatId: number) => Promise<void>;
   fetchMessages: (chatId: number) => Promise<[]>;
   generateRandomName: (userId: number) => string;
+  updateMessageStatus: (messageId: number, status: boolean) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -93,6 +95,16 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     const ProtocoloID = activeChat.ProtocoloID;
 
     socket.emit("send_message", { ProtocoloID, message });
+
+    // Depois de emitir a mensagem, adicione-a ao estado local para que apareça imediatamente
+    const newMessage = {
+      id: Date.now(), // Gerar um ID temporário para a nova mensagem
+      Mensagem: message,
+      Data_Envio: new Date().toISOString(),
+      Leitura: null, // A nova mensagem está inicialmente como não lida
+    };
+
+    updateChatMessages(chatId, newMessage); // Atualiza a lista de mensagens do chat ativo
   };
 
   const selectChat = async (chatId: number) => {
@@ -121,6 +133,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
             : chat
         )
       );
+
+      selectedChat.mensagens.forEach(async (msg: Message) => {
+        if (msg.Leitura === false) {
+          await updateMessageStatus(msg.id, true);
+        }
+      });
     } catch (error) {
       console.error("Erro ao buscar mensagens do chat:", error);
     }
@@ -141,6 +159,22 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         : prev
     );
   }
+
+  const updateMessageStatus = async (messageId: number, status: boolean) => {
+    try {
+      const response = await api.put(`/mensagens/${messageId}`, {
+        data: { Leitura: status },
+      });
+
+      if (response.status === 200) {
+        console.log(`Mensagem com ID ${messageId} marcada como lida`);
+      } else {
+        console.error("Erro ao atualizar o status da mensagem");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar o status da mensagem:", error);
+    }
+  };
 
   function initializeSocket() {
     if (!socket.connected) {
@@ -258,6 +292,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         selectChat,
         generateRandomName,
         fetchMessages,
+        updateMessageStatus,
       }}
     >
       {children}

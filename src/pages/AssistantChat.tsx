@@ -5,12 +5,9 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonItem,
-  IonLabel,
   IonInput,
   IonButtons,
   IonFooter,
-  IonList,
   IonBackButton,
 } from "@ionic/react";
 import { useChat } from "../Contexts/ChatContext";
@@ -29,24 +26,36 @@ const AssistantChat: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    if (chatId) {
+    if (chatId && activeChat !== null) {
       selectChat(Number(chatId));
     }
-  }, []);
+  }, [chatId, activeChat]);
 
   useEffect(() => {
-    if (!activeChat) return;
-
-    const fetchMessageActiveChat = async () => {
-      const messages = await fetchMessages(activeChat.id);
-      setMessages(messages);
-    };
-
-    fetchMessageActiveChat();
+    if (activeChat !== null) {
+      const fetchMessageActiveChat = async () => {
+        const fetchedMessages = await fetchMessages(activeChat.id);
+        setMessages(fetchedMessages);
+      };
+      fetchMessageActiveChat();
+    }
   }, [activeChat]);
 
-  if (!activeChat) {
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  const handleSendMessage = () => {
+    if (message.trim() === "") return;
+    if (activeChat !== null) {
+      sendMessage(activeChat.id, message);
+    }
+    setMessage("");
+  };
+
+  if (activeChat === null) {
     return (
       <IonPage>
         <IonContent>
@@ -55,12 +64,6 @@ const AssistantChat: React.FC = () => {
       </IonPage>
     );
   }
-
-  const handleSendMessage = () => {
-    if (message.trim() === "") return;
-    sendMessage(activeChat.id, message);
-    setMessage("");
-  };
 
   return (
     <IonPage className="Chat-root">
