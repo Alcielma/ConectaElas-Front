@@ -19,7 +19,7 @@ const ChatService = {
   async getChats(userId: number) {
     try {
       const response = await api.get(
-        `/protocolos?fields[0]=ProtocoloID&fields[1]=id&populate[usuario][fields][0]=id&populate[mensagens][fields]=Mensagem,Data_Envio`
+        `/protocolos?fields[0]=ProtocoloID&fields[1]=id&populate[usuario][fields][0]=id&populate[mensagens][fields]=Mensagem,Data_Envio,Leitura`
       );
       return response.data.data || [];
     } catch (error) {

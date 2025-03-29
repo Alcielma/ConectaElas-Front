@@ -75,6 +75,12 @@
     text-align: start in !important;
 }
 
+.unread-count {
+    font-size: 14px;
+    color: #777;
+    text-align: start;
+}
+
 
 .no-chats {
     font-size: 16px;

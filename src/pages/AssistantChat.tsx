@@ -29,7 +29,7 @@ const AssistantChat: React.FC = () => {
     if (chatId && activeChat !== null) {
       selectChat(Number(chatId));
     }
-  }, [chatId, activeChat]);
+  }, []);
 
   useEffect(() => {
     if (activeChat !== null) {
@@ -39,7 +39,7 @@ const AssistantChat: React.FC = () => {
       };
       fetchMessageActiveChat();
     }
-  }, [activeChat]);
+  }, []);
 
   useEffect(() => {
     if (chatEndRef.current) {

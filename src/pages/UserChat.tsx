@@ -31,7 +31,7 @@ const UserChat: React.FC = () => {
     } else {
       selectChat(activeChat.id); // Seleciona o chat ativo se já existir
     }
-  }, [activeChat]);
+  }, []);
 
   // Busca as mensagens do chat ativo sempre que ele mudar
   useEffect(() => {

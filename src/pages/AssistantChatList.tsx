@@ -39,27 +39,40 @@ const AssistantChatList: React.FC = () => {
       <div className="chat-list-container">
         <div className="chat-list">
           {chats.length > 0 ? (
-            chats.map((chat) => (
-              <div
-                key={chat.id}
-                className="chat-item"
-                onClick={async () => {
-                  await selectChat(chat.id);
-                  history.push(`/assistantChats/${chat.id}`);
-                }}
-              >
-                <div className="chat-info">
-                  <h2 className="chat-name">
-                    {generateRandomName(chat.usuario.id)}
-                  </h2>
-                  <p className="chat-message">
-                    {chat.mensagens.length > 0
-                      ? chat.mensagens[chat.mensagens.length - 1].Mensagem
-                      : "Sem mensagens"}
-                  </p>
+            chats.map((chat) => {
+              const unreadCount = chat.mensagens.reduce((acc, msg) => {
+                if (msg.Leitura === false) acc++;
+                return acc;
+              }, 0);
+
+              console.log(unreadCount);
+              return (
+                <div
+                  key={chat.id}
+                  className="chat-item"
+                  onClick={async () => {
+                    await selectChat(chat.id);
+                    history.push(`/assistantChats/${chat.id}`);
+                  }}
+                >
+                  <div className="chat-info">
+                    <h2 className="chat-name">
+                      {generateRandomName(chat.usuario.id)}
+                    </h2>
+                    <p className="chat-message">
+                      {chat.mensagens.length > 0
+                        ? chat.mensagens[chat.mensagens.length - 1].Mensagem
+                        : "Sem mensagens"}
+                    </p>
+                    {unreadCount > 0 && (
+                      <span className="unread-count">
+                        {unreadCount} Náo lidas
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <p className="no-chats">Nenhum chat ativo</p>
           )}
