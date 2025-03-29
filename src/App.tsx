@@ -8,7 +8,7 @@ import { AuthProvider } from "./Contexts/AuthContext";
 import { ChatProvider } from "./Contexts/ChatContext";
 import PrivateRoute from "./components/PrivateRoute";
 import TabsLayout from "./components/TabsLayout";
-import Register from "./pages/Register";
+// import Register from "./pages/Register";
 import AssistantChat from "./pages/AssistantChat";
 import AssistantChatList from "./pages/AssistantChatList";
 import UserChat from "./pages/UserChat";
@@ -73,7 +73,7 @@ const App: React.FC = () => {
           <IonReactRouter>
             <IonRouterOutlet>
               <Route exact path="/login" component={Login} />
-              <Route exact path="/register" component={Register} />
+              {/* <Route exact path="/register" component={Register} /> */}
               <PrivateRoute path="/tabs" component={TabsLayout} />
               <Route
                 exact

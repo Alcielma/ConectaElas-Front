@@ -4,6 +4,12 @@ import { useHistory } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
+import RenderRegisterComponent from "../components/RenderRegisterComponent";
+
+export enum LoginScreens {
+  LOGIN,
+  REGISTER,
+}
 
 const Login: React.FC = () => {
   const { login, user } = useAuth();
@@ -14,6 +20,9 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [screenState, setScreenState] = useState<LoginScreens>(
+    LoginScreens.LOGIN
+  );
 
   useEffect(() => {
     if (user && window.location.pathname === "/login") {
@@ -28,18 +37,16 @@ const Login: React.FC = () => {
 
     const loginSuccessful = await login(identifier, password);
 
-    if (loginSuccessful) {
-      history.push("/tabs");
-    } else {
+    if (!loginSuccessful) {
       setError("Credenciais inválidas. Tente novamente.");
     }
 
     setLoading(false);
   };
 
-  return (
-    <div className="login-container">
-      <div className="login-box">
+  const renderLoginComponent = () => {
+    return (
+      <>
         <h2 className="login-title">Login</h2>
         <div>
           <form onSubmit={handleLogin}>
@@ -84,12 +91,31 @@ const Login: React.FC = () => {
             Ainda não tem uma conta?{" "}
             <span
               className="signup-link"
-              onClick={() => history.push("/register")}
+              onClick={() => handleChangeScreen(LoginScreens.REGISTER)}
             >
               Cadastre-se aqui
             </span>
           </p>
         </div>
+      </>
+    );
+  };
+
+  const handleChangeScreen = (screen: LoginScreens) => {
+    setScreenState(screen);
+  };
+
+  return (
+    <div className="login-container">
+      <div
+        className={`login-box ${
+          screenState === LoginScreens.REGISTER && "full"
+        }`}
+      >
+        {screenState === LoginScreens.LOGIN && renderLoginComponent()}
+        {screenState === LoginScreens.REGISTER && (
+          <RenderRegisterComponent handleChangeScreen={handleChangeScreen} />
+        )}
       </div>
     </div>
   );

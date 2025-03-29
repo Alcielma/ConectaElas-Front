@@ -1,11 +1,18 @@
 import React, { useState } from "react";
+import { IonIcon } from "@ionic/react";
+import { arrowBack, eye, eyeOff } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
-import { arrowBack, eye, eyeOff } from "ionicons/icons";
-import { IonIcon } from "@ionic/react";
-import "./Register.css";
+import { LoginScreens } from "../pages/Login";
+import "./RenderRegisterComponent.css";
 
-const Register: React.FC = () => {
+interface RenderRegisterComponentProps {
+  handleChangeScreen: (screen: LoginScreens) => void;
+}
+
+const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
+  handleChangeScreen,
+}) => {
   const { register } = useAuth();
   const history = useHistory();
   const [username, setUsername] = useState("");
@@ -36,7 +43,7 @@ const Register: React.FC = () => {
 
     const success = await register(username, email, password);
     if (success) {
-      history.push("/login");
+      handleChangeScreen(LoginScreens.LOGIN); // Volta para a tela de login
     } else {
       setError("Erro ao cadastrar usuário. Tente novamente.");
     }
@@ -46,7 +53,10 @@ const Register: React.FC = () => {
 
   return (
     <div className="register-container">
-      <div className="back-button" onClick={() => history.push("/login")}>
+      <div
+        className="back-button"
+        onClick={() => handleChangeScreen(LoginScreens.LOGIN)}
+      >
         <IonIcon icon={arrowBack} />
       </div>
       <div className="register-box">
@@ -121,4 +131,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default RenderRegisterComponent;
