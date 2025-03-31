@@ -60,7 +60,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
         <IonIcon icon={arrowBack} />
       </div>
       <div className="register-box">
-        <h2 className="login-title">Cadastro</h2>
+        <h2 className="login-title">Cadastre-se</h2>
         <form onSubmit={handleRegister}>
           <div className="input-group">
             <label htmlFor="username">Username</label>
