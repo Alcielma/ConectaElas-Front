@@ -1,10 +1,17 @@
 /* Register.css */
 .register-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     height: 100vh;
+    flex-direction: column;
+}
 
+.top-box {
+    width: 100%;
+    flex-direction: row;
+    align-items: baseline;
+    justify-items: flex-start;
 }
 
 .register-box {
@@ -82,9 +89,9 @@ h2 {
 }
 
 .back-button {
-    position: absolute;
+    /* position: absolute;
     top: 50px;
-    left: 20px;
+    left: 20px; */
     font-size: 25px !important;
     cursor: pointer;
     color: #f5135b !important;

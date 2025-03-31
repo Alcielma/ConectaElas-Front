@@ -53,11 +53,14 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
 
   return (
     <div className="register-container">
-      <div
-        className="back-button"
-        onClick={() => handleChangeScreen(LoginScreens.LOGIN)}
-      >
-        <IonIcon icon={arrowBack} />
+      <div className="top-box">
+        <div
+          className="back-button"
+          onClick={() => handleChangeScreen(LoginScreens.LOGIN)}
+        >
+          <IonIcon icon={arrowBack} />
+        </div>
+        <div style={{ width: "44px" }} />
       </div>
       <div className="register-box">
         <h2 className="login-title">Cadastre-se</h2>
@@ -127,6 +130,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
           </button>
         </form>
       </div>
+      <div style={{ width: "44px" }} />
     </div>
   );
 };

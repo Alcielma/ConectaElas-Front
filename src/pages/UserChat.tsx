@@ -24,16 +24,14 @@ const UserChat: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<[]>([]);
 
-  // Quando a tela for carregada, rola até o final para mostrar as mensagens mais recentes
   useEffect(() => {
     if (!activeChat) {
-      startChat(""); // Inicia o chat se não houver um chat ativo
+      startChat("");
     } else {
-      selectChat(activeChat.id); // Seleciona o chat ativo se já existir
+      selectChat(activeChat.id);
     }
   }, []);
 
-  // Busca as mensagens do chat ativo sempre que ele mudar
   useEffect(() => {
     if (!activeChat) return;
 
@@ -45,22 +43,21 @@ const UserChat: React.FC = () => {
     fetchMessageActiveChat();
   }, [activeChat]);
 
-  // Rola até o final sempre que as mensagens mudam
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]); // Quando as mensagens mudarem, rola até o final
+  }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!message.trim()) return; // Não envia mensagens vazias
+    if (!message.trim()) return;
 
     if (!activeChat) {
-      await startChat(message); // Inicia o chat caso não haja chat ativo
+      await startChat(message);
     } else {
-      await sendMessage(activeChat.id, message); // Envia a mensagem para o chat ativo
+      await sendMessage(activeChat.id, message);
     }
-    setMessage(""); // Limpa o campo de mensagem após o envio
+    setMessage("");
   };
 
   return (
