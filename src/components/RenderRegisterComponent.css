@@ -12,6 +12,7 @@
     flex-direction: row;
     align-items: baseline;
     justify-items: flex-start;
+    text-align: start;
 }
 
 .register-box {

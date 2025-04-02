@@ -43,7 +43,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
 
     const success = await register(username, email, password);
     if (success) {
-      handleChangeScreen(LoginScreens.LOGIN); // Volta para a tela de login
+      handleChangeScreen(LoginScreens.LOGIN);
     } else {
       setError("Erro ao cadastrar usuário. Tente novamente.");
     }
@@ -60,7 +60,6 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
         >
           <IonIcon icon={arrowBack} />
         </div>
-        <div style={{ width: "44px" }} />
       </div>
       <div className="register-box">
         <h2 className="login-title">Cadastre-se</h2>
