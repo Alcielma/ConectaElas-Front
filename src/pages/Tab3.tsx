@@ -47,7 +47,7 @@ const Tab3: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    history.push("/login");
+    history.replace("/login");
   };
 
   const handleEditEmail = async () => {

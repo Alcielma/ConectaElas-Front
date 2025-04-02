@@ -17,12 +17,31 @@ import { IonIcon } from "@ionic/react";
 import { send } from "ionicons/icons";
 
 const UserChat: React.FC = () => {
-  const { activeChat, startChat, sendMessage, selectChat, fetchMessages } =
-    useChat();
+  const {
+    activeChat,
+    startChat,
+    sendMessage,
+    selectChat,
+    fetchMessages,
+    broadcastTyping,
+    isTyping,
+  } = useChat();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<[]>([]);
+
+  useEffect(() => {
+    const messagesContainer = document.querySelector(".messages-container");
+
+    if (isTyping && messagesContainer) {
+      // Aplica o ajuste de padding quando estiver digitando
+      messagesContainer.classList.add("typing");
+    } else if (messagesContainer) {
+      // Remove o padding extra quando não está digitando
+      messagesContainer.classList.remove("typing");
+    }
+  }, [isTyping]);
 
   useEffect(() => {
     if (!activeChat) {
@@ -59,6 +78,11 @@ const UserChat: React.FC = () => {
     }
     setMessage("");
   };
+
+  function handleMessageChange(message: string) {
+    setMessage(message);
+    broadcastTyping();
+  }
 
   return (
     <IonPage className="Chat-root">
@@ -111,6 +135,16 @@ const UserChat: React.FC = () => {
               assistentes!
             </p>
           )}
+          {isTyping && (
+            <div className="message-bubble-typing received typing-visible">
+              <p>Digitando...</p>
+              <div className="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          )}
           <div ref={chatEndRef} />
         </div>
       </IonContent>
@@ -121,7 +155,7 @@ const UserChat: React.FC = () => {
             <IonInput
               value={message}
               placeholder="Digite sua mensagem..."
-              onIonChange={(e) => setMessage(e.detail.value!)}
+              onIonChange={(e) => handleMessageChange(e.detail.value!)}
               style={{ flex: 1 }}
             />
             <IonIcon

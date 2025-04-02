@@ -21,6 +21,7 @@ interface Chat {
 interface ChatContextType {
   chats: Chat[];
   activeChat: Chat | null;
+  isTyping: boolean;
   fetchChats: () => void;
   startChat: (message: string) => Promise<Chat | null>;
   sendMessage: (chatId: number, message: string) => Promise<void>;
@@ -28,6 +29,7 @@ interface ChatContextType {
   fetchMessages: (chatId: number) => Promise<[]>;
   generateRandomName: (userId: number) => string;
   updateMessageStatus: (messageId: number, status: boolean) => Promise<void>;
+  broadcastTyping: () => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -45,7 +47,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { user } = useAuth();
   const [chats, setChats] = useState<Chat[]>([]);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  let typingTimeout: any;
 
   const fetchChats = async () => {
     if (!user) return;
@@ -216,7 +220,34 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
     });
+
+    socket.on("typing", () => {
+      // Exibe o "digitando..." no frontend
+      setIsTyping(true);
+    });
+
+    socket.on("stop_typing", () => {
+      // Remove o "digitando..." quando o usuário parar de digitar
+      setIsTyping(false);
+    });
   }
+
+  const broadcastTyping = () => {
+    if (activeChat) {
+      socket.emit("typing", {
+        ProtocoloID: activeChat.ProtocoloID,
+        socketId: socket.id, // Inclui o socketId do usuário
+      });
+
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        socket.emit("stop_typing", {
+          ProtocoloID: activeChat.ProtocoloID,
+          socketId: socket.id, // Inclui o socketId do usuário
+        });
+      }, 1000);
+    }
+  };
 
   const generateRandomName = (userId: number) => {
     const colors = [
@@ -286,6 +317,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         chats,
         activeChat,
+        isTyping,
         fetchChats,
         startChat,
         sendMessage,
@@ -293,6 +325,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         generateRandomName,
         fetchMessages,
         updateMessageStatus,
+        broadcastTyping,
       }}
     >
       {children}

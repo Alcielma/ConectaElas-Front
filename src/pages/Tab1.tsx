@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IonContent,
   IonHeader,
@@ -16,9 +16,13 @@ import {
 import "./Tab1.css";
 import Feed from "../components/Feed";
 import Carrossel from "../components/Carrossel";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
 
 const Tab1: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { user } = useAuth();
+  const history = useHistory();
 
   const handleCategoryClick = (category: string | null) => {
     setSelectedCategory(category);

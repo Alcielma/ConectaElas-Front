@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import AuthService from "../Services/AuthService";
 import socket from "../Services/Socket";
+import { useHistory } from "react-router-dom";
+import { useIonRouter } from "@ionic/react";
 
 interface User {
   id: number;
@@ -46,6 +48,8 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [authToken, setAuthToken] = useState<string | null>(null);
+  const history = useHistory();
+  const ionRouter = useIonRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -55,6 +59,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     ionRouter.push("/login", "forward", "replace");
+  //   }
+  // }, [user]);
 
   const login = async (
     identifier: string,

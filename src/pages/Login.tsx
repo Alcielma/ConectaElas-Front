@@ -5,6 +5,9 @@ import { IonIcon } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
 import RenderRegisterComponent from "../components/RenderRegisterComponent";
+// import { useIonRouter } from "@ionic/react";
+import { Redirect } from "react-router-dom";
+import { useIonRouter } from "@ionic/react";
 
 export enum LoginScreens {
   LOGIN,
@@ -14,6 +17,7 @@ export enum LoginScreens {
 const Login: React.FC = () => {
   const { login, user } = useAuth();
   const history = useHistory();
+  const ionRouter = useIonRouter();
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -24,11 +28,11 @@ const Login: React.FC = () => {
     LoginScreens.LOGIN
   );
 
-  useEffect(() => {
-    if (user && window.location.pathname === "/login") {
-      history.push("/tabs/tab1");
-    }
-  }, [user, history]);
+  // useEffect(() => {
+  //   if (user) {
+  //     // history.replace("/tabs/tab1");
+  //   }
+  // }, [user, history]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +41,9 @@ const Login: React.FC = () => {
 
     const loginSuccessful = await login(identifier, password);
 
-    if (!loginSuccessful) {
+    if (loginSuccessful) {
+      ionRouter.push("/tabs/tab1", "forward", "replace");
+    } else {
       setError("Credenciais inválidas. Tente novamente.");
     }
 

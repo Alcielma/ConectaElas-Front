@@ -1,35 +1,44 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonFooter,
   IonInput,
   IonButtons,
-  IonFooter,
   IonBackButton,
 } from "@ionic/react";
 import { useChat } from "../Contexts/ChatContext";
-import { useHistory, useParams } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
 import { IonIcon } from "@ionic/react";
 import { send } from "ionicons/icons";
+import "./UserChat.css";
 
 const AssistantChat: React.FC = () => {
-  const [message, setMessage] = useState("");
-  const { activeChat, sendMessage, selectChat, fetchMessages } = useChat();
-  const [messages, setMessages] = useState<[]>([]);
-  const { chatId } = useParams<{ chatId: string }>();
+  const {
+    activeChat,
+    sendMessage,
+    selectChat,
+    fetchMessages,
+    broadcastTyping,
+    isTyping,
+  } = useChat();
   const { user } = useAuth();
+  const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
-  const history = useHistory();
+  const [messages, setMessages] = useState<[]>([]);
 
   useEffect(() => {
-    if (chatId && activeChat !== null) {
-      selectChat(Number(chatId));
+    const messagesContainer = document.querySelector(".messages-container");
+
+    if (isTyping && messagesContainer) {
+      messagesContainer.classList.add("typing");
+    } else if (messagesContainer) {
+      messagesContainer.classList.remove("typing");
     }
-  }, []);
+  }, [isTyping]);
 
   useEffect(() => {
     if (activeChat !== null) {
@@ -39,7 +48,7 @@ const AssistantChat: React.FC = () => {
       };
       fetchMessageActiveChat();
     }
-  }, []);
+  }, [activeChat]);
 
   useEffect(() => {
     if (chatEndRef.current) {
@@ -47,37 +56,33 @@ const AssistantChat: React.FC = () => {
     }
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim() === "") return;
     if (activeChat !== null) {
-      sendMessage(activeChat.id, message);
+      await sendMessage(activeChat.id, message);
     }
     setMessage("");
   };
 
-  if (activeChat === null) {
-    return (
-      <IonPage>
-        <IonContent>
-          <p>Carregando mensagens...</p>
-        </IonContent>
-      </IonPage>
-    );
+  function handleMessageChange(message: string) {
+    setMessage(message);
+    broadcastTyping();
   }
 
   return (
     <IonPage className="Chat-root">
-      <IonHeader>
+      <IonHeader className="Chat-header">
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
-          <IonTitle className="center-title">Chat</IonTitle>
+          <IonTitle className="center-title">Chat com Assistente</IonTitle>
           <IonButtons slot="end">
-            <div style={{ width: "44px" }} />{" "}
+            <div style={{ width: "44px" }} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="chat-content">
         <div className="messages-container">
           {messages.length ? (
@@ -110,18 +115,31 @@ const AssistantChat: React.FC = () => {
                 </div>
               ))
           ) : (
-            <p className="no-messages">Sem mensagens ainda!</p>
+            <p className="no-messages">
+              Envie uma mensagem para iniciar seu chat com o assistente!
+            </p>
+          )}
+          {isTyping && (
+            <div className="message-bubble-typing received typing-visible">
+              <p>Digitando...</p>
+              <div className="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
           )}
           <div ref={chatEndRef} />
         </div>
       </IonContent>
+
       <IonFooter>
         <IonToolbar className="chat-input-toolbar">
           <div style={{ display: "flex", alignItems: "center" }}>
             <IonInput
               value={message}
               placeholder="Digite sua mensagem..."
-              onIonChange={(e) => setMessage(e.detail.value!)}
+              onIonChange={(e) => handleMessageChange(e.detail.value!)}
               style={{ flex: 1 }}
             />
             <IonIcon

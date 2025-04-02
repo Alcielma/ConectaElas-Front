@@ -1,5 +1,6 @@
 import { Route, Redirect } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
+import Login from "../pages/Login";
 
 interface PrivateRouteProps {
   component: React.ComponentType<any>;
@@ -16,9 +17,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return (
     <Route
       {...rest}
-      render={(props) =>
-        user ? <Component {...props} /> : <Redirect to="/login" />
-      }
+      render={(props) => (user ? <Component {...props} /> : <Login />)}
     />
   );
 };
