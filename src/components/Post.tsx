@@ -3,6 +3,8 @@ import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
 import CommentItem from "./CommentItem";
 import "./Post.css";
+import { IonIcon } from "@ionic/react";
+import { chatbubbleSharp } from "ionicons/icons";
 
 interface Comment {
   id: number;
@@ -88,18 +90,31 @@ const Post: React.FC<PostProps> = ({
   return (
     <div className="post-container">
       <div className="post-header" onClick={toggleExpand}>
+        <div className="profile-header-post">
+          <div className="profile-image">
+            <img
+              src="/src/Assets/WhatsApp Image 2025-04-17 at 17.29.40_577d8fb8.jpg"
+              alt=""
+              className="imagem-perfil-post"
+            />
+          </div>
+          <div className="profile-name-post">ConectaElas</div>
+        </div>
         <h2 className="post-title">{title}</h2>
-        {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
         <p className="post-description ">{description}</p>
+        {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
 
-        <p className="comments-count">{comments.length} Comentário(os) </p>
+        <div className="comments-count-box">
+          <IonIcon icon={chatbubbleSharp} className="chatbubble-icon" />
+          <p className="comments-count">{comments.length} Comentário(os) </p>
+        </div>
       </div>
 
       <div className={`post-comments ${isExpanded ? "expanded" : ""}`}>
         <div className="add-comment">
           <input
             type="text"
-            placeholder="Escreva um comentário..."
+            placeholder="Deixe aqui sua opinião..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             onFocus={(e) => e.stopPropagation()}

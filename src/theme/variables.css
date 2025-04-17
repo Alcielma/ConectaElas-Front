@@ -1,6 +1,9 @@
 /* variables.css ou global.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-    /* --cor-principal: #F5135B; */
+    --ion-font-family: 'Inter', sans-serif;
     --cor-principal: #DD2273;
     --cor-secundaria: #720079;
     --cor-secundaria-hover: #3d0341;

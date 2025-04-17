@@ -41,40 +41,42 @@ const Tab1: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <Carrossel />
+        <div className="body-feed">
+          <Carrossel />
 
-        <div className="category-buttons">
-          <button
-            onClick={() => handleCategoryClick(null)}
-            className="category-button"
-          >
-            <IonIcon icon={listSharp} />
-            <span className="button-label">Todos</span>
-          </button>
-          <button
-            onClick={() => handleCategoryClick("Notícia")}
-            className="category-button"
-          >
-            <IonIcon icon={newspaperSharp} />
-            <span className="button-label">Notícia</span>
-          </button>
-          <button
-            onClick={() => handleCategoryClick("Informativo")}
-            className="category-button"
-          >
-            <IonIcon icon={informationCircleSharp} />
-            <span className="button-label">Informativo</span>
-          </button>
-          <button
-            onClick={() => handleCategoryClick("Relato")}
-            className="category-button"
-          >
-            <IonIcon icon={chatbubbleEllipsesSharp} />
-            <span className="button-label">Relato</span>
-          </button>
+          <div className="category-buttons">
+            <button
+              onClick={() => handleCategoryClick(null)}
+              className="category-button"
+            >
+              <IonIcon icon={listSharp} />
+              <span className="button-label">Todos</span>
+            </button>
+            <button
+              onClick={() => handleCategoryClick("Notícia")}
+              className="category-button"
+            >
+              <IonIcon icon={newspaperSharp} />
+              <span className="button-label">Notícia</span>
+            </button>
+            <button
+              onClick={() => handleCategoryClick("Informativo")}
+              className="category-button"
+            >
+              <IonIcon icon={informationCircleSharp} />
+              <span className="button-label">Informativo</span>
+            </button>
+            <button
+              onClick={() => handleCategoryClick("Relato")}
+              className="category-button"
+            >
+              <IonIcon icon={chatbubbleEllipsesSharp} />
+              <span className="button-label">Relato</span>
+            </button>
+          </div>
+
+          <Feed selectedCategory={selectedCategory} />
         </div>
-
-        <Feed selectedCategory={selectedCategory} />
       </IonContent>
     </IonPage>
   );
