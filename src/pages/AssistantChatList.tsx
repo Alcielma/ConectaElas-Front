@@ -66,7 +66,7 @@ const AssistantChatList: React.FC = () => {
                     </p>
                     {unreadCount > 0 && (
                       <span className="unread-count">
-                        {unreadCount} Náo lidas
+                        {unreadCount} Não lidas
                       </span>
                     )}
                   </div>

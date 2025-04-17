@@ -24,7 +24,7 @@
 .toggle-expand {
     background: none;
     border: none;
-    color: #24CE9E;
+    color: var(--cor-secundaria);
     cursor: pointer;
     font-size: 0.9rem;
     padding: 0;

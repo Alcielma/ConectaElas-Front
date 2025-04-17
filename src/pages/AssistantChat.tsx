@@ -76,7 +76,7 @@ const AssistantChat: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
-          <IonTitle className="center-title">Chat com Assistente</IonTitle>
+          <IonTitle className="center-title">Chat</IonTitle>
           <IonButtons slot="end">
             <div style={{ width: "44px" }} />
           </IonButtons>
@@ -119,7 +119,7 @@ const AssistantChat: React.FC = () => {
               Envie uma mensagem para iniciar seu chat com o assistente!
             </p>
           )}
-          {isTyping && (
+          {/* {isTyping && (
             <div className="message-bubble-typing received typing-visible">
               <p>Digitando...</p>
               <div className="typing-indicator">
@@ -128,7 +128,7 @@ const AssistantChat: React.FC = () => {
                 <span></span>
               </div>
             </div>
-          )}
+          )} */}
           <div ref={chatEndRef} />
         </div>
       </IonContent>

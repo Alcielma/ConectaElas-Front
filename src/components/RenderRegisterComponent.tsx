@@ -62,10 +62,10 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
         </div>
       </div>
       <div className="register-box">
-        <h2 className="login-title">Cadastre-se</h2>
+        <h2 className="login-title">Criando uma conta</h2>
         <form onSubmit={handleRegister}>
           <div className="input-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Como você prefere ser chamada?</label>
             <input
               type="text"
               id="username"
@@ -87,7 +87,13 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
           </div>
 
           <div className="input-group">
-            <label htmlFor="password">Senha</label>
+            <div className="password-label-box">
+              <label htmlFor="password" className="label-password">
+                Qual a senha que você deseja utilizar no aplicativo?
+              </label>
+              <p>para sua segurança evite usar uma senha que você já utiliza</p>
+            </div>
+
             <div className="password-input-container">
               <input
                 type={showPassword ? "text" : "password"}
@@ -105,7 +111,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
           </div>
 
           <div className="input-group">
-            <label htmlFor="confirm-password">Confirme a Senha</label>
+            <label htmlFor="confirm-password">Digite a senha novamente</label>
             <div className="password-input-container">
               <input
                 type={showConfirmPassword ? "text" : "password"}

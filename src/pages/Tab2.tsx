@@ -34,7 +34,7 @@ const Tab2: React.FC = () => {
 
       <IonContent fullscreen>
         <div className="tab2-content">
-          <img
+          {/* <img
             src="src/Assets/944a18b4-aa46-4775-af18-478e715cbf8a.png"
             className="background-image"
             alt="Arte abstrata"
@@ -43,7 +43,7 @@ const Tab2: React.FC = () => {
             src="src/Assets/ce8a9d1b-0ad5-4719-bace-6ace4847b9db.png"
             className="background-image2"
             alt="Arte abstrata"
-          />
+          /> */}
           {isAssistant ? (
             <div className="card-container">
               <IonRouterLink className="card" href="/assistantChats">

@@ -42,7 +42,7 @@
 
 .report-icon {
     font-size: 24px;
-    color: #24ce9e;
+    color: var(--cor-secundaria);
     margin-right: 15px;
 }
 

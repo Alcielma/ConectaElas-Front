@@ -30,7 +30,7 @@ const Login: React.FC = () => {
 
   // useEffect(() => {
   //   if (user) {
-  //     // history.replace("/tabs/tab1");
+  //      history.replace("/tabs/tab1");
   //   }
   // }, [user, history]);
 
@@ -42,7 +42,8 @@ const Login: React.FC = () => {
     const loginSuccessful = await login(identifier, password);
 
     if (loginSuccessful) {
-      ionRouter.push("/tabs/tab1", "forward", "replace");
+      // ionRouter.push("/tabs/tab1", "forward", "replace");
+      history.replace("/tabs/tab1");
     } else {
       setError("Credenciais inválidas. Tente novamente.");
     }
@@ -53,11 +54,11 @@ const Login: React.FC = () => {
   const renderLoginComponent = () => {
     return (
       <>
-        <h2 className="login-title">Login</h2>
+        <h2 className="login-title">Entrar na sua conta</h2>
         <div>
           <form onSubmit={handleLogin}>
             <div className="input-group">
-              <label htmlFor="identifier">Email ou Username</label>
+              <label htmlFor="identifier">E-mail ou Telefone</label>
               <input
                 type="text"
                 id="identifier"
@@ -90,7 +91,7 @@ const Login: React.FC = () => {
             {error && <p className="error-message">{error}</p>}
 
             <button type="submit" className="login-button" disabled={loading}>
-              {loading ? "Entrando..." : "Login"}
+              {loading ? "Entrando..." : "Entrar"}
             </button>
           </form>
           <p className="signup-prompt">

@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: flex-end;
     height: 100dvh;
-    background-color: #e4124f;
+    background-color: var(--cor-principal);
 }
 
 .login-box {
@@ -89,7 +89,7 @@ h2 {
 }
 
 .input-group input:focus {
-    border-color: #24ce9e;
+    border-color: var(--cor-secundaria);
     outline: none;
 }
 
@@ -101,7 +101,7 @@ h2 {
 .login-button {
     width: 100%;
     padding: 10px 0;
-    background-color: #f5135b;
+    background-color: var(--cor-principal);
     border: none;
     border-radius: 5px;
     color: white;
@@ -132,7 +132,7 @@ h2 {
 }
 
 .signup-link {
-    color: #f5135b;
+    color: var(--cor-principal);
     cursor: pointer;
     font-weight: bold;
     text-decoration: underline;

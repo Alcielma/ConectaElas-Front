@@ -5,35 +5,44 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     z-index: 1000;
-}
-
-h3 {
-    color: black;
-    text-align: center;
-}
-
-p {
-    color: black;
-    text-align: center;
+    animation: fadeIn 0.3s ease-in-out forwards;
 }
 
 .modal-content {
     background-color: white;
-
+    border-radius: 20px 20px 0 0;
     padding: 20px;
-    border-radius: 8px;
-    width: 18rem;
-    max-width: 100%;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    width: 100%;
+    height: auto;
+    min-height: 20rem;
+    gap: 3rem;
+    max-height: 100%;
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    to {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
 }
 
 .modal-header {
@@ -44,41 +53,33 @@ p {
 
 .modal-header h3 {
     margin: 0;
-    font-size: 18px;
-}
-
-.contact-icon {
-    background: none;
-    border: none;
     font-size: 20px;
-    cursor: pointer;
+    color: black;
 }
-
-.contact-icon {
-    color: white;
-}
-
 
 .modal-body {
-    margin-top: 10px;
+    margin-top: 15px;
+    flex: 1;
+    overflow-y: auto;
     width: 100%;
-    gap: 10px;
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .modal-footer {
-    margin-top: 20px;
+    margin-top: auto;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     gap: 10px;
     width: 100%;
 }
 
 .cancel-btn,
 .confirm-btn {
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
     cursor: pointer;
     width: 100%;
 }
@@ -90,7 +91,7 @@ p {
 }
 
 .confirm-btn {
-    background-color: #24CE9E;
+    background-color: var(--cor-secundaria);
     color: white;
     border: none;
 }
@@ -100,5 +101,54 @@ p {
 }
 
 .confirm-btn:hover {
-    background-color: #24CE9E;
+    background-color: var(--cor-secundaria-hover);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+}
+
+.close-icon {
+    font-size: 24px;
+    color: #333;
+    padding-top: 0.5rem;
+}
+
+.slideUp {
+    animation: slideUp 0.4s ease-out forwards;
+}
+
+.slideDown {
+    animation: slideDown 0.4s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+.fadeIn {
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.fadeOut {
+    animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    to {
+        background-color: rgba(0, 0, 0, 0);
+    }
 }

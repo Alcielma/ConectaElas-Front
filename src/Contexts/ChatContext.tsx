@@ -222,12 +222,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     socket.on("typing", () => {
-      // Exibe o "digitando..." no frontend
       setIsTyping(true);
     });
 
     socket.on("stop_typing", () => {
-      // Remove o "digitando..." quando o usuário parar de digitar
       setIsTyping(false);
     });
   }

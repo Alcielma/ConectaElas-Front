@@ -175,7 +175,7 @@
 .add-comment button {
     padding: 8px 12px;
     border-radius: 10px;
-    background-color: #24CE9E;
+    background-color: var(--cor-secundaria);
     color: #fff;
     border: none;
     cursor: pointer;
@@ -184,7 +184,7 @@
 }
 
 .add-comment button:hover {
-    background-color: #108d6a;
+    background-color: var(--cor-secundaria-hover);
 }
 
 /* ___________________________________________________ */

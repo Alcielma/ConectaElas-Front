@@ -1,6 +1,5 @@
 .custom-background {
     --background: #f7fafc;
-
 }
 
 .container {
@@ -23,7 +22,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #F5135B;
+    background-color: var(--cor-principal);
     border: none;
     display: flex;
     align-items: center;
@@ -41,7 +40,7 @@
 }
 
 .category-button:focus {
-    background-color: #24CE9E;
+    background-color: var(--cor-secundaria);
     outline: 3px solid #ffffff;
     width: 62px;
     height: 62px;

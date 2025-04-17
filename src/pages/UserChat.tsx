@@ -135,7 +135,7 @@ const UserChat: React.FC = () => {
               assistentes!
             </p>
           )}
-          {isTyping && (
+          {/* {isTyping && (
             <div className="message-bubble-typing received typing-visible">
               <p>Digitando...</p>
               <div className="typing-indicator">
@@ -144,7 +144,7 @@ const UserChat: React.FC = () => {
                 <span></span>
               </div>
             </div>
-          )}
+          )} */}
           <div ref={chatEndRef} />
         </div>
       </IonContent>

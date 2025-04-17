@@ -4,7 +4,7 @@
     justify-content: space-between;
     height: 100%;
     padding: 40px 20px;
-    background-color: #f5f7fa;
+    background-color: var(--cor-fundo);
 
 }
 
@@ -21,7 +21,7 @@
 .profile-name {
     font-size: 25px !important;
     font-weight: bold;
-    color: #ff5a5f;
+    color: var(--cor-secundaria);
     margin-top: 20px;
 }
 
@@ -78,7 +78,7 @@
 
 
 .logout-button {
-    background-color: #ff5a5f;
+    background-color: var(--cor-secundaria);
     color: #ffffff;
     border: none;
     padding: 15px 30px;
@@ -90,7 +90,7 @@
 }
 
 .logout-button:hover {
-    background-color: #e14e50;
+    background-color: var(--cor-secundaria-hover);
 }
 
 
@@ -132,14 +132,14 @@
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
-    color: #24CE9E;
+    color: var(--cor-secundaria);
     display: inline-flex;
     align-items: center;
 }
 
 .edit-button:hover {
     text-decoration: underline;
-    color: #167e60;
+    color: var(--cor-secundaria-hover);
 }
 
 
@@ -168,7 +168,7 @@
 .modal-input {
     width: 100%;
     background-color: #dddddd80;
-    padding: 10px;
+    padding: 1.1rem;
     border: none;
     border-radius: 5px;
     font-size: 16px;

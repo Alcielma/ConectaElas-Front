@@ -59,7 +59,7 @@
 
 .contact-icon {
     font-size: 24px;
-    color: #24ce9e;
+    color: var(cor-secundaria);
     margin-right: 15px;
 }
 
@@ -101,11 +101,11 @@
 
 .edit-btn ion-icon {
     font-size: 24px;
-    color: #24ce9e;
+    color: var(cor-secundaria);
 }
 
 .edit-btn ion-icon:hover {
-    color: #167e60;
+    color: var(cor-secundaria)-hover;
 }
 
 /* .edit-btn:hover {
@@ -114,7 +114,7 @@
 
 .add-contact-btn {
     margin-top: 20px;
-    background: #24ce9e;
+    background: var(cor-secundaria);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -149,7 +149,7 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
-    color: #24ce9e;
+    color: var(--cor-secundaria);
 }
 
 .form-group {
@@ -180,7 +180,7 @@
 
 .save-contact-btn {
     margin-top: 20px;
-    background: #24ce9e;
+    background: var(--cor-secundaria);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -191,7 +191,7 @@
 }
 
 .save-contact-btn:hover {
-    background: #1cb488;
+    background: var(--cor-secundaria-hover);
 }
 
 .info-card-angel {

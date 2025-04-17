@@ -46,6 +46,6 @@
 }
 
 .swiper-pagination-bullet-active {
-    background-color: #24CE9E !important;
+    background-color: var(--cor-secundaria) !important;
     opacity: 1;
 }

@@ -1,10 +1,21 @@
 /* variables.css ou global.css */
+:root {
+    /* --cor-principal: #F5135B; */
+    --cor-principal: #DD2273;
+    --cor-secundaria: #720079;
+    --cor-secundaria-hover: #3d0341;
+    /* --cor-fundo: #f5f7fa; */
+    --cor-fundo: #FFF;
+    /* Define a variável de cor */
+}
+
 
 /* Estilizando o IonToolbar */
 ion-toolbar {
-    --background: #F5135B;
+    --background: var(--cor-principal);
     --color: #ffffff;
     --border-color: #000000;
+
 }
 
 /* Centralizando o IonTitle */
@@ -18,20 +29,19 @@ ion-toolbar ion-title {
 
 
 ion-tab-bar {
-    --background: #F5135B;
-    /* Cor de fundo das tabs */
+    --background: white;
     --color: white;
-    /* Cor padrão do texto */
     --color-selected: #ffffff;
-    /* Cor do texto quando a tab está ativa */
     --ion-color-primary: #ffffff;
-    /* Cor de ícones e texto */
+    border: #cccccc;
+    box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25);
+
 }
 
 ion-tab-button {
-    --color: white;
+    --color: var(--cor-principal);
     /* Cor do texto */
-    --color-selected: #24CE9E;
+    --color-selected: var(--cor-secundaria);
     /* Cor do texto quando ativo */
     --ripple-color: rgba(255, 255, 255, 0.3);
     /* Cor do efeito ripple */
