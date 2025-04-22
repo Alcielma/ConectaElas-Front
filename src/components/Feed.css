@@ -1,4 +1,3 @@
-/* contêiner principal*/
 .feed-container {
     min-height: 100vh;
     padding: 1.5rem;
@@ -6,7 +5,7 @@
 
 }
 
-/*título principal */
+
 .feed-title {
     font-size: 2.5rem;
     color: #1e3a8a;
@@ -15,7 +14,6 @@
     margin-bottom: 2rem;
 }
 
-/* contêiner de postagens */
 .feed-posts {
     display: flex;
     justify-content: center;

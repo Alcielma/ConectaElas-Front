@@ -59,7 +59,7 @@
 
 .contact-icon {
     font-size: 24px;
-    color: var(cor-secundaria);
+    color: var(--cor-secundaria);
     margin-right: 15px;
 }
 
@@ -101,11 +101,11 @@
 
 .edit-btn ion-icon {
     font-size: 24px;
-    color: var(cor-secundaria);
+    color: #299677;
 }
 
 .edit-btn ion-icon:hover {
-    color: var(cor-secundaria)-hover;
+    color: #299677;
 }
 
 /* .edit-btn:hover {
@@ -114,7 +114,7 @@
 
 .add-contact-btn {
     margin-top: 20px;
-    background: var(cor-secundaria);
+    background: var(--cor-secundaria);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -127,7 +127,7 @@
 }
 
 .add-contact-btn:hover {
-    background: #1cb488;
+    background: var(--cor-secundaria-hover);
 }
 
 

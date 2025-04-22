@@ -1,20 +1,17 @@
-/* contêiner principal */
 .post-container {
     display: flex;
     max-width: 45vh;
     width: 23rm;
     height: 23rm;
-    /* margin: 0 20px 20px; */
     padding: 5px 20px;
     flex-direction: column;
     align-items: flex-center;
     gap: 6px;
     flex-shrink: 0;
     border-radius: 8px;
-    /* background: #F8EBF3; */
 }
 
-/* imagem */
+
 .post-image {
     width: 100%;
     height: auto;
@@ -25,7 +22,6 @@
 }
 
 
-/* conteúdo */
 .post-content {
     display: flex;
     flex-direction: column;
