@@ -141,6 +141,7 @@ const AssistantChat: React.FC = () => {
               placeholder="Digite sua mensagem..."
               onIonChange={(e) => handleMessageChange(e.detail.value!)}
               style={{ flex: 1 }}
+              className="caixa-enviar-mensagem"
             />
             <IonIcon
               icon={send}

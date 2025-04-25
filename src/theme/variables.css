@@ -21,6 +21,10 @@ ion-toolbar {
 
 }
 
+ion-toolbar chat-input-toolbar {
+    background-color: white;
+}
+
 /* Centralizando o IonTitle */
 ion-toolbar ion-title {
     text-align: center;

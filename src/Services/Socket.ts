@@ -6,7 +6,7 @@ if (!token) {
   console.warn("Token de autenticação não encontrado!");
 }
 
-const socket: Socket = io("http://192.168.1.13:1338", {
+const socket: Socket = io("http://192.168.18.170:1338", {
   transports: ["websocket"],
   forceNew: true,
   reconnection: true,

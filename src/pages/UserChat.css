@@ -82,6 +82,7 @@
 .chat-input-toolbar {
     display: flex;
     padding: 10px;
+    background-color: #fff !important;
 }
 
 .message-bubble-typing {
@@ -164,4 +165,8 @@
 
 .typing-visible {
     transform: translateY(-30px);
+}
+
+.caixa-enviar-mensagem {
+    background-color: #fff !important;
 }
