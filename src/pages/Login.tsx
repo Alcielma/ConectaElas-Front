@@ -8,6 +8,9 @@ import RenderRegisterComponent from "../components/RenderRegisterComponent";
 // import { useIonRouter } from "@ionic/react";
 import { Redirect } from "react-router-dom";
 import { useIonRouter } from "@ionic/react";
+import LmtsLogo from "../Assets/LmtsLogo.png";
+import SECRETARIA_MUNICIPAL_DAS_MULHERES from "../Assets/SECRETARIA_MUNICIPAL_DAS_MULHERES.png";
+import ACS from "../Assets/ACS.png";
 
 export enum LoginScreens {
   LOGIN,
@@ -103,6 +106,27 @@ const Login: React.FC = () => {
               Cadastre-se aqui
             </span>
           </p>
+          <div className="parceiros-box">
+            <p className="parceiros-tittle">Parceiros:</p>
+            <div className="parceiros">
+              <div className="parceiro">
+                <img src={LmtsLogo} alt="" className="lmts" />
+                {/* <div className="caption">Legenda</div> */}
+              </div>
+              <div className="parceiro">
+                <img
+                  src={SECRETARIA_MUNICIPAL_DAS_MULHERES}
+                  alt=""
+                  className="secretaria"
+                />
+                {/* <div className="caption">Legenda</div> */}
+              </div>
+              <div className="parceiro">
+                <img src={ACS} alt="" className="ACS" />
+                {/* <div className="caption">Legenda</div> */}
+              </div>
+            </div>
+          </div>
         </div>
       </>
     );

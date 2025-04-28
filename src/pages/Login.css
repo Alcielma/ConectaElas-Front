@@ -13,9 +13,9 @@
     max-width: 600px;
     width: 100%;
     text-align: center;
-    gap: 30px;
+    gap: 10px;
     background-color: white;
-    height: 70vh;
+    height: 72vh;
     border-top-left-radius: 1.5rem;
     border-top-right-radius: 1.5rem;
     box-shadow: black;
@@ -70,7 +70,7 @@ h2 {
 }
 
 .input-group input {
-    color: #333;
+    color: #e7e7e7;
 }
 
 .input-group label {
@@ -159,3 +159,59 @@ h2 {
     color: #6b6b6b;
     font-size: 1.2rem;
 }
+
+.parceiros-box {
+    padding-top: 10px;
+}
+
+.parceiros-tittle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #333;
+    margin-bottom: 0px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 30px
+}
+
+.parceiros {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
+    /* gap: 20px; */
+    /* margin-top: 20px; */
+}
+
+.parceiro {
+    text-align: center;
+    width: 70px;
+    /* padding-top: 40px; */
+}
+
+.parceiro img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+/* .caption {
+    margin-top: 8px;
+    font-size: 8px;
+    color: #555;
+} */
+
+.ACS {
+    transform: scale(0.6);
+}
+
+/* .secretaria {
+    transform: scale(1.2)
+}
+
+.lmts {
+    transform: scale(0.8);
+} */
