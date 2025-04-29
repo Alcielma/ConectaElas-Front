@@ -18,6 +18,7 @@ import AssistantChatList from "../pages/AssistantChatList";
 import Teste from "../pages/teste";
 import AngelContact from "../pages/AngelContact";
 import PrivateRoute from "./PrivateRoute";
+import Sobre from "../pages/Sobre";
 
 const TabsLayout: React.FC = () => {
   return (
@@ -27,6 +28,8 @@ const TabsLayout: React.FC = () => {
         <PrivateRoute exact path="/tabs/tab2" component={Tab2} />
         <PrivateRoute exact path="/tabs/tab3" component={Tab3} />
         <PrivateRoute exact path="/tabs/chat" component={UserChat} />
+        <Route exact path="/tabs/sobre" component={Sobre} />
+
         <PrivateRoute
           exact
           path="/tabs/ReportChannels"
