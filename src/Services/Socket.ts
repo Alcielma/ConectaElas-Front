@@ -6,7 +6,7 @@ if (!token) {
   console.warn("Token de autenticação não encontrado!");
 }
 
-const socket: Socket = io("http://192.168.1.16:1338", {
+const socket: Socket = io(import.meta.env.VITE_API_URL, {
   transports: ["websocket"],
   forceNew: true,
   reconnection: true,
