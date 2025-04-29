@@ -9,6 +9,7 @@ import AuthService from "../Services/AuthService";
 import socket from "../Services/Socket";
 import { useHistory } from "react-router-dom";
 import { useIonRouter } from "@ionic/react";
+import { IHTTPReturn } from "../Services/apiTypes";
 
 interface User {
   id: number;
@@ -20,13 +21,13 @@ interface User {
 interface AuthContextType {
   user: User | null;
   authToken: string | null;
-  login: (identifier: string, password: string) => Promise<boolean>;
+  login: (identifier: string, password: string) => Promise<IHTTPReturn>;
   logout: () => void;
   register: (
     username: string,
     email: string,
     password: string
-  ) => Promise<boolean>;
+  ) => Promise<IHTTPReturn>;
   isAssistant: boolean;
   updateUser: (updatedUser: Partial<User>) => void;
 }
@@ -69,31 +70,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (
     identifier: string,
     password: string
-  ): Promise<boolean> => {
-    try {
-      const result = await AuthService.login(identifier, password);
-      if (result) {
-        const { jwt, user: userData } = result;
+  ): Promise<IHTTPReturn> => {
+    const result = await AuthService.login(identifier, password);
 
-        const adaptedUser: User = {
-          id: userData.id,
-          name: userData.username,
-          email: userData.email,
-          tipo: userData.Tipo,
-        };
-
-        setAuthToken(jwt);
-        setUser(adaptedUser);
-        localStorage.setItem("authToken", jwt);
-        localStorage.setItem("user", JSON.stringify(adaptedUser));
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      return false;
+    if (!result.success || !result.data?.jwt || !result.data?.user) {
+      console.error("Falha ao tentar fazer login", result.message);
+      return {
+        success: false,
+        message: result.message || "Falha ao fazer login",
+      };
     }
+
+    const {
+      data: { jwt, user: userData },
+    } = result;
+
+    const adaptedUser: User = {
+      id: userData.id,
+      name: userData.username,
+      email: userData.email,
+      tipo: userData.Tipo,
+    };
+
+    setAuthToken(jwt);
+    setUser(adaptedUser);
+    localStorage.setItem("authToken", jwt);
+    localStorage.setItem("user", JSON.stringify(adaptedUser));
+
+    return { success: true, data: adaptedUser };
   };
 
   const logout = () => {
@@ -104,7 +108,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     if (socket.connected) {
       socket.disconnect();
-      console.log("orangotango");
     }
   };
 
@@ -112,36 +115,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     username: string,
     email: string,
     password: string
-  ): Promise<boolean> => {
-    try {
-      const data = { username, email, password };
-      const response = await AuthService.register(data);
+  ): Promise<IHTTPReturn> => {
+    const data = { username, email, password };
+    const response = await AuthService.register(data);
 
-      if (response && response.jwt && response.user) {
-        const { jwt, user } = response;
-
-        const adaptedUser: User = {
-          id: user.id,
-          name: user.username,
-          email: user.email,
-          tipo: user.Tipo || "Autenticado",
-        };
-
-        localStorage.setItem("authToken", jwt);
-        localStorage.setItem("user", JSON.stringify(adaptedUser));
-
-        setAuthToken(jwt);
-        setUser(adaptedUser);
-
-        return true;
-      } else {
-        console.error("Resposta inválida do backend:", response);
-        return false;
-      }
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-      return false;
+    if (!response.success || !response.data?.jwt || !response.data?.user) {
+      console.error("Falha ao tentar se registar", response.message);
+      return {
+        success: false,
+        message: response.message || "Falha ao registrar",
+      };
     }
+
+    const { jwt, user } = response.data;
+
+    const adaptedUser: User = {
+      id: user.id,
+      name: user.username,
+      email: user.email,
+      tipo: user.Tipo || "Autenticado",
+    };
+
+    localStorage.setItem("authToken", jwt);
+    localStorage.setItem("user", JSON.stringify(adaptedUser));
+
+    setAuthToken(jwt);
+    setUser(adaptedUser);
+
+    return {
+      success: true,
+      data: adaptedUser,
+    };
   };
 
   const updateUser = (updatedUser: Partial<User>) => {

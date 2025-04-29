@@ -1,4 +1,5 @@
 import api from "./api";
+import { IHTTPReturn } from "./apiTypes";
 
 interface UserPayload {
   id: number;
@@ -22,7 +23,7 @@ const AuthService = {
   async login(
     identifier: string,
     password: string
-  ): Promise<LoginPayload | null> {
+  ): Promise<IHTTPReturn<LoginPayload>> {
     try {
       const response = await api.post<{ jwt: string; user: UserPayload }>(
         "/auth/local",
@@ -32,14 +33,23 @@ const AuthService = {
         }
       );
 
-      return response.data;
-    } catch (error) {
+      return {
+        success: true,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
       console.error("Erro ao fazer login:", error);
-      return null;
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data?.error?.message || "Falha ao fazer login",
+        error: error.response?.data?.error || error.message,
+      };
     }
   },
 
-  async register(data: RegisterPayload): Promise<LoginPayload | null> {
+  async register(data: RegisterPayload): Promise<IHTTPReturn<LoginPayload>> {
     try {
       const response = await api.post<LoginPayload>(
         "/auth/local/register",
@@ -51,15 +61,22 @@ const AuthService = {
         }
       );
 
-      return response.data;
+      return {
+        success: true,
+        data: response.data,
+        status: response.status,
+      };
     } catch (error: any) {
-      console.error(
-        "Erro ao cadastrar usuário:",
-        error.response?.data || error
-      );
-      return null;
+      console.log(error);
+      return {
+        success: false,
+        status: error.response?.status,
+        message: error.response?.data?.error?.message || "Falha ao registrar",
+        error: error.response?.data?.error || error.message,
+      };
     }
   },
+
   async updateEmail(userId: number, newEmail: string, authToken: string) {
     try {
       const response = await api.put(
