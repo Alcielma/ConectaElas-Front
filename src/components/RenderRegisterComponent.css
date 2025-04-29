@@ -1,136 +1,133 @@
 /* Register.css */
 .register-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
 }
 
 .password-label-box {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .password-label-box p {
-    margin-top: 0;
-    padding: 0;
-    font-size: 0.8rem;
+  margin-top: 0;
+  padding: 0;
+  font-size: 0.8rem;
 }
 
-
 .top-box {
-    width: 100%;
-    flex-direction: row;
-    align-items: baseline;
-    justify-items: flex-start;
-    text-align: start;
+  width: 100%;
+  flex-direction: row;
+  align-items: baseline;
+  justify-items: flex-start;
+  text-align: start;
 }
 
 .register-box {
-
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
-
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
 }
 
 h2 {
-    margin-bottom: 20px;
-    color: #333;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .login-title {
-    font-weight: 900;
-    font-size: 2rem;
-    padding-bottom: 2rem
+  font-weight: 900;
+  font-size: 2rem;
+  padding-bottom: 2rem;
 }
 
 .input-group {
-    margin-bottom: 15px;
-    text-align: left;
+  margin-bottom: 15px;
+  text-align: left;
 }
 
 .input-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .input-group input {
-    width: 100%;
-    background-color: #dddddd80 !important;
-    padding: 1.1rem;
-    border: none;
-    border-radius: 0.4rem;
-    font-size: 16px;
-    color: #333;
+  width: 100%;
+  background-color: #dddddd80 !important;
+  padding: 1.1rem;
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 16px;
+  color: #333;
 }
 
 .input-group input:focus {
-    border-color: var(cor-secundaria);
-    outline: none;
+  border-color: var(cor-secundaria);
+  outline: none;
 }
 
 .register-button {
-    width: 100%;
-    padding: 10px 0;
-    background-color: var(--cor-principal);
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  width: 100%;
+  padding: 10px 0;
+  background-color: var(--cor-principal);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .register-button:hover {
-    background-color: var(--cor-principal);
+  background-color: var(--cor-principal);
 }
 
 .register-button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
+  background-color: #ddd;
+  cursor: not-allowed;
 }
 
 .error-message {
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
 }
 
 .back-button {
-    /* position: absolute;
+  /* position: absolute;
     top: 50px;
     left: 20px; */
-    font-size: 25px !important;
-    cursor: pointer;
-    color: var(--cor-principal) !important;
-    transition: color 0.3s;
+  font-size: 25px !important;
+  cursor: pointer;
+  color: var(--cor-principal) !important;
+  transition: color 0.3s;
 }
 
 .back-button:hover {
-    color: var(--cor-principal);
+  color: var(--cor-principal);
 }
 
 .password-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .password-input-container input {
-    flex: 1;
+  flex: 1;
 }
 
 .toggle-password-icon {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-    color: #6b6b6b;
-    font-size: 1.2rem;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #6b6b6b;
+  font-size: 1.2rem;
 }
