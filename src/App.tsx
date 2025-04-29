@@ -13,6 +13,7 @@ import AssistantChatList from "./pages/AssistantChatList";
 import Onboarding from "./pages/Onboarding";
 import UserChat from "./pages/UserChat";
 import { SplashScreen } from "@capacitor/splash-screen";
+import Sobre from "./pages/Sobre";
 
 // Core CSS required for Ionic components to work properly
 import "@ionic/react/css/core.css";
@@ -79,6 +80,8 @@ const App: React.FC = () => {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/onboarding" component={Onboarding} />
                 <Route path="/tabs" component={TabsLayout} />
+                <Route exact path="/sobre" component={Sobre} />
+
                 <Route
                   exact
                   path="/assistantChats"

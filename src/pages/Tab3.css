@@ -171,3 +171,13 @@
   margin-top: 5px;
   display: block;
 }
+
+
+.profile-link-button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+}
