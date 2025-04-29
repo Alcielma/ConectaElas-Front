@@ -28,19 +28,38 @@ const Sobre: React.FC = () => {
         <div className="sobre-text-container">
           <h2>Bem-vinda ao Conecta Elas!</h2>
           <p>
-            O Conecta Elas é um espaço seguro, desenvolvido para facilitar o
-            acesso à informação, apoio e serviços para mulheres.
+            O <strong>Conecta Elas</strong> é um aplicativo criado para
+            fortalecer os direitos das mulheres e combater a violência doméstica
+            e familiar na cidade de <strong>Lagoa de Itaenga (PE)</strong>.
           </p>
           <p>
-            Aqui você encontra conteúdos informativos, pode interagir
-            anonimamente e buscar ajuda através de contatos de órgãos
-            competentes ou via nosso chat assistente.
+            Desenvolvido em parceria com o{" "}
+            <strong>
+              Laboratório Multidisciplinar de Tecnologias Sociais (LMTS)
+            </strong>{" "}
+            da{" "}
+            <strong>
+              Universidade Federal do Agreste de Pernambuco (UFAPE)
+            </strong>
+            , o Conecta Elas nasce como uma ferramenta de apoio, acolhimento e
+            empoderamento feminino.
           </p>
           <p>
-            Nosso compromisso é promover acolhimento, autonomia e fortalecimento
-            feminino, com respeito e privacidade.
+            Aqui, você encontra conteúdos informativos sobre seus direitos, pode
+            interagir anonimamente em publicações, receber orientações e, quando
+            necessário, buscar ajuda através de contatos diretos com órgãos
+            competentes ou via nosso{" "}
+            <strong>chat com assistente anônima</strong>.
           </p>
-          <p>Seja muito bem-vinda à nossa rede de apoio!</p>
+          <p>
+            Nosso compromisso é promover o acesso à informação, o fortalecimento
+            da autonomia das mulheres e a construção de um espaço seguro e de
+            confiança.
+          </p>
+          <p>
+            Seja muito bem-vinda à nossa rede de apoio. Você não está sozinha.
+            💜
+          </p>
         </div>
       </IonContent>
     </IonPage>
