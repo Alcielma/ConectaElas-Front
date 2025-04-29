@@ -5,8 +5,8 @@ import { IonIcon } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
 import RenderRegisterComponent from "../components/RenderRegisterComponent";
-import { useIonRouter } from "@ionic/react";
 import LmtsLogo from "../Assets/LmtsLogo.png";
+import logoReverseRedondaWhite from "../Assets/logoReverseRedondaWhite.png";
 import SECRETARIA_MUNICIPAL_DAS_MULHERES from "../Assets/SECRETARIA_MUNICIPAL_DAS_MULHERES.png";
 import ACS from "../Assets/ACS.png";
 import { FieldValues, useForm } from "react-hook-form";
@@ -168,6 +168,10 @@ const Login: React.FC = () => {
 
   return (
     <div className="login-container">
+      <div className="logoLogin-container">
+        <img src={logoReverseRedondaWhite} />
+        <h3>Conecta Elas</h3>
+      </div>
       <div
         className={`login-box ${
           screenState === LoginScreens.REGISTER && "full"
