@@ -80,7 +80,6 @@ const App: React.FC = () => {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/onboarding" component={Onboarding} />
                 <Route path="/tabs" component={TabsLayout} />
-                <Route exact path="/sobre" component={Sobre} />
 
                 <Route
                   exact

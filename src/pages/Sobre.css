@@ -2,15 +2,16 @@
     background-color: white;
     padding: 20px;
     overflow-y: auto;
+
 }
 
 .sobre-text-container {
     background: white;
-
+    min-height: 100vh;
     padding: 20px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     color: #333;
-    /* height: 100%; */
+    text-align: center;
 }
 
 .sobre-text-container h2 {
@@ -24,4 +25,8 @@
     font-size: 16px;
     line-height: 1.6;
     margin-bottom: 15px;
+}
+
+.sobre-text {
+    text-align: start;
 }
