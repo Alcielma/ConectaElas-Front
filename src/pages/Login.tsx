@@ -1,35 +1,60 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import { IonIcon } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
 import RenderRegisterComponent from "../components/RenderRegisterComponent";
-// import { useIonRouter } from "@ionic/react";
-import { Redirect } from "react-router-dom";
 import { useIonRouter } from "@ionic/react";
 import LmtsLogo from "../Assets/LmtsLogo.png";
 import SECRETARIA_MUNICIPAL_DAS_MULHERES from "../Assets/SECRETARIA_MUNICIPAL_DAS_MULHERES.png";
 import ACS from "../Assets/ACS.png";
+import { FieldValues, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export enum LoginScreens {
   LOGIN,
   REGISTER,
 }
 
-const Login: React.FC = () => {
-  const { login, user } = useAuth();
-  const history = useHistory();
-  const ionRouter = useIonRouter();
+const schema = z.object({
+  identifier: z.union([
+    z.string().email("Email ou telefone inválido."),
+    z
+      .string()
+      .regex(/^[0-9]+$/, "Email ou telefone inválido.")
+      .length(11, "Telefone deve ter 11 dígitos."),
+  ]),
+  password: z
+    .string()
+    .nonempty("A senha não pode ficar vazia.")
+    .min(8, "A senha deve ter pelo menos 8 dígitos."),
+});
 
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
+type FormData = z.infer<typeof schema>;
+
+const Login: React.FC = () => {
+  const { login } = useAuth();
+  const history = useHistory();
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [screenState, setScreenState] = useState<LoginScreens>(
     LoginScreens.LOGIN
   );
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError,
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
+  });
 
   // useEffect(() => {
   //   if (user) {
@@ -37,14 +62,13 @@ const Login: React.FC = () => {
   //   }
   // }, [user, history]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (data: FieldValues) => {
     setLoading(true);
-    setError(null);
 
-    const loginSuccessful = await login(identifier, password);
+    const { identifier, password } = data;
+    const response = await login(identifier, password);
 
-    if (loginSuccessful) {
+    if (response.success) {
       const firstLogin = localStorage.getItem("onboardingComplete");
       if (!firstLogin) {
         history.replace("/onboarding");
@@ -52,7 +76,7 @@ const Login: React.FC = () => {
         history.replace("/tabs/tab1");
       }
     } else {
-      setError("Credenciais inválidas. Tente novamente.");
+      setError("root", { message: "Credenciais inválidas. Tente novamente." });
     }
 
     setLoading(false);
@@ -63,17 +87,17 @@ const Login: React.FC = () => {
       <>
         <h2 className="login-title">Entrar na sua conta</h2>
         <div>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit(handleLogin)}>
             <div className="input-group">
               <label htmlFor="identifier">E-mail ou Telefone</label>
               <input
                 type="text"
-                id="identifier"
                 className="Input-Login"
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                required
+                {...register("identifier")}
               />
+              {errors.identifier && (
+                <p className="error-message">{errors.identifier.message}</p>
+              )}
             </div>
 
             <div className="input-group">
@@ -81,11 +105,8 @@ const Login: React.FC = () => {
               <div className="password-input-container">
                 <input
                   type={showPassword ? "text" : "password"}
-                  id="password"
                   className="Input-Login"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password")}
                 />
                 <IonIcon
                   icon={showPassword ? eyeOff : eye}
@@ -93,9 +114,14 @@ const Login: React.FC = () => {
                   className="toggle-password-icon"
                 />
               </div>
+              {errors.password && (
+                <p className="error-message">{errors.password.message}</p>
+              )}
             </div>
 
-            {error && <p className="error-message">{error}</p>}
+            {errors.root && (
+              <p className="error-message">{errors.root.message}</p>
+            )}
 
             <button type="submit" className="login-button" disabled={loading}>
               {loading ? "Entrando..." : "Entrar"}

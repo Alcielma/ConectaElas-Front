@@ -25,6 +25,8 @@ const Modal: React.FC<ModalProps> = ({
     if (isOpen) {
       setShowModal(true);
       setClosing(false);
+    } else {
+      handleClose();
     }
   }, [isOpen]);
 
