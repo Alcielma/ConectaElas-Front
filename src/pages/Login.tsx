@@ -20,11 +20,11 @@ export enum LoginScreens {
 
 const schema = z.object({
   identifier: z.union([
-    z.string().email("Email ou telefone inválido."),
+    z.string().email("Email ou CPF inválido."),
     z
       .string()
-      .regex(/^[0-9]+$/, "Email ou telefone inválido.")
-      .length(11, "Telefone deve ter 11 dígitos."),
+      .regex(/^[0-9]+$/, "Email ou CPF inválido.")
+      .length(11, "CPF inválido."),
   ]),
   password: z
     .string()
@@ -89,7 +89,7 @@ const Login: React.FC = () => {
         <div>
           <form onSubmit={handleSubmit(handleLogin)}>
             <div className="input-group">
-              <label htmlFor="identifier">E-mail ou Telefone</label>
+              <label htmlFor="identifier">E-mail ou CPF</label>
               <input
                 type="text"
                 className="Input-Login"
