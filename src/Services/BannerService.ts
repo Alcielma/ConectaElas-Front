@@ -17,7 +17,7 @@ const BannerService = {
         id: item.id,
         Link: item.Link,
         Titulo: item.Titulo,
-        imageUrl: `http://192.168.18.170:1338${item.Upload[0].url}`,
+        imageUrl: `http://192.168.1.16:1338${item.Upload[0].url}`,
       }));
     } catch (error) {
       console.error("Erro ao buscar banners:", error);

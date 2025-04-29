@@ -12,11 +12,12 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@capacitor/android": "6.1.2",
+    "@capacitor/android": "^6.2.1",
     "@capacitor/app": "^6.0.1",
     "@capacitor/core": "^6.2.0",
     "@capacitor/haptics": "6.0.1",
     "@capacitor/keyboard": "6.0.2",
+    "@capacitor/splash-screen": "^6.0.3",
     "@capacitor/status-bar": "6.0.1",
     "@ionic/react": "^8.0.0",
     "@ionic/react-router": "^8.0.0",
@@ -29,7 +30,7 @@
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
     "socket.io-client": "^4.8.1",
-    "swiper": "^11.2.5"
+    "swiper": "^11.2.6"
   },
   "devDependencies": {
     "@capacitor/cli": "^6.2.0",

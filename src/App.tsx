@@ -10,7 +10,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import TabsLayout from "./components/TabsLayout";
 import AssistantChat from "./pages/AssistantChat";
 import AssistantChatList from "./pages/AssistantChatList";
+import Onboarding from "./pages/Onboarding";
 import UserChat from "./pages/UserChat";
+import { SplashScreen } from "@capacitor/splash-screen";
 
 // Core CSS required for Ionic components to work properly
 import "@ionic/react/css/core.css";
@@ -32,6 +34,13 @@ const App: React.FC = () => {
   const [backPressTime, setBackPressTime] = useState(0);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  useEffect(() => {
+    const hideSplash = async () => {
+      await SplashScreen.hide();
+    };
+
+    setTimeout(hideSplash, 10000);
+  }, []);
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const user = localStorage.getItem("user");
@@ -68,7 +77,7 @@ const App: React.FC = () => {
             <IonRouterOutlet>
               <Switch>
                 <Route exact path="/login" component={Login} />
-
+                <Route exact path="/onboarding" component={Onboarding} />
                 <Route path="/tabs" component={TabsLayout} />
                 <Route
                   exact

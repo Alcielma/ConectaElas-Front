@@ -45,8 +45,12 @@ const Login: React.FC = () => {
     const loginSuccessful = await login(identifier, password);
 
     if (loginSuccessful) {
-      // ionRouter.push("/tabs/tab1", "forward", "replace");
-      history.replace("/tabs/tab1");
+      const firstLogin = localStorage.getItem("onboardingComplete");
+      if (!firstLogin) {
+        history.replace("/onboarding");
+      } else {
+        history.replace("/tabs/tab1");
+      }
     } else {
       setError("Credenciais inválidas. Tente novamente.");
     }

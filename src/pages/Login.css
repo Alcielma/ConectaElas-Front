@@ -86,10 +86,12 @@ h2 {
     border: none;
     border-radius: 0.4rem;
     font-size: 16px;
+    color: #333;
 }
 
 .input-group input:focus {
     border-color: var(--cor-secundaria);
+    background-color: #dddddd80;
     outline: none;
 }
 
