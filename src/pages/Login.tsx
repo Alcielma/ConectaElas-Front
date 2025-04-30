@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { IonIcon } from "@ionic/react";
+import { IonIcon, IonSpinner } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
 import RenderRegisterComponent from "../components/RenderRegisterComponent";
@@ -12,6 +12,9 @@ import ACS from "../Assets/ACS.png";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import InputErrorMessage from "../components/inputErrorMessage";
+import { maskCpf, unMaskNumbers } from "../utils/mask";
+import { isValidCPF } from "../utils/utils";
 
 export enum LoginScreens {
   LOGIN,
@@ -20,11 +23,15 @@ export enum LoginScreens {
 
 const schema = z.object({
   identifier: z.union([
-    z.string().email("Email ou CPF inválido."),
+    z.string().email("Email ou CPF inválido"),
     z
       .string()
-      .regex(/^[0-9]+$/, "Email ou CPF inválido.")
-      .length(11, "CPF inválido."),
+      .min(11, "CPF deve ter 11 dígitos")
+      .max(14, "CPF muito longo")
+      .refine((value) => {
+        const unmasked = unMaskNumbers(value);
+        return unmasked.length === 11;
+      }, "CPF inválido"),
   ]),
   password: z
     .string()
@@ -35,7 +42,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const Login: React.FC = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const history = useHistory();
 
   const [loading, setLoading] = useState(false);
@@ -48,6 +55,8 @@ const Login: React.FC = () => {
     register,
     formState: { errors },
     setError,
+    setValue,
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -62,19 +71,29 @@ const Login: React.FC = () => {
   //   }
   // }, [user, history]);
 
+  const identifierValue = watch("identifier");
+
+  useEffect(() => {
+    const onlyNumbers = identifierValue.replace(/\D/g, "");
+    const canBeCPF = onlyNumbers.length === 11 && /^\d+$/.test(identifierValue);
+    if (canBeCPF) setValue("identifier", maskCpf(identifierValue));
+    else setValue("identifier", identifierValue);
+  }, [identifierValue]);
+
   const handleLogin = async (data: FieldValues) => {
     setLoading(true);
 
-    const { identifier, password } = data;
+    let { identifier, password } = data;
+    const onlyNumbers = identifierValue.replace(/\D/g, "");
+    const isCPF = onlyNumbers.length === 11 && isValidCPF(onlyNumbers);
+    if (isCPF) identifier = unMaskNumbers(identifier);
+
     const response = await login(identifier, password);
 
-    if (response.success) {
-      const firstLogin = localStorage.getItem("onboardingComplete");
-      if (!firstLogin) {
-        history.replace("/onboarding");
-      } else {
-        history.replace("/tabs/tab1");
-      }
+    if (response.success && response.data) {
+      history.replace(
+        response.data.isOnboardingViewed ? "/tabs/tab1" : "/onboarding"
+      );
     } else {
       setError("root", { message: "Credenciais inválidas. Tente novamente." });
     }
@@ -93,10 +112,12 @@ const Login: React.FC = () => {
               <input
                 type="text"
                 className="Input-Login"
+                placeholder="Email ou CPF"
                 {...register("identifier")}
+                aria-invalid={errors.password ? "true" : "false"}
               />
-              {errors.identifier && (
-                <p className="error-message">{errors.identifier.message}</p>
+              {errors.identifier && errors.identifier.message && (
+                <InputErrorMessage message={errors.identifier.message} />
               )}
             </div>
 
@@ -105,8 +126,10 @@ const Login: React.FC = () => {
               <div className="password-input-container">
                 <input
                   type={showPassword ? "text" : "password"}
+                  placeholder="Senha"
                   className="Input-Login"
                   {...register("password")}
+                  aria-invalid={errors.password ? "true" : "false"}
                 />
                 <IonIcon
                   icon={showPassword ? eyeOff : eye}
@@ -114,17 +137,21 @@ const Login: React.FC = () => {
                   className="toggle-password-icon"
                 />
               </div>
-              {errors.password && (
-                <p className="error-message">{errors.password.message}</p>
+              {errors.password && errors.password.message && (
+                <InputErrorMessage message={errors.password.message} />
               )}
             </div>
 
-            {errors.root && (
-              <p className="error-message">{errors.root.message}</p>
+            {errors.root && errors.root.message && (
+              <InputErrorMessage message={errors.root.message} />
             )}
 
             <button type="submit" className="login-button" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? (
+                <IonSpinner name="crescent" color="light" />
+              ) : (
+                "Entrar"
+              )}
             </button>
           </form>
           <p className="signup-prompt">

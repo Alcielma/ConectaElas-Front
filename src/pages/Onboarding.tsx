@@ -1,17 +1,23 @@
-import { IonPage, IonButton, IonIcon } from "@ionic/react";
+import { IonPage, IonButton, IonIcon, IonSpinner } from "@ionic/react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { Pagination, EffectFade } from "swiper/modules";
 import { chevronBack, chevronForward } from "ionicons/icons";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 import "./Onboarding.css";
 import React, { useState, useRef } from "react";
+import { arrowForward } from "ionicons/icons";
 import imagem1 from "../Assets/slides/imagem1.svg";
 import imagem2 from "../Assets/slides/imagem2.svg";
 import imagem3 from "../Assets/slides/imagem3.svg";
 import LogoConectaRedondo from "../Assets/slides/Logo-conectaelas-redondo.png";
-import { EffectFade } from "swiper/modules";
-import "swiper/css/effect-fade";
+import { FieldValues, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import AuthService from "../Services/AuthService";
+import { useAuth } from "../Contexts/AuthContext";
+import InputErrorMessage from "../components/inputErrorMessage";
 
 const slides = [
   {
@@ -30,31 +36,69 @@ const slides = [
     image: imagem3,
   },
   {
-    title: "Pronta para começar?",
-    text: "Descubra tudo que o Conecta Elas pode fazer por você. Vamos juntas!",
+    title: "Este é seu espaço seguro.",
+    text: "Nos diga como prefere ser chamada e vamos juntas nessa!",
     image: LogoConectaRedondo,
     isLast: true,
   },
 ];
 
+const schema = z.object({
+  nome: z
+    .string()
+    .min(3, "O nome é muito pequeno.")
+    .max(58, "O nome é muito grande."),
+});
+
+type FormData = z.infer<typeof schema>;
+
 const Onboarding: React.FC = () => {
+  const { user, updateUser } = useAuth();
   const swiperRef = useRef<any>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
+  const [prevSlideIndex, setPrevSlideIndex] = useState(0);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      nome: "",
+    },
+  });
 
   const nextSlide = () => {
-    if (swiperRef.current) {
+    if (swiperRef.current && !transitioning) {
       swiperRef.current.slideNext();
     }
   };
 
   const prevSlide = () => {
-    if (swiperRef.current) {
+    if (swiperRef.current && !transitioning) {
       swiperRef.current.slidePrev();
     }
   };
 
-  const finishOnboarding = () => {
-    localStorage.setItem("onboardingComplete", "true");
+  const handleSlideChange = (swiper: any) => {
+    setTransitioning(true);
+    setPrevSlideIndex(currentSlide);
+    setCurrentSlide(swiper.activeIndex);
+
+    // Tempo deve coincidir com a duração da animação CSS
+    setTimeout(() => setTransitioning(false), 500);
+  };
+
+  const finishOnboarding = async (data: FieldValues) => {
+    const { nome } = data;
+
+    const success = await AuthService.updateuser(user!.id, {
+      nome,
+      is_onboarding_viewed: true,
+    });
+    if (success) updateUser({ isOnboardingViewed: true, name: nome });
     window.location.href = "/tabs/tab1";
   };
 
@@ -65,8 +109,8 @@ const Onboarding: React.FC = () => {
           modules={[Pagination, EffectFade]}
           effect="fade"
           fadeEffect={{ crossFade: true }}
-          //   pagination={{ clickable: true }}
-          onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)}
+          speed={500}
+          onSlideChange={handleSlideChange}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
         >
           {slides.map((slide, index) => (
@@ -74,13 +118,74 @@ const Onboarding: React.FC = () => {
               <div className="slide-image-container">
                 <img src={slide.image} className="slide-image" />
               </div>
-              <h2>{slide.title}</h2>
-              <p>{slide.text}</p>
+
+              {/* Título com animação */}
+              <h2
+                className={`
+                ${
+                  transitioning && index === prevSlideIndex
+                    ? "slide-text-out"
+                    : ""
+                }
+                ${
+                  transitioning && index === currentSlide ? "slide-text-in" : ""
+                }
+              `}
+              >
+                {slide.title}
+              </h2>
+
+              {/* Texto com animação */}
+              <p
+                className={`
+                ${
+                  transitioning && index === prevSlideIndex
+                    ? "slide-text-out"
+                    : ""
+                }
+                ${
+                  transitioning && index === currentSlide ? "slide-text-in" : ""
+                }
+              `}
+              >
+                {slide.text}
+              </p>
 
               {slide.isLast && (
-                <button className="start-button" onClick={finishOnboarding}>
-                  Começar agora
-                </button>
+                <form
+                  onSubmit={handleSubmit(finishOnboarding)}
+                  className="last-slide-form"
+                >
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className={`form-input ${errors.nome ? "error" : ""}`}
+                      placeholder="Como você quer ser chamada?"
+                      {...register("nome")}
+                    />
+                    {errors.nome && errors.nome.message && (
+                      <InputErrorMessage message={errors.nome.message} />
+                    )}
+                  </div>
+
+                  <button
+                    className="start-button"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <IonSpinner name="crescent" color="light" />
+                    ) : (
+                      <>
+                        Começar agora
+                        <IonIcon
+                          icon={arrowForward}
+                          style={{ marginLeft: "8px" }}
+                        />
+                      </>
+                    )}
+                  </button>
+                </form>
               )}
             </SwiperSlide>
           ))}
@@ -90,7 +195,7 @@ const Onboarding: React.FC = () => {
           <IonButton
             fill="clear"
             onClick={prevSlide}
-            disabled={currentSlide === 0}
+            disabled={currentSlide === 0 || transitioning}
           >
             <IonIcon icon={chevronBack} className="nav-button" />
           </IonButton>
@@ -105,7 +210,11 @@ const Onboarding: React.FC = () => {
           </div>
 
           {currentSlide !== slides.length - 1 ? (
-            <IonButton fill="clear" onClick={nextSlide}>
+            <IonButton
+              fill="clear"
+              onClick={nextSlide}
+              disabled={transitioning}
+            >
               <IonIcon icon={chevronForward} className="nav-button" />
             </IonButton>
           ) : (

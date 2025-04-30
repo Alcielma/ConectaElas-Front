@@ -129,11 +129,7 @@ const Tab3: React.FC = () => {
       return;
     }
 
-    const success = await AuthService.updateUsername(
-      user!.id,
-      newUsername,
-      authToken!
-    );
+    const success = await AuthService.updateUsername(user!.id, newUsername);
 
     if (success) {
       updateUser({ name: newUsername });

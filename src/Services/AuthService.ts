@@ -4,8 +4,10 @@ import { IHTTPReturn } from "./apiTypes";
 interface UserPayload {
   id: number;
   username: string;
+  nome?: string;
   email: string;
   Tipo: string;
+  is_onboarding_viewed: boolean;
 }
 
 interface LoginPayload {
@@ -98,23 +100,24 @@ const AuthService = {
     }
   },
 
-  async updateUsername(userId: number, newUsername: string, authToken: string) {
+  async updateUsername(userId: number, newUsername: string) {
     try {
-      const response = await api.put(
-        `/users/${userId}`,
-        {
-          username: newUsername,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+      const response = await api.put(`/users/${userId}`, {
+        nome: newUsername,
+      });
       return response.status === 200;
     } catch (error) {
       console.error("Erro ao atualizar o nome de usuário:", error);
+      return false;
+    }
+  },
+
+  async updateuser(userId: number, data: Partial<UserPayload>) {
+    try {
+      const response = await api.put(`/users/${userId}`, { ...data });
+      return response.status === 200;
+    } catch (error) {
+      console.error("Erro ao atualizar o usuário:", error);
       return false;
     }
   },

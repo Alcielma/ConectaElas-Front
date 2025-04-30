@@ -4,117 +4,171 @@
 } */
 
 .onboarding-page {
-    display: flex !important;
-    justify-content: end !important;
-    padding-bottom: 40px;
-    align-items: center;
-    background-color: white;
-    color: var(--cor-principal);
+  display: flex !important;
+  justify-content: end !important;
+  padding-bottom: 40px;
+  align-items: center;
+  background-color: white;
+  color: var(--cor-principal);
 }
 
 .onboarding-container {
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
 }
 
 .slide-image-container {
-    width: 100%;
-    max-width: 300px;
-    height: 300px;
-    margin: 0 auto 2rem auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-
+  width: 100%;
+  max-width: 300px;
+  height: 300px;
+  margin: 0 auto 2rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .slide-image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .onboarding-page h2 {
-    font-weight: 900;
-    margin-top: 1rem;
+  font-weight: 900;
+  margin-top: 1rem;
 }
 
 .onboarding-page p {
-    font-size: 1rem;
-    margin-top: 2rem;
-    /* margin-bottom: 4rem; */
-    font-weight: 100;
-    color: rgb(53, 53, 53);
+  font-size: 1rem;
+  margin-top: 2rem;
+  /* margin-bottom: 4rem; */
+  font-weight: 100;
+  color: rgb(53, 53, 53);
 }
 
 .navigation {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
 }
 
 .dots {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
 }
 
 .dot {
-    width: 10px;
-    height: 10px;
-    background-color: var(--cor-principal);
-    opacity: 0.5;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+  width: 10px;
+  height: 10px;
+  background-color: var(--cor-principal);
+  opacity: 0.5;
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
 .dot.active {
-    opacity: 1;
-    background-color: var(--cor-principal);
+  opacity: 1;
+  background-color: var(--cor-principal);
 }
 
 .nav-button {
-    color: var(--cor-secundaria);
+  color: var(--cor-secundaria);
 }
 
 .start-button {
-    margin-top: 2rem;
-    padding: 0.9rem 1.8rem;
-    background-color: var(--cor-principal);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    overflow: hidden;
+  width: 100%;
+  max-width: 18rem;
+  margin-top: 2rem;
+  padding: 0.9rem 1.8rem;
+  background-color: var(--cor-principal);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
 }
 
 .start-button .arrow {
-    display: inline-block;
-    transition: transform 0.3s ease;
+  display: inline-block;
+  transition: transform 0.3s ease;
 }
 
 .start-button:hover {
-    background-color: #c30047;
-
+  background-color: #c30047;
 }
 
 .start-button:hover .arrow {
-    transform: translateX(5px);
+  transform: translateX(5px);
 }
 
+.start-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
 
 .placeholder-button {
-    width: 44px;
-    height: 44px;
+  width: 44px;
+  height: 44px;
+}
+
+.form-input {
+  text-align: center;
+  font-weight: bold;
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-text-out {
+  animation: fadeOutDown 0.5s ease-out forwards;
+  position: absolute;
+  width: 100%;
+}
+
+.slide-text-in {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.swiper-slide {
+  position: relative;
+}
+
+.swiper-slide h2,
+.swiper-slide p {
+  position: relative;
+  margin: 0 auto;
+  width: 80%;
+  text-align: center;
 }

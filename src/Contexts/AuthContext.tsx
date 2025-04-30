@@ -13,9 +13,11 @@ import { IHTTPReturn } from "../Services/apiTypes";
 
 interface User {
   id: number;
-  name: string;
+  username: string;
+  name?: string;
   email: string;
   tipo: string;
+  isOnboardingViewed: boolean;
 }
 
 interface AuthContextType {
@@ -87,9 +89,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const adaptedUser: User = {
       id: userData.id,
-      name: userData.username,
+      name: userData.nome,
+      username: userData.username,
       email: userData.email,
       tipo: userData.Tipo,
+      isOnboardingViewed: userData.is_onboarding_viewed,
     };
 
     setAuthToken(jwt);
@@ -131,9 +135,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const adaptedUser: User = {
       id: user.id,
-      name: user.username,
+      name: user.nome,
+      username: user.username,
       email: user.email,
       tipo: user.Tipo || "Autenticado",
+      isOnboardingViewed: user.is_onboarding_viewed,
     };
 
     localStorage.setItem("authToken", jwt);
