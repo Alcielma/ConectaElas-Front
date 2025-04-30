@@ -199,8 +199,11 @@ const Tab3: React.FC = () => {
               className="profile-section profile-link-button"
               onClick={() => history.push("/tabs/sobre")}
             >
-              <div className="info">
-                <h3 className="profile-label">Sobre o Conecta Elas</h3>
+              <div className="saiba-mais-box">
+                <h3 className="profile-label">
+                  {" "}
+                  Saiba mais sobre o Conecta Elas
+                </h3>
               </div>
             </button>
           </div>

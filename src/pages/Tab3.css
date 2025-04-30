@@ -49,10 +49,11 @@
   display: flex;
   flex-direction: row;
   gap: 5px;
+  align-items: baseline;
 }
 
 .profile-label {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 900;
   color: #666;
 }
@@ -93,7 +94,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .IonModal {
@@ -180,4 +181,13 @@
   border: none;
   cursor: pointer;
   padding: 10px 20px;
+}
+
+.saiba-mais {
+  display: flex;
+  align-items: center;
+}
+
+.saiba-mais-box h3 {
+  margin-top: 10px !important;
 }
