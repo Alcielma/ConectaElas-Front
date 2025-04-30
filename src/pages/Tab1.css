@@ -17,7 +17,7 @@
 .category-buttons {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 45vh;
     max-width: 45vh;
     /* gap: 20px; */
     justify-content: space-between;
@@ -29,8 +29,8 @@
 
 .category-button {
     color: white;
-    width: 4rem;
-    height: 4rem;
+    width: 4.5rem;
+    height: 4.5rem;
     border-radius: 50%;
     background-color: var(--cor-principal);
     border: none;

@@ -1,9 +1,10 @@
 .post-container {
     display: flex;
-    max-width: 45vh;
+    /* max-width: 45vh; */
+    width: 45vh;
     width: 23rm;
     height: 23rm;
-    padding: 5px 20px;
+    padding: 5px 15px;
     flex-direction: column;
     align-items: flex-center;
     gap: 6px;

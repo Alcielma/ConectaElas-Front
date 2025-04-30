@@ -9,8 +9,8 @@
 
 
 .carrossel-image {
-    width: 100%;
-    height: auto;
+    width: 45vh;
+    height: 23vh;
     border-radius: 8px;
     object-fit: cover;
     display: block;
