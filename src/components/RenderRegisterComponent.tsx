@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { IonIcon } from "@ionic/react";
+import React, { useEffect, useState } from "react";
+import { IonIcon, IonSpinner } from "@ionic/react";
 import { arrowBack, eye, eyeOff } from "ionicons/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../Contexts/AuthContext";
@@ -7,6 +7,9 @@ import { LoginScreens } from "../pages/Login";
 import "./RenderRegisterComponent.css";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
+import { isValidCPF } from "../utils/utils";
+import InputErrorMessage from "./inputErrorMessage";
+import { maskCpf, unMaskNumbers } from "../utils/mask";
 
 interface RenderRegisterComponentProps {
   handleChangeScreen: (screen: LoginScreens) => void;
@@ -18,11 +21,13 @@ const schema = z
       .string()
       .nonempty("E-mail não pode ser vazio")
       .email("E-mail inválido"),
+    password: z.string().min(8, "A senha deve ter pelo menos 8 digitos"),
     username: z
       .string()
-      .min(3, "O nome não é grande o suficiente")
-      .max(50, "O nome é muito grande"),
-    password: z.string().min(8, "A senha deve ter pelo menos 8 digitos"),
+      .nonempty("CPF não pode ser vazio")
+      .refine((cpf) => isValidCPF(cpf), {
+        message: "CPF inválido",
+      }),
     confirmPassword: z.string().min(8, "A senha deve ter pelo menos 8 digitos"),
   })
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
@@ -41,9 +46,18 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
+  const usernameValue = watch("username");
+
+  useEffect(() => {
+    if (usernameValue) setValue("username", maskCpf(usernameValue));
+  }, [usernameValue]);
+
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -51,7 +65,8 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
   const handleRegister = async (data: FieldValues) => {
     setLoading(true);
 
-    const { username, email, password } = data;
+    let { username, email, password } = data;
+    username = unMaskNumbers(username);
     const response = await register(username, email, password);
 
     if (response.success) {
@@ -59,7 +74,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
     } else {
       if (response.message === "Email or Username are already taken") {
         setError("root", {
-          message: "Email ou nome de usuário já está em uso!",
+          message: "Email ou CPF já cadastrado!",
         });
       } else {
         setError("root", {
@@ -67,7 +82,6 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
         });
       }
     }
-
     setLoading(false);
   };
 
@@ -85,14 +99,14 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
         <h2 className="login-title">Criando uma conta</h2>
         <form onSubmit={handleSubmit(handleRegister)}>
           <div className="input-group">
-            <label htmlFor="username">Como você prefere ser chamada?</label>
+            <label htmlFor="username">CPF</label>
             <input
               type="text"
-              placeholder="Nome de usuário"
-              {...formRegister("username", { required: true, maxLength: 80 })}
+              placeholder="CPF"
+              {...formRegister("username")}
             />
-            {errors.username && (
-              <p className="error-message">{errors.username.message}</p>
+            {errors.username && errors.username.message && (
+              <InputErrorMessage message={errors.username.message} />
             )}
           </div>
 
@@ -103,8 +117,8 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
               placeholder="E-mail"
               {...formRegister("email")}
             />
-            {errors.email && (
-              <p className="error-message">{errors.email.message}</p>
+            {errors.email && errors.email.message && (
+              <InputErrorMessage message={errors.email.message} />
             )}
           </div>
 
@@ -118,6 +132,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
 
             <div className="password-input-container">
               <input
+                placeholder="Digite sua senha"
                 type={showPassword ? "text" : "password"}
                 {...formRegister("password")}
               />
@@ -127,8 +142,8 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
                 className="toggle-password-icon"
               />
             </div>
-            {errors.password && (
-              <p className="error-message">{errors.password.message}</p>
+            {errors.password && errors.password.message && (
+              <InputErrorMessage message={errors.password.message} />
             )}
           </div>
 
@@ -136,6 +151,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
             <label htmlFor="confirmPassword">Digite a senha novamente</label>
             <div className="password-input-container">
               <input
+                placeholder="Digite sua senha novamente"
                 type={showConfirmPassword ? "text" : "password"}
                 {...formRegister("confirmPassword")}
               />
@@ -145,17 +161,21 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
                 className="toggle-password-icon"
               />
             </div>
-            {errors.confirmPassword && (
-              <p className="error-message">{errors.confirmPassword.message}</p>
+            {errors.confirmPassword && errors.confirmPassword.message && (
+              <InputErrorMessage message={errors.confirmPassword.message} />
             )}
           </div>
 
-          {errors.root && (
-            <p className="error-message">{errors.root.message}</p>
+          {errors.root && errors.root.message && (
+            <InputErrorMessage message={errors.root.message} />
           )}
 
           <button type="submit" className="register-button" disabled={loading}>
-            {loading ? "Cadastrando..." : "Cadastrar"}
+            {loading ? (
+              <IonSpinner name="crescent" color="light" />
+            ) : (
+              "Cadastrar"
+            )}
           </button>
         </form>
       </div>

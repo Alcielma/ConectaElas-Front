@@ -19,8 +19,8 @@
 }
 
 .logoLogin-container img {
-  width: 30%;
-  height: auto;
+  width: auto;
+  height: 15vh;
   aspect-ratio: 1 / 1;
   animation: fadein 1s ease;
 }

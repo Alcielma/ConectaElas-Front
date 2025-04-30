@@ -1,60 +1,55 @@
 /* variables.css ou global.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 :root {
-    --ion-font-family: 'Inter', sans-serif;
-    --cor-principal: #DD2273;
-    --cor-secundaria: #720079;
-    --cor-secundaria-hover: #3d0341;
-    /* --cor-fundo: #f5f7fa; */
-    --cor-fundo: #FFF;
-    /* Define a variável de cor */
+  --ion-font-family: "Inter", sans-serif;
+  --cor-principal: #dd2273;
+  --cor-secundaria: #720079;
+  --cor-secundaria-hover: #3d0341;
+  /* --cor-fundo: #f5f7fa; */
+  --cor-fundo: #fff;
+  /* Define a variável de cor */
 }
-
 
 /* Estilizando o IonToolbar */
 ion-toolbar {
-    --background: var(--cor-principal);
-    --color: #ffffff;
-    --border-color: #000000;
-
+  --background: var(--cor-principal);
+  --color: #ffffff;
+  --border-color: #000000;
 }
 
 ion-toolbar chat-input-toolbar {
-    background-color: white;
+  background-color: white;
 }
 
 /* Centralizando o IonTitle */
 ion-toolbar ion-title {
-    text-align: center;
-    width: 100%;
-    position: relative;
-    font-weight: 800;
-
+  text-align: center;
+  width: 100%;
+  position: relative;
+  font-weight: 800;
 }
 
-
 ion-tab-bar {
-    --background: white;
-    --color: white;
-    --color-selected: #ffffff;
-    --ion-color-primary: #ffffff;
-    border: #cccccc;
-    box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25);
-
+  --background: white;
+  --color: white;
+  --color-selected: #ffffff;
+  --ion-color-primary: #ffffff;
+  border: #cccccc;
+  box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25);
 }
 
 ion-tab-button {
-    --color: var(--cor-principal);
-    /* Cor do texto */
-    --color-selected: var(--cor-secundaria);
-    /* Cor do texto quando ativo */
-    --ripple-color: rgba(255, 255, 255, 0.3);
-    /* Cor do efeito ripple */
+  --color: var(--cor-principal);
+  /* Cor do texto */
+  --color-selected: var(--cor-secundaria);
+  /* Cor do texto quando ativo */
+  --ripple-color: rgba(255, 255, 255, 0.3);
+  /* Cor do efeito ripple */
 }
 
 :host(.button-solid) {
-    --background: #24CE9E;
-    --color: var(--ion-color-primary-contrast, #fff);
+  --background: #24ce9e;
+  --color: var(--ion-color-primary-contrast, #fff);
 }
