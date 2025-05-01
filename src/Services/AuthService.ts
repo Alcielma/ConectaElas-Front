@@ -121,6 +121,51 @@ const AuthService = {
       return false;
     }
   },
+
+  async confirmarCodigo(email: string, codigo: string): Promise<IHTTPReturn> {
+    try {
+      const response = await api.post("/inserir-codigos", {
+        email,
+        codigo,
+      });
+
+      return {
+        success: response.status === 200,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
+      console.error("Erro ao confirmar código:", error);
+      return {
+        success: false,
+        status: error.response?.status,
+        message:
+          error.response?.data?.error?.message || "Falha ao confirmar código",
+        error: error.response?.data?.error || error.message,
+      };
+    }
+  },
+
+  async reenviarCodigo(email: string): Promise<IHTTPReturn> {
+    try {
+      const response = await api.post("/reenvio-codigos", { email });
+
+      return {
+        success: response.status === 200,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
+      console.error("Erro ao reenviar código:", error);
+      return {
+        success: false,
+        status: error.response?.status,
+        message:
+          error.response?.data?.error?.message || "Falha ao reenviar código",
+        error: error.response?.data?.error || error.message,
+      };
+    }
+  },
 };
 
 export default AuthService;

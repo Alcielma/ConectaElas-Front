@@ -69,19 +69,18 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
     username = unMaskNumbers(username);
     const response = await register(username, email, password);
 
-    if (response.success) {
-      handleChangeScreen(LoginScreens.LOGIN);
-    } else {
+    if (!response.success) {
       if (response.message === "Email or Username are already taken") {
         setError("root", {
           message: "Email ou CPF já cadastrado!",
         });
       } else {
         setError("root", {
-          message: "Houve um erro ao tenta cadastrar. Tente novamente",
+          message: "Houve um erro ao tentar cadastrar. Tente novamente",
         });
       }
     }
+
     setLoading(false);
   };
 
