@@ -6,8 +6,8 @@ if (!token) {
   console.warn("Token de autenticação não encontrado!");
 }
 
-const socket: Socket = io(import.meta.env.VITE_API_URL, {
-  transports: ["websocket"],
+const socket: Socket = io(import.meta.env.VITE_SOCKET_URL, {
+  transports: ["polling"],
   forceNew: true,
   reconnection: true,
   reconnectionAttempts: 5,
