@@ -5,6 +5,7 @@ import CommentItem from "./CommentItem";
 import "./Post.css";
 import { IonIcon } from "@ionic/react";
 import { chatbubbleSharp } from "ionicons/icons";
+import logoPerfil from "../Assets/logoPerfil.jpg";
 
 interface Comment {
   id: number;
@@ -93,11 +94,7 @@ const Post: React.FC<PostProps> = ({
       <div className="post-header" onClick={toggleExpand}>
         <div className="profile-header-post">
           <div className="profile-image">
-            <img
-              src="/src/Assets/logoPerfil.jpg"
-              alt=""
-              className="imagem-perfil-post"
-            />
+            <img src={logoPerfil} alt="" className="imagem-perfil-post" />
           </div>
           <div className="profile-name-post">ConectaElas</div>
         </div>
