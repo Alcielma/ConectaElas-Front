@@ -168,5 +168,5 @@
 }
 
 .caixa-enviar-mensagem {
-    background-color: #fff !important;
+    background-color: var(--cor-principal);
 }

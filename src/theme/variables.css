@@ -53,3 +53,7 @@ ion-tab-button {
   --background: #24ce9e;
   --color: var(--ion-color-primary-contrast, #fff);
 }
+
+native-wrapper.sc-ion-input-ios {
+  --background: var(--cor-principal);
+}
