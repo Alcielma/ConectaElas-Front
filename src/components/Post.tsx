@@ -94,7 +94,7 @@ const Post: React.FC<PostProps> = ({
         <div className="profile-header-post">
           <div className="profile-image">
             <img
-              src="/src/Assets/WhatsApp Image 2025-04-17 at 17.29.40_577d8fb8.jpg"
+              src="/src/Assets/logoPerfil.jpg"
               alt=""
               className="imagem-perfil-post"
             />

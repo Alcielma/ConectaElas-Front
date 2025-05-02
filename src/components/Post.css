@@ -14,7 +14,7 @@
 
 .post-image {
     width: 100%;
-    height: auto;
+    height: 23vh;
     max-height: 15rem;
     border-radius: 8px;
     object-fit: cover;
