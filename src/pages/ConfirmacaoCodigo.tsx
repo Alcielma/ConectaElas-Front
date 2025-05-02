@@ -49,10 +49,10 @@ const ConfirmacaoCodigo: React.FC = () => {
   const handleEnviarCodigo = async () => {
     const codigoDigitado = code.join("");
 
-    if (codigoDigitado.length !== NUM_DIGITS) {
-      setErro("Digite todos os 5 dígitos do código.");
-      return;
-    }
+    // if (codigoDigitado.length !== NUM_DIGITS) {
+    //   setErro("Digite todos os 5 dígitos do código.");
+    //   return;
+    // }
 
     setLoading(true);
     setErro("");
@@ -116,13 +116,13 @@ const ConfirmacaoCodigo: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
+          {/* <IonButtons slot="start">
             <IonBackButton defaultHref="/login" />
-          </IonButtons>
+          </IonButtons> */}
           <IonTitle className="center-title">Confirmação de e-mail</IonTitle>
-          <IonButtons slot="end">
+          {/* <IonButtons slot="end">
             <div style={{ width: "44px" }} />
-          </IonButtons>
+          </IonButtons> */}
         </IonToolbar>
       </IonHeader>
       <IonContent className="confirmacao-content" fullscreen>

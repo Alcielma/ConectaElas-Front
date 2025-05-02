@@ -152,7 +152,7 @@ const Post: React.FC<PostProps> = ({
             />
           ))
         ) : (
-          <p>Sem comentários.</p>
+          <p className="sem-comentarios">Sem comentários.</p>
         )}
       </div>
     </div>
