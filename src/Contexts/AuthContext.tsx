@@ -63,12 +63,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     ionRouter.push("/login", "forward", "replace");
-  //   }
-  // }, [user]);
-
   const login = async (
     identifier: string,
     password: string
@@ -123,34 +117,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const data = { username, email, password };
     const response = await AuthService.register(data);
 
-    if (!response.success || !response.data?.jwt || !response.data?.user) {
-      console.error("Falha ao tentar se registar", response.message);
+    if (!response.success || !response.data?.user) {
+      console.error("Falha ao tentar se registrar", response.message);
       return {
         success: false,
         message: response.message || "Falha ao registrar",
       };
     }
 
-    const { jwt, user } = response.data;
+    const { user } = response.data;
 
-    const adaptedUser: User = {
-      id: user.id,
-      name: user.nome,
-      username: user.username,
-      email: user.email,
-      tipo: user.Tipo || "Autenticado",
-      isOnboardingViewed: user.is_onboarding_viewed,
-    };
-
-    localStorage.setItem("authToken", jwt);
-    localStorage.setItem("user", JSON.stringify(adaptedUser));
-
-    setAuthToken(jwt);
-    setUser(adaptedUser);
+    ionRouter.push(
+      `/confirmacao-codigo?email=${encodeURIComponent(email)}`,
+      "forward"
+    );
 
     return {
       success: true,
-      data: adaptedUser,
+      data: user,
     };
   };
 
