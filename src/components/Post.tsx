@@ -28,6 +28,7 @@ const Post: React.FC<PostProps> = ({
   imageUrl,
   comentarios,
 }) => {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(
@@ -101,7 +102,24 @@ const Post: React.FC<PostProps> = ({
           <div className="profile-name-post">ConectaElas</div>
         </div>
         <h2 className="post-title">{title}</h2>
-        <p className="post-description ">{description}</p>
+        <p
+          className={`post-description ${
+            isDescriptionExpanded ? "expanded" : ""
+          }`}
+        >
+          {description}
+        </p>
+        {description.split("\n").length > 3 && (
+          <button
+            className="ver-mais-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsDescriptionExpanded(!isDescriptionExpanded);
+            }}
+          >
+            {isDescriptionExpanded ? "Ver menos" : "Ver mais"}
+          </button>
+        )}
         {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
 
         <div className="comments-count-box">

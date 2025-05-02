@@ -1,106 +1,111 @@
 .post-container {
-    display: flex;
-    /* max-width: 45vh; */
-    width: 45vh;
-    width: 23rm;
-    height: 23rm;
-    padding: 5px 15px;
-    flex-direction: column;
-    align-items: flex-center;
-    gap: 6px;
-    flex-shrink: 0;
-    border-radius: 8px;
+  display: flex;
+  /* max-width: 45vh; */
+  width: 45vh;
+  width: 23rm;
+  height: 23rm;
+  padding: 5px 15px;
+  flex-direction: column;
+  align-items: flex-center;
+  gap: 6px;
+  flex-shrink: 0;
+  border-radius: 8px;
 }
-
 
 .post-image {
-    width: 100%;
-    height: auto;
-    max-height: 15rem;
-    border-radius: 8px;
-    object-fit: cover;
-    overflow: hidden;
+  width: 100%;
+  height: auto;
+  max-height: 15rem;
+  border-radius: 8px;
+  object-fit: cover;
+  overflow: hidden;
 }
-
 
 .post-content {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    padding-top: 1rem;
-    padding-top: 1rem;
-    gap: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding-top: 1rem;
+  padding-top: 1rem;
+  gap: 1px;
 }
-
 
 .post-title {
-    color: #303030;
-    font-family: var(--ion-font-family);
-    font-size: 1.3rem;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+  color: #303030;
+  font-family: var(--ion-font-family);
+  font-size: 1.3rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
-
 
 .post-description {
-    color: #303030;
-    font-family: var(--ion-font-family);
-    font-size: 0.9rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+  white-space: pre-line;
+  max-height: 3.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: max-height 0.3s ease;
+  line-height: 1.2em;
+  color: #000000;
 }
 
+.post-description.expanded {
+  max-height: none;
+}
+
+.ver-mais-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
 
 .profile-container {
-    display: flex;
-    align-items: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .profile-header-post {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 13px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 13px;
 }
 
-
 .profile-image {
-    display: flex;
-    width: 2.5rem;
-    height: 2.5rem;
-    background-color: white;
-    border-radius: 200px;
-    overflow: hidden;
-    padding: 0px;
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: white;
+  border-radius: 200px;
+  overflow: hidden;
+  padding: 0px;
 }
 
 .imagem-perfil-post {
-    display: block;
-    object-fit: cover;
-    border-radius: 200px;
-    height: 100%;
-    width: 100%;
-    transform: scale(1.1);
+  display: block;
+  object-fit: cover;
+  border-radius: 200px;
+  height: 100%;
+  width: 100%;
+  transform: scale(1.1);
 }
-
-
 
 /* .profile-info {
     display: flex;
     flex-direction: column;
 } */
 
-
 .profile-name-post {
-    font-weight: 600;
-    font-size: 14px;
-    color: #000000;
+  font-weight: 600;
+  font-size: 14px;
+  color: #000000;
 }
-
 
 /* .profile-email {
     font-size: 12px;
@@ -108,9 +113,9 @@
 } */
 
 .post-comments {
-    margin-top: 20px;
-    padding-top: 10px;
-    border-top: 1px solid #ddd;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
 }
 
 /* .comment-item {
@@ -136,101 +141,100 @@
     color: #807f7f;
 }*/
 .comments-count-box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .chatbubble-icon {
-    font-size: 15px;
-    color: #303030;
+  font-size: 15px;
+  color: #303030;
 }
 
 .comments-count {
-    color: #303030;
-    font-family: var(--ion-font-family);
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    margin-left: 6px;
-    text-align: start;
+  color: #303030;
+  font-family: var(--ion-font-family);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-left: 6px;
+  text-align: start;
 }
 
 /* Contêiner de comentários fechado */
 .post-comments {
-    max-height: 0;
-    overflow-y: auto;
-    transition: max-height 0.3s ease-out;
-    scrollbar-width: none;
-    opacity: 0;
-    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  max-height: 0;
+  overflow-y: auto;
+  transition: max-height 0.3s ease-out;
+  scrollbar-width: none;
+  opacity: 0;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 .post-comments::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
+  width: 0;
+  background: transparent;
 }
 
 /* Contêiner de comentários expandido */
 .post-comments.expanded {
-    max-height: 500px;
-    opacity: 1;
-    transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
+  max-height: 500px;
+  opacity: 1;
+  transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
 }
 
 .add-comment {
-    display: flex;
-    margin-top: 2px;
-    margin-bottom: 12px;
-    gap: 10px;
+  display: flex;
+  margin-top: 2px;
+  margin-bottom: 12px;
+  gap: 10px;
 }
 
 .add-comment input {
-    flex: 1;
-    padding: 8px;
-    border-radius: 10px;
-    border: none;
-    background-color: white;
-    color: #474747;
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  background-color: white;
+  color: #474747;
 }
 
 .add-comment input::placeholder {
-    font-size: 0.9rem;
-    color: #888888bd;
+  font-size: 0.9rem;
+  color: #888888bd;
 }
 
-
 .add-comment button {
-    padding: 8px 12px;
-    border-radius: 10px;
-    background-color: var(--cor-secundaria);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background-color: var(--cor-secundaria);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
 }
 
 .add-comment button:hover {
-    background-color: var(--cor-secundaria-hover);
+  background-color: var(--cor-secundaria-hover);
 }
 
 /* ___________________________________________________ */
 
 .success-message {
-    color: green;
-    font-size: 0.9rem;
-    padding: 5px 0;
-    animation: fadeOut 2.5s forwards;
+  color: green;
+  font-size: 0.9rem;
+  padding: 5px 0;
+  animation: fadeOut 2.5s forwards;
 }
 
 @keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
+  from {
+    opacity: 1;
+  }
 
-    to {
-        opacity: 0;
-    }
+  to {
+    opacity: 0;
+  }
 }
