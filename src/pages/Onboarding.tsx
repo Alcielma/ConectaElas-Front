@@ -156,7 +156,7 @@ const Onboarding: React.FC = () => {
                   onSubmit={handleSubmit(finishOnboarding)}
                   className="last-slide-form"
                 >
-                  <div className="input-group">
+                  <div className="input-group-name">
                     <input
                       type="text"
                       className={`form-input ${errors.nome ? "error" : ""}`}
