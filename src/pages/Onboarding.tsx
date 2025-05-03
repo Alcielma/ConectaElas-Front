@@ -32,7 +32,7 @@ const slides = [
   },
   {
     title: "Você nunca está sozinha.",
-    text: "Converse de forma anônima com nosso assistente e encontre ajuda dos órgãos competentes sempre que precisar.",
+    text: "Converse de forma anônima com a Secretaria da Mulher e encontre ajuda dos órgãos competentes sempre que precisar.",
     image: imagem3,
   },
   {

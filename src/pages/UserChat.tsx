@@ -91,7 +91,7 @@ const UserChat: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
-          <IonTitle className="center-title">Chat com Assistente</IonTitle>
+          <IonTitle className="center-title">Secretaria da Mulher</IonTitle>
           <IonButtons slot="end">
             <div style={{ width: "44px" }} />
           </IonButtons>
@@ -131,8 +131,8 @@ const UserChat: React.FC = () => {
               ))
           ) : (
             <p className="no-messages">
-              Envie uma mensagem para iniciar seu chat com um dos nossos
-              assistentes!
+              Envie uma mensagem para iniciar seu chat com a Secretaria da
+              Mulher!
             </p>
           )}
           {/* {isTyping && (
