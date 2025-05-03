@@ -94,12 +94,12 @@ const Post: React.FC<PostProps> = ({
         <div className="profile-header-post">
           <div className="profile-image">
             <img
-              src="/src/Assets/logoPerfil.jpg"
+              src="/src/Assets/SECRETARIA_MUNICIPAL_DAS_MULHERES.png"
               alt=""
               className="imagem-perfil-post"
             />
           </div>
-          <div className="profile-name-post">ConectaElas</div>
+          <div className="profile-name-post">Secretaria da Mulher</div>
         </div>
         <h2 className="post-title">{title}</h2>
         <p

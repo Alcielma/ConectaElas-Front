@@ -81,8 +81,8 @@
 
 .profile-image {
     display: flex;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 3rem;
     background-color: white;
     border-radius: 200px;
     overflow: hidden;
@@ -91,11 +91,11 @@
 
 .imagem-perfil-post {
     display: block;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 200px;
     height: 100%;
     width: 100%;
-    transform: scale(1.1);
+    transform: scale(1);
 }
 
 /* .profile-info {
