@@ -9,6 +9,7 @@ import LmtsLogo from "../Assets/LmtsLogo.png";
 import logoReverseRedondaWhite from "../Assets/logoReverseRedondaWhite.png";
 import SECRETARIA_MUNICIPAL_DAS_MULHERES from "../Assets/SECRETARIA_MUNICIPAL_DAS_MULHERES.png";
 import ACS from "../Assets/ACS.png";
+import UFAPE from "../Assets/Brasao-ufape.png";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -167,8 +168,10 @@ const Login: React.FC = () => {
             <p className="parceiros-tittle">Parceiros:</p>
             <div className="parceiros">
               <div className="parceiro">
+                <img src={ACS} alt="" className="ACS" />
+              </div>
+              <div className="parceiro">
                 <img src={LmtsLogo} alt="" className="lmts" />
-                {/* <div className="caption">Legenda</div> */}
               </div>
               <div className="parceiro">
                 <img
@@ -176,11 +179,10 @@ const Login: React.FC = () => {
                   alt=""
                   className="secretaria"
                 />
-                {/* <div className="caption">Legenda</div> */}
               </div>
+
               <div className="parceiro">
-                <img src={ACS} alt="" className="ACS" />
-                {/* <div className="caption">Legenda</div> */}
+                <img src={UFAPE} alt="" className="UFAPE" />
               </div>
             </div>
           </div>
