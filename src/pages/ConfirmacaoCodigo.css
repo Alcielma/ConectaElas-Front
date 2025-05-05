@@ -1,96 +1,111 @@
 /* src/pages/ConfirmacaoCodigo.css */
 
 .confirmacao-content {
-    --background: var(--cor-fundo);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  --background: var(--cor-fundo);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .confirmacao-container {
-    text-align: center;
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  text-align: center;
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .confirmacao-container h2 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--cor-secundaria);
-    margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cor-secundaria);
+  margin-bottom: 10px;
 }
 
 .confirmacao-container p {
-    font-size: 1.1rem;
-    color: #555;
-    margin-bottom: 30px;
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 30px;
 }
 
 .code-inputs {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .code-input {
-    width: 50px;
-    height: 60px;
-    font-size: 24px;
-    text-align: center;
-    border: 2.8px solid var(--cor-secundaria);
-    border-radius: 8px;
-    background-color: white;
-    color: #333;
-    outline: none;
-    transition: border-color 0.3s ease;
+  width: 50px;
+  height: 60px;
+  font-size: 24px;
+  text-align: center;
+  border: 2.8px solid var(--cor-secundaria);
+  border-radius: 8px;
+  background-color: white;
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
 .code-input:focus {
-    border-color: var(--cor-principal);
+  border-color: var(--cor-principal);
+}
+
+.code-input:disabled {
+  color: #fff;
+  background-color: var(--cor-secundaria);
+  border-color: var(--cor-secundaria-hover);
+  cursor: not-allowed;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes loading {
+  100% {
+    left: 100%;
+  }
 }
 
 #texto-secundario-confirmacao {
-    font-size: 0.9rem !important;
+  font-size: 0.9rem !important;
 }
 
 .enviar-codigo-button {
-    margin-top: 20px;
-    padding: 0.9rem 1.8rem;
-    background-color: var(--cor-principal);
-    color: white;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  margin-top: 20px;
+  padding: 0.9rem 1.8rem;
+  background-color: var(--cor-principal);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .enviar-codigo-button:hover {
-    background-color: #c30047;
+  background-color: #c30047;
 }
 
 .reenviar-codigo-texto {
-    margin-top: 25px;
-    font-size: 0.95rem;
-    color: #555;
+  margin-top: 25px;
+  font-size: 0.95rem;
+  color: #555;
 }
 
 .reenviar-link {
-    margin-left: 6px;
-    color: var(--cor-principal);
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    transition: color 0.3s;
+  margin-left: 6px;
+  color: var(--cor-principal);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s;
 }
 
 .reenviar-link:hover {
-    color: #c30047;
+  color: #c30047;
 }

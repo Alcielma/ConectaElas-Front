@@ -4,9 +4,8 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonButtons,
-  IonBackButton,
   IonToast,
+  IonSpinner,
 } from "@ionic/react";
 import React, { useRef, useState, useEffect } from "react";
 import "./ConfirmacaoCodigo.css";
@@ -14,6 +13,7 @@ import { useAuth } from "../Contexts/AuthContext";
 import AuthService from "../Services/AuthService";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { promise } from "zod";
 
 const NUM_DIGITS = 5;
 
@@ -29,9 +29,9 @@ const ConfirmacaoCodigo: React.FC = () => {
   const [toastMsg, setToastMsg] = useState("");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const emailFromURL = queryParams.get("email") || "";
+  const identifierFromURL = queryParams.get("identifier") || "";
 
-  if (!emailFromURL) {
+  if (!identifierFromURL) {
     history.goBack();
     return null;
   }
@@ -46,8 +46,8 @@ const ConfirmacaoCodigo: React.FC = () => {
     return () => clearInterval(interval);
   }, [tempoRestante]);
 
-  const handleEnviarCodigo = async () => {
-    const codigoDigitado = code.join("");
+  const handleEnviarCodigo = async (codigo: string[]) => {
+    const codigoDigitado = codigo.join("");
 
     // if (codigoDigitado.length !== NUM_DIGITS) {
     //   setErro("Digite todos os 5 dígitos do código.");
@@ -57,8 +57,10 @@ const ConfirmacaoCodigo: React.FC = () => {
     setLoading(true);
     setErro("");
 
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const result = await AuthService.confirmarCodigo(
-      emailFromURL || "",
+      identifierFromURL || "",
       codigoDigitado
     );
 
@@ -72,11 +74,11 @@ const ConfirmacaoCodigo: React.FC = () => {
   };
 
   const handleReenviarCodigo = async () => {
-    if (!emailFromURL) return;
+    if (!identifierFromURL) return;
     setReenviando(true);
     setTempoRestante(60);
 
-    const result = await AuthService.reenviarCodigo(emailFromURL);
+    const result = await AuthService.reenviarCodigo(identifierFromURL);
 
     if (result.success) {
       setToastMsg("Código reenviado com sucesso!");
@@ -87,7 +89,7 @@ const ConfirmacaoCodigo: React.FC = () => {
     setReenviando(false);
   };
 
-  const handleChange = (value: string, index: number) => {
+  const handleChange = async (value: string, index: number) => {
     if (!/^[0-9]?$/.test(value)) return;
 
     const newCode = [...code];
@@ -99,7 +101,7 @@ const ConfirmacaoCodigo: React.FC = () => {
     }
 
     if (index === NUM_DIGITS - 1 && value) {
-      handleEnviarCodigo();
+      await handleEnviarCodigo(newCode);
     }
   };
 
@@ -137,26 +139,25 @@ const ConfirmacaoCodigo: React.FC = () => {
                 type="text"
                 inputMode="numeric"
                 maxLength={1}
-                className="code-input"
+                className={`code-input`}
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 ref={(el) => (inputRefs.current[index] = el)}
+                disabled={loading}
               />
             ))}
           </div>
 
+          {(loading || reenviando) && (
+            <span style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+              <IonSpinner name="crescent" color="light" />
+            </span>
+          )}
+
           <p id="texto-secundario-confirmacao">
             Caso não encontre, verifique sua caixa de spam ou lixo eletrônico.
           </p>
-
-          <button
-            className="enviar-codigo-button"
-            onClick={handleEnviarCodigo}
-            disabled={loading}
-          >
-            {loading ? "Validando..." : "Enviar código"}
-          </button>
 
           {erro && <p style={{ color: "red", marginTop: 10 }}>{erro}</p>}
 
