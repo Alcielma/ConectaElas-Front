@@ -194,7 +194,7 @@ const Tab3: React.FC = () => {
               </div>
             </div>
 
-            <button
+            {/* <button
               className="profile-section profile-link-button"
               onClick={() => router.push("/tabs/sobre", "forward")}
             >
@@ -204,7 +204,7 @@ const Tab3: React.FC = () => {
                   Saiba mais sobre o Conecta Elas
                 </h3>
               </div>
-            </button>
+            </button> */}
           </div>
 
           <div className="profile-footer">
