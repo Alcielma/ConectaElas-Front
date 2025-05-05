@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const { user } = response.data;
 
     ionRouter.push(
-      `/confirmacao-codigo?email=${encodeURIComponent(email)}`,
+      `/confirmacao-codigo?identifier=${encodeURIComponent(email)}`,
       "forward"
     );
 

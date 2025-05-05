@@ -122,10 +122,13 @@ const AuthService = {
     }
   },
 
-  async confirmarCodigo(email: string, codigo: string): Promise<IHTTPReturn> {
+  async confirmarCodigo(
+    identifier: string,
+    codigo: string
+  ): Promise<IHTTPReturn> {
     try {
       const response = await api.post("/inserir-codigos", {
-        email,
+        identifier,
         codigo,
       });
 
@@ -146,9 +149,9 @@ const AuthService = {
     }
   },
 
-  async reenviarCodigo(email: string): Promise<IHTTPReturn> {
+  async reenviarCodigo(identifier: string): Promise<IHTTPReturn> {
     try {
-      const response = await api.post("/reenvio-codigos", { email });
+      const response = await api.post("/reenvio-codigos", { identifier });
 
       return {
         success: response.status === 200,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { IonIcon, IonSpinner } from "@ionic/react";
+import { IonIcon, IonSpinner, useIonRouter } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
 import RenderRegisterComponent from "../components/RenderRegisterComponent";
@@ -44,6 +44,7 @@ type FormData = z.infer<typeof schema>;
 const Login: React.FC = () => {
   const { login, user } = useAuth();
   const history = useHistory();
+  const ionRouter = useIonRouter();
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -95,6 +96,17 @@ const Login: React.FC = () => {
         response.data.isOnboardingViewed ? "/tabs/tab1" : "/onboarding"
       );
     } else {
+      if (
+        response.message ===
+        "Este e-mail ainda não foi confirmado. Reenviamos um novo código."
+      ) {
+        ionRouter.push(
+          `/confirmacao-codigo?identifier=${encodeURIComponent(identifier)}`,
+          "forward"
+        );
+        return;
+      }
+
       setError("root", { message: "Credenciais inválidas. Tente novamente." });
     }
 

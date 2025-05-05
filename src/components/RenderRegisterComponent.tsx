@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonIcon, IonSpinner } from "@ionic/react";
+import { IonIcon, IonSpinner, useIonRouter } from "@ionic/react";
 import { arrowBack, eye, eyeOff } from "ionicons/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../Contexts/AuthContext";
@@ -58,6 +58,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
     if (usernameValue) setValue("username", maskCpf(usernameValue));
   }, [usernameValue]);
 
+  const ionRouter = useIonRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -74,6 +75,14 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
         setError("root", {
           message: "Email ou CPF já cadastrado!",
         });
+      } else if (
+        response.message ===
+        "Este e-mail já foi usado, mas não confirmado. Um novo código foi enviado."
+      ) {
+        ionRouter.push(
+          `/confirmacao-codigo?identifier=${encodeURIComponent(email)}`,
+          "forward"
+        );
       } else {
         setError("root", {
           message: "Houve um erro ao tentar cadastrar. Tente novamente",
