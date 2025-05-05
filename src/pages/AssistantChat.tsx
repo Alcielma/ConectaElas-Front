@@ -116,7 +116,7 @@ const AssistantChat: React.FC = () => {
               ))
           ) : (
             <p className="no-messages">
-              Envie uma mensagem para iniciar seu chat com o assistente!
+              Envie uma mensagem para iniciar seu chat!
             </p>
           )}
           {/* {isTyping && (

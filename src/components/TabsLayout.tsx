@@ -8,7 +8,12 @@ import {
   IonLabel,
 } from "@ionic/react";
 import { Redirect, Route } from "react-router-dom";
-import { chatboxSharp, homeSharp, personSharp } from "ionicons/icons";
+import {
+  chatboxSharp,
+  homeSharp,
+  personSharp,
+  radioSharp,
+} from "ionicons/icons";
 import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
 import Tab3 from "../pages/Tab3";
@@ -48,8 +53,8 @@ const TabsLayout: React.FC = () => {
           <IonLabel>Início</IonLabel>
         </IonTabButton>
         <IonTabButton tab="tab2" href="/tabs/tab2">
-          <IonIcon aria-hidden="true" icon={chatboxSharp} />
-          <IonLabel>Comunicação</IonLabel>
+          <IonIcon aria-hidden="true" icon={radioSharp} />
+          <IonLabel>Conexões</IonLabel>
         </IonTabButton>
         <IonTabButton tab="tab4" href="/tabs/tab3">
           <IonIcon aria-hidden="true" icon={personSharp} />
