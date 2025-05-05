@@ -12,12 +12,14 @@ import {
 } from "@ionic/react";
 import { useChat } from "../Contexts/ChatContext";
 import { useHistory } from "react-router-dom";
+import { useIonRouter } from "@ionic/react";
 
 import "./AssistantChatList.css";
 
 const AssistantChatList: React.FC = () => {
   const { chats, selectChat, generateRandomName, fetchChats } = useChat();
   const history = useHistory();
+  const router = useIonRouter();
 
   useEffect(() => {
     fetchChats();
@@ -52,7 +54,7 @@ const AssistantChatList: React.FC = () => {
                   className="chat-item"
                   onClick={async () => {
                     await selectChat(chat.id);
-                    history.push(`/assistantChats/${chat.id}`);
+                    router.push(`/assistantChats/${chat.id}`, "forward");
                   }}
                 >
                   <div className="chat-info">

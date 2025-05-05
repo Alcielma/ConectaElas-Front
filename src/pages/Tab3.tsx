@@ -13,10 +13,12 @@ import Modal from "../components/Modal";
 import { useHistory } from "react-router-dom";
 import "./Tab3.css";
 import AuthService from "../Services/AuthService";
+import { useIonRouter } from "@ionic/react";
 
 const Tab3: React.FC = () => {
   const { user, logout, authToken, updateUser } = useAuth();
   const history = useHistory();
+  const router = useIonRouter();
 
   const [showEditEmailModal, setShowEditEmailModal] = useState(false);
   const [showEditUsernameModal, setShowEditUsernameModal] = useState(false);
@@ -60,7 +62,8 @@ const Tab3: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    history.replace("/login");
+    // history.replace("/login");
+    router.push("/Login", "forward");
   };
 
   const handleEditEmail = async () => {
@@ -193,7 +196,7 @@ const Tab3: React.FC = () => {
 
             <button
               className="profile-section profile-link-button"
-              onClick={() => history.push("/tabs/sobre")}
+              onClick={() => router.push("/tabs/sobre", "forward")}
             >
               <div className="saiba-mais-box">
                 <h3 className="profile-label">

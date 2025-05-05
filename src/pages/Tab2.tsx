@@ -15,12 +15,14 @@ import {
   sparkles,
 } from "ionicons/icons";
 import { useAuth } from "../Contexts/AuthContext";
+import { useIonRouter } from "@ionic/react";
 
 import "./Tab2.css";
 
 const Tab2: React.FC = () => {
   const { isAssistant } = useAuth();
   const history = useHistory();
+  const router = useIonRouter();
 
   return (
     <IonPage>
@@ -41,21 +43,24 @@ const Tab2: React.FC = () => {
             </div>
           ) : (
             <div className="card-container">
-              <div className="card" onClick={() => history.push("/tabs/chat")}>
+              <div
+                className="card"
+                onClick={() => router.push("/tabs/chat", "forward")}
+              >
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
                 <p>Chat com a Secretaria da Mulher</p>
               </div>
               <div className="card-down">
                 <div
                   className="card"
-                  onClick={() => history.push("/tabs/ReportChannels")}
+                  onClick={() => router.push("/tabs/ReportChannels", "forward")}
                 >
                   <IonIcon icon={megaphoneSharp} className="card-icon" />
                   <p id="canais">Canais de Denúncia</p>
                 </div>
                 <div
                   className="card"
-                  onClick={() => history.push("/tabs/AngelContact")}
+                  onClick={() => router.push("/tabs/AngelContact", "forward")}
                 >
                   <IonIcon icon={sparkles} className="card-icon" />
                   <p>Contato do Anjo</p>

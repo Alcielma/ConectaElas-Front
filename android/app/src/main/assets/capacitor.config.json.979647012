@@ -1,5 +1,5 @@
 {
-	"appId": "io.ionic.starter",
+	"appId": "com.ufape.lmts.conectaelas",
 	"appName": "Conecta Elas",
 	"webDir": "dist"
 }

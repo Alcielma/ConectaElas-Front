@@ -86,7 +86,7 @@ const App: React.FC = () => {
                   component={ConfirmacaoCodigo}
                 />
 
-                <Route path="/tabs" component={TabsLayout} />
+                <PrivateRoute path="/tabs" component={TabsLayout} />
 
                 <Route
                   exact

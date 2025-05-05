@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.ufape.lmts.conectaelas;
 
 import com.getcapacitor.BridgeActivity;
 

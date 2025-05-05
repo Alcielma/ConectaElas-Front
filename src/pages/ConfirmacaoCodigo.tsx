@@ -14,6 +14,7 @@ import { useAuth } from "../Contexts/AuthContext";
 import AuthService from "../Services/AuthService";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useIonRouter } from "@ionic/react";
 
 const NUM_DIGITS = 5;
 
@@ -30,6 +31,7 @@ const ConfirmacaoCodigo: React.FC = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const emailFromURL = queryParams.get("email") || "";
+  const router = useIonRouter();
 
   if (!emailFromURL) {
     history.goBack();
@@ -63,7 +65,8 @@ const ConfirmacaoCodigo: React.FC = () => {
     );
 
     if (result.success) {
-      history.replace("/Login");
+      // history.replace("/Login");
+      router.push("/Login", "forward");
     } else {
       setErro("Código inválido ou expirado. Tente novamente.");
     }
