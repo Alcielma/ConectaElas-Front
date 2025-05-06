@@ -48,7 +48,7 @@ const Tab2: React.FC = () => {
                 onClick={() => router.push("/tabs/chat", "forward")}
               >
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
-                <p>Chat com a Secretaria da Mulher</p>
+                <p>Chat com a Secretaria das Mulheres</p>
               </div>
               <div className="card-down">
                 <div

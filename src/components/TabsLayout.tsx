@@ -13,6 +13,8 @@ import {
   homeSharp,
   personSharp,
   radioSharp,
+  helpCircleSharp,
+  informationCircleSharp,
 } from "ionicons/icons";
 import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
@@ -55,6 +57,10 @@ const TabsLayout: React.FC = () => {
         <IonTabButton tab="tab2" href="/tabs/tab2">
           <IonIcon aria-hidden="true" icon={radioSharp} />
           <IonLabel>Conexões</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="tab3" href="/tabs/Sobre">
+          <IonIcon aria-hidden="true" icon={informationCircleSharp} />
+          <IonLabel>Sobre</IonLabel>
         </IonTabButton>
         <IonTabButton tab="tab4" href="/tabs/tab3">
           <IonIcon aria-hidden="true" icon={personSharp} />

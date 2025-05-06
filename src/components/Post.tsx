@@ -96,7 +96,7 @@ const Post: React.FC<PostProps> = ({
           <div className="profile-image">
             <img src={LogoSecretaria} alt="" className="imagem-perfil-post" />
           </div>
-          <div className="profile-name-post">Secretaria da Mulher</div>
+          <div className="profile-name-post">Secretaria das Mulheres</div>
         </div>
         <h2 className="post-title">{title}</h2>
         <p

@@ -16,7 +16,7 @@ const emergencyNumbers = [
   { name: "Polícia", number: "190" },
   { name: "Bombeiros", number: "193" },
   { name: "Samu", number: "192" },
-  { name: "Delegacia da Mulher", number: "180" },
+  { name: "Delegacia das Mulheres", number: "180" },
   { name: "Disque Direitos Humanos", number: "100" },
 ];
 

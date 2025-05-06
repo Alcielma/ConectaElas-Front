@@ -51,7 +51,8 @@ const Sobre: React.FC = () => {
               pode interagir anonimamente em publicações, receber orientações e,
               quando necessário, buscar ajuda através de contatos diretos com
               órgãos competentes ou via nosso{" "}
-              <strong>chat com um assistente da Secretaria da Mulher</strong>.
+              <strong>chat com um assistente da Secretaria das Mulheres</strong>
+              .
             </p>
             <p>
               Nosso compromisso é promover o acesso à informação, o

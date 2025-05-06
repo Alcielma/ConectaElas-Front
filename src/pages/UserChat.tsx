@@ -91,7 +91,7 @@ const UserChat: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
-          <IonTitle className="center-title">Secretaria da Mulher</IonTitle>
+          <IonTitle className="center-title">Secretaria das Mulheres</IonTitle>
           <IonButtons slot="end">
             <div style={{ width: "44px" }} />
           </IonButtons>
