@@ -16,6 +16,14 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // signingConfigs {
+    //     release {
+    //         storeFile file("minha-release-key.keystore") // Caminho para sua keystore
+    //         storePassword "sua-senha"
+    //         keyAlias "minha-key-alias"
+    //         keyPassword "sua-senha"
+    //     }
+    // }
     buildTypes {
         release {
             minifyEnabled false
