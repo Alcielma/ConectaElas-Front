@@ -1,0 +1,35 @@
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  background-color: #dddddd80 !important;
+  padding: 1.1rem;
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 16px;
+  color: #333;
+}
+
+.input-group input:focus {
+  border-color: var(cor-secundaria);
+  outline: none;
+}
+
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  flex: 1;
+}

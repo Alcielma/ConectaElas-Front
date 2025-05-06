@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../Contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { IonIcon, IonSpinner, useIonRouter } from "@ionic/react";
+import { IonIcon, IonRouterLink, IonSpinner, useIonRouter } from "@ionic/react";
 import { eye, eyeOff } from "ionicons/icons";
 import "./Login.css";
 import RenderRegisterComponent from "../components/RenderRegisterComponent";
@@ -149,6 +149,11 @@ const Login: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="toggle-password-icon"
                 />
+              </div>
+              <div style={{ textAlign: "right", marginTop: "4px" }}>
+                <IonRouterLink className="signup-prompt" href="/esqueceu-senha">
+                  Esqueceu sua senha?
+                </IonRouterLink>
               </div>
               {errors.password && errors.password.message && (
                 <InputErrorMessage message={errors.password.message} />

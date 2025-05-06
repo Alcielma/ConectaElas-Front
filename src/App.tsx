@@ -29,6 +29,7 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
+import EsqueceuSenha from "./pages/EsqueceuSenha";
 
 setupIonicReact();
 
@@ -85,6 +86,7 @@ const App: React.FC = () => {
                   path="/confirmacao-codigo"
                   component={ConfirmacaoCodigo}
                 />
+                <Route exact path="/esqueceu-senha" component={EsqueceuSenha} />
 
                 <PrivateRoute path="/tabs" component={TabsLayout} />
 

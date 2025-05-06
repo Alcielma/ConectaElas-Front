@@ -10,6 +10,22 @@
   /* --cor-fundo: #f5f7fa; */
   --cor-fundo: #fff;
   /* Define a variável de cor */
+
+  --ion-color-primary: var(--cor-principal); /* Cor principal (rosa) */
+  --ion-color-primary-rgb: 221, 34, 115;
+  --ion-color-primary-contrast: #ffffff; /* Cor do texto (branco) */
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #c21e65; /* Tom mais escuro */
+  --ion-color-primary-tint: #e03881; /* Tom mais claro */
+
+  --ion-color-secondary: var(--cor-secundaria); /* Roxo */
+  --ion-color-secondary-rgb: 114, 0, 121;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #64006a;
+  --ion-color-secondary-tint: #801a86;
+
+  --ion-background-color: #fff;
 }
 
 /* Estilizando o IonToolbar */
@@ -56,4 +72,37 @@ ion-tab-button {
 
 native-wrapper.sc-ion-input-ios {
   --background: var(--cor-principal);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root.md,
+  :root,
+  :host {
+    --ion-font-family: "Inter", sans-serif;
+    --cor-principal: #dd2273;
+    --cor-secundaria: #720079;
+    --cor-secundaria-hover: #3d0341;
+    /* --cor-fundo: #f5f7fa; */
+    --cor-fundo: #fff;
+    /* Define a variável de cor */
+
+    --ion-color-primary: var(--cor-principal); /* Cor principal (rosa) */
+    --ion-color-primary-rgb: 221, 34, 115;
+    --ion-color-primary-contrast: #ffffff; /* Cor do texto (branco) */
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #c21e65; /* Tom mais escuro */
+    --ion-color-primary-tint: #e03881; /* Tom mais claro */
+
+    --ion-color-secondary: var(--cor-secundaria); /* Roxo */
+    --ion-color-secondary-rgb: 114, 0, 121;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #64006a;
+    --ion-color-secondary-tint: #801a86;
+
+    --ion-background-color: #fff;
+
+    --ion-item-background: #fff;
+    --ion-item-color: #000;
+  }
 }

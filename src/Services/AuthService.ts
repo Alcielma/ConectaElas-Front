@@ -169,6 +169,100 @@ const AuthService = {
       };
     }
   },
+
+  async enviarCodigoSenha(email: string): Promise<IHTTPReturn> {
+    try {
+      const response = await api.post("/redefinir-senhas", { email });
+
+      return {
+        success: response.status === 200,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
+      console.error("Erro ao enviar código (SENHA):", error);
+      return {
+        success: false,
+        status: error.response?.status,
+        message:
+          error.response?.data?.error?.message || "Falha ao enviar código",
+        error: error.response?.data?.error || error.message,
+      };
+    }
+  },
+
+  async reenviarCodigoSenha(email: string): Promise<IHTTPReturn> {
+    try {
+      const response = await api.post("/redefinir-senhas", { email });
+
+      return {
+        success: response.status === 200,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
+      console.error("Erro ao enviar código (SENHA):", error);
+      return {
+        success: false,
+        status: error.response?.status,
+        message:
+          error.response?.data?.error?.message || "Falha ao enviar código",
+        error: error.response?.data?.error || error.message,
+      };
+    }
+  },
+
+  async confirmarCodigoSenha(
+    email: string,
+    codigo: string
+  ): Promise<IHTTPReturn> {
+    try {
+      const response = await api.post("/inserir-codigo-senhas", {
+        email,
+        codigo,
+      });
+
+      return {
+        success: response.status === 200,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
+      console.error("Erro ao confirmar código (SENHA):", error);
+      return {
+        success: false,
+        status: error.response?.status,
+        message:
+          error.response?.data?.error?.message ||
+          "Código inválido ou expirado!",
+        error: error.response?.data?.error || error.message,
+      };
+    }
+  },
+
+  async recuperarSenha(codigo: string, senha: string): Promise<IHTTPReturn> {
+    try {
+      const response = await api.post("/nova-senhas", {
+        data: { codigo, senha },
+      });
+
+      return {
+        success: response.status === 200,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
+      console.error("Erro ao Recuperar Senha:", error);
+      return {
+        success: false,
+        status: error.response?.status,
+        message:
+          error.response?.data?.error?.message ||
+          "Falha ao tentar recuperar senha",
+        error: error.response?.data?.error || error.message,
+      };
+    }
+  },
 };
 
 export default AuthService;

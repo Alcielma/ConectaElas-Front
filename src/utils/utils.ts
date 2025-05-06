@@ -36,3 +36,19 @@ export function canBeCPF(cpf: string): boolean {
   const onlyNumbers = cpf.replace(/\D/g, "");
   return onlyNumbers.length === 11 && /^\d+$/.test(cpf);
 }
+
+export type ToastColor =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "success"
+  | "warning"
+  | "danger"
+  | "light"
+  | "medium"
+  | "dark";
+
+export interface ToastItem {
+  message: string;
+  color: ToastColor;
+}
