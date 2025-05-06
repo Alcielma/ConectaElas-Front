@@ -34,29 +34,10 @@ const Tab1: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <IonButtons slot="start">
-            <div style={{ width: "44px" }} />{" "}
-          </IonButtons>
-
+        <IonToolbar>
           <IonTitle style={{ textAlign: "center", flex: 1 }}>
             Conecta Elas
           </IonTitle>
-
-          <IonButtons slot="end">
-            <IonIcon
-              icon={helpCircleSharp}
-              size="large"
-              style={{ marginRight: "12px", cursor: "pointer" }}
-              onClick={() => router.push("/tabs/sobre", "forward")}
-            />
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="custom-background">
