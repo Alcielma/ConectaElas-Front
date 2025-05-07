@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import "./Onboarding.css";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { arrowForward } from "ionicons/icons";
 import imagem1 from "../Assets/slides/imagem1.svg";
 import imagem2 from "../Assets/slides/imagem2.svg";
@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import AuthService from "../Services/AuthService";
 import { useAuth } from "../Contexts/AuthContext";
 import InputErrorMessage from "../components/inputErrorMessage";
+import { StatusBar, Style } from "@capacitor/status-bar";
 
 const slides = [
   {

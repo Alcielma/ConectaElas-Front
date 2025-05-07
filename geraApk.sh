@@ -9,8 +9,8 @@ ionic cap sync android
 cd android
 
 # Gera o APK Release
-# echo "Gerando APK Release"
-# ./gradlew assembleRelease || { echo "❌ APK assembly failed"; exit 1; }
+echo "Gerando APK Release"
+./gradlew assembleRelease || { echo "❌ APK assembly failed"; exit 1; }
 
 # Gera o Android App Bundle (AAB)
 echo "Gerando AAB Bundle"
@@ -18,7 +18,7 @@ echo "Gerando AAB Bundle"
 
 # Mensagem de conclusão
 echo -e "\n✅ Build concluído!"
-# echo "📁 APK (Release):  android/app/build/outputs/apk/release/app-release.apk"
+echo "📁 APK (Release):  android/app/build/outputs/apk/release/app-release.apk"
 echo "📁 AAB (Bundle):   android/app/build/outputs/bundle/release/app-release.aab"
 
 # Abre a pasta no Windows (Explorer)

@@ -170,7 +170,7 @@
 .swiper-slide h2,
 .swiper-slide p {
   position: relative;
-  margin: 0 auto;
+  margin: 12px auto;
   width: 80%;
   text-align: center;
 }

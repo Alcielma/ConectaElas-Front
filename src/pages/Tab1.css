@@ -1,73 +1,73 @@
 .body-feed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
 }
 
 .custom-background {
-    --background: #f7fafc;
+  --background: #f7fafc;
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .category-buttons {
-    display: flex;
-    flex-direction: row;
-    width: 45vh;
-    max-width: 45vh;
-    /* gap: 20px; */
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 0px;
-    padding-inline: 15px;
-    padding-bottom: 16px;
+  display: flex;
+  flex-direction: row;
+  width: 45vh;
+  max-width: 45vh;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0px;
+  padding-inline: 15px;
+  padding-bottom: 16px;
 }
 
 .category-button {
-    color: white;
-    width: 4.2rem;
-    height: 4.2rem;
-    border-radius: 50%;
-    background-color: var(--cor-principal);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    font-size: 24px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    position: relative;
+  color: white;
+  width: 4.2rem;
+  height: 4.2rem;
+  border-radius: 50%;
+  background-color: var(--cor-principal);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
 }
 
 .category-button:hover {
-    background-color: #e0e0e5;
-
+  background-color: #e0e0e5;
 }
 
-.category-button:focus {
-    background-color: var(--cor-secundaria);
-    outline: 3px solid #ffffff;
-    width: 62px;
-    height: 62px;
+.category-button:focus,
+.category-button.selected {
+  background-color: var(--cor-secundaria);
+  outline: 3px solid #ffffff;
+  width: 62px;
+  height: 62px;
 }
 
 .category-button IonIcon {
-    color: #6b6b6b;
-    font-size: 10rem;
+  color: #6b6b6b;
+  font-size: 10rem;
 }
 
 .button-label {
-    font-size: 10px;
-    color: #333;
-    margin-top: 4px;
-    text-align: center;
-    position: absolute;
-    bottom: -15px;
+  font-size: 10px;
+  color: #333;
+  margin-top: 4px;
+  text-align: center;
+  position: absolute;
+  bottom: -15px;
 }
 
 /* .background-image-tab1 {
