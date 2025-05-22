@@ -3,18 +3,23 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 // import "@fontsource/inter";
 
+import { StatusBar, Style } from "@capacitor/status-bar";
+
 const container = document.getElementById("root");
 const root = createRoot(container!);
 
-import { StatusBar, Style } from "@capacitor/status-bar";
+(async () => {
+  try {
+    await StatusBar.show();
+    await StatusBar.setBackgroundColor({ color: "#dd2273" });
+    await StatusBar.setStyle({ style: Style.Dark });
+  } catch (error) {
+    console.warn("Erro ao configurar StatusBar:", error);
+  }
 
-await StatusBar.show();
-
-await StatusBar.setBackgroundColor({ color: "#dd2273" });
-
-await StatusBar.setStyle({ style: Style.Dark });
-root.render(
-  // <React.StrictMode>
-  <App />
-  // </React.StrictMode>
-);
+  root.render(
+    // <React.StrictMode>
+    <App />
+    // </React.StrictMode>
+  );
+})();
