@@ -30,10 +30,20 @@ import "@ionic/react/css/display.css";
 import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
 import EsqueceuSenha from "./pages/EsqueceuSenha";
+import { StatusBar, Style } from "@capacitor/status-bar";
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  useEffect(() => {
+    const initializeStatusBar = async () => {
+      await StatusBar.show();
+      await StatusBar.setBackgroundColor({ color: "#dd2273" });
+      await StatusBar.setStyle({ style: Style.Dark });
+    };
+    initializeStatusBar();
+  }, []);
+
   const [backPressTime, setBackPressTime] = useState(0);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
