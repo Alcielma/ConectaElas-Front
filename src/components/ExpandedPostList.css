@@ -1,0 +1,131 @@
+.expanded-post-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: var(--cor-fundo);
+}
+
+.expanded-post {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 16px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.expanded-post h2 {
+  color: #303030;
+  font-family: var(--ion-font-family);
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: normal;
+}
+
+.expanded-post p {
+  color: #000000;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.expanded-post img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.toggle-comments {
+  margin: 1rem 0;
+  background-color: var(--cor-secundaria);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.toggle-comments:hover {
+  background-color: var(--cor-secundaria-hover);
+}
+
+.comment-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 1rem;
+  margin-bottom: 12px;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  background-color: white;
+  color: #474747;
+}
+
+.comment-input input::placeholder {
+  font-size: 0.9rem;
+  color: #888888bd;
+}
+
+.comment-input button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background-color: var(--cor-secundaria);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.comment-input button:hover {
+  background-color: var(--cor-secundaria-hover);
+}
+
+.comments-section {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.sem-comentarios {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+}
+
+.favorite-icon {
+    font-size: 24px;
+    color: #c3007a; /* Rosa para não selecionada */
+    background-color: #fff0f5; /* Fundo rosa claro */
+    border-radius: 50%;
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.favorite-icon:hover {
+    color: #a1005f; /* Rosa mais escuro no hover */
+    background-color: #ffe83e; /* Fundo rosa um pouco mais escuro */
+}
+
+.favorite-icon.favorited {
+    color: #ffd700; /* Amarelo para selecionada */
+    background-color: #fffacd; /* Fundo amarelo claro */
+}
+
+.favorite-icon.favorited:hover {
+    color: #ffcc00; /* Amarelo mais escuro no hover */
+    background-color: #fff8dc; /* Fundo amarelo um pouco mais escuro */
+}

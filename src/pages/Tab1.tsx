@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import {
   IonContent,
   IonHeader,
@@ -6,73 +7,48 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { IonIcon } from "@ionic/react";
-import {
-  listSharp,
-  newspaperSharp,
-  informationCircleSharp,
-} from "ionicons/icons";
 import "./Tab1.css";
-import Feed from "../components/Feed";
 import Carrossel from "../components/Carrossel";
+import Feed from "../components/Feed";
+
+const categorias = ["Notícia", "Informativo", "Favoritos"];
 
 const Tab1: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  const handleCategoryClick = (category: string | null) => {
-    setSelectedCategory(category);
-  };
+  const history = useHistory();
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle style={{ textAlign: "center", flex: 1 }}>
-            Conecta Elas
-          </IonTitle>
+        <IonToolbar className="header-gradient">
+          <IonTitle className="title-centered">Menu Principal</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent fullscreen className="custom-background">
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Conecta Elas</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-
         <div className="body-feed">
-          <Carrossel />
-
-          <div className="category-buttons">
-            <button
-              onClick={() => handleCategoryClick(null)}
-              className={`category-button ${
-                selectedCategory === null && "selected"
-              }`}
-            >
-              <IonIcon icon={listSharp} />
-              <span className="button-label">Todos</span>
-            </button>
-            <button
-              onClick={() => handleCategoryClick("Notícia")}
-              className={`category-button ${
-                selectedCategory === "Notícia" && "selected"
-              }`}
-            >
-              <IonIcon icon={newspaperSharp} />
-              <span className="button-label">Notícia</span>
-            </button>
-            <button
-              onClick={() => handleCategoryClick("Informativo")}
-              className={`category-button ${
-                selectedCategory === "Informativo" && "selected"
-              }`}
-            >
-              <IonIcon icon={informationCircleSharp} />
-              <span className="button-label">Informativo</span>
-            </button>
+          {/* Carrossel */}
+          <div className="carrossel-wrapper">
+            <Carrossel />
           </div>
 
-          <Feed selectedCategory={selectedCategory} />
+          {/* Seções por categoria */}
+          {categorias.map((categoria) => (
+            <div key={categoria} className="categoria-section">
+              <div className="categoria-header">
+                <h3 className="categoria-title">{categoria}</h3>
+                <span
+                  className="ver-todos"
+                  onClick={() => history.push(`/categoria/${categoria}`)}
+                >
+                  Ver todos
+                </span>
+              </div>
+
+              <div className="categoria-cards">
+                <Feed selectedCategory={categoria} horizontalLimit={5} /> {/* Alterado de 3 para 5 */}
+              </div>
+            </div>
+          ))}
         </div>
       </IonContent>
     </IonPage>

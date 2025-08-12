@@ -1,81 +1,63 @@
-.body-feed {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-}
-
-.custom-background {
-  --background: #f7fafc;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-}
-
-.category-buttons {
-  display: flex;
-  flex-direction: row;
-  width: 45vh;
-  max-width: 45vh;
-  gap: 24px;
-  justify-content: center;
-  align-items: center;
-  padding-top: 0px;
-  padding-inline: 15px;
-  padding-bottom: 16px;
-}
-
-.category-button {
+/* Cabeçalho com gradiente */
+.header-gradient {
+  background: linear-gradient(90deg, #c3007a, #d94fbd);
   color: white;
-  width: 4.2rem;
-  height: 4.2rem;
-  border-radius: 50%;
-  background-color: var(--cor-principal);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  font-size: 24px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  position: relative;
 }
 
-.category-button:hover {
-  background-color: #e0e0e5;
-}
-
-.category-button:focus,
-.category-button.selected {
-  background-color: var(--cor-secundaria);
-  outline: 3px solid #ffffff;
-  width: 62px;
-  height: 62px;
-}
-
-.category-button IonIcon {
-  color: #6b6b6b;
-  font-size: 10rem;
-}
-
-.button-label {
-  font-size: 10px;
-  color: #333;
-  margin-top: 4px;
+.title-centered {
   text-align: center;
-  position: absolute;
-  bottom: -15px;
+  font-weight: bold;
 }
 
-/* .background-image-tab1 {
-    position: absolute;
-    width: 80%;
-    opacity: 0.3;
-    bottom: 50%;
-    left: 80%;
-    transform: translateX(-50%) translateY(-5%) scale(1);
-    z-index: -1;
-} */
+/* Corpo */
+.body-feed {
+  padding: 16px;
+}
+
+/* Carrossel com borda arredondada */
+.carrossel-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  margin-left: auto; /* Centraliza horizontalmente */
+  margin-right: auto;
+  max-width: 23rem; /* Garante que o carrossel respeite a largura definida */
+  width: 100%; /* Permite responsividade */
+}
+
+/* Seções de categoria */
+.categoria-section {
+  margin-bottom: 24px;
+}
+
+.categoria-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.categoria-title {
+  color: #720079;
+  font-size: 18px;
+  margin: 0;
+}
+
+.ver-todos {
+  font-size: 14px;
+  color: #720079;
+  cursor: pointer;
+}
+
+.categoria-cards {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+}
+
+.categoria-cards::-webkit-scrollbar {
+  display: none;
+}
