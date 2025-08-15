@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { IonIcon } from "@ionic/react";
+import { star, starOutline } from "ionicons/icons";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
 import CommentItem from "./CommentItem";
+import PostModal from "./PostModal";
 import "./Post.css";
-import { IonIcon } from "@ionic/react";
-import { chatbubbleSharp } from "ionicons/icons";
-import LogoSecretaria from "../Assets/SECRETARIA_MUNICIPAL_DAS_MULHERES.png";
 
 interface Comment {
   id: number;
@@ -19,7 +19,7 @@ interface PostProps {
   title: string;
   description: string;
   imageUrl: string | null;
-  comentarios: Comment[];
+  comments: Comment[]; // Changed to 'comments' to match PostModal prop and resolve type error
 }
 
 const Post: React.FC<PostProps> = ({
@@ -27,24 +27,52 @@ const Post: React.FC<PostProps> = ({
   title,
   description,
   imageUrl,
-  comentarios,
+  comments: initialComments, // Renamed to avoid conflict with state
 }) => {
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  console.log("Descrição no Post:", description); // Log para depuração
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(
-    [...comentarios].sort(
+    [...initialComments].sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
   );
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const { user } = useAuth();
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
+  useEffect(() => {
+    if (user?.id) {
+      const key = `favorites_${user.id}`;
+      const favorites = JSON.parse(localStorage.getItem(key) || "[]");
+      setIsFavorite(favorites.includes(id));
+    }
+  }, [user, id]);
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Impede que o clique no ícone abra o modal
+    if (!user?.id) {
+      console.error("Usuário não está logado.");
+      return;
+    }
+
+    const key = `favorites_${user.id}`;
+    let favorites = JSON.parse(localStorage.getItem(key) || "[]");
+
+    if (isFavorite) {
+      favorites = favorites.filter((f: number) => f !== id);
+    } else {
+      favorites.push(id);
+    }
+
+    localStorage.setItem(key, JSON.stringify(favorites));
+    setIsFavorite(!isFavorite);
   };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
@@ -66,7 +94,7 @@ const Post: React.FC<PostProps> = ({
 
       const response = await addComment(commentData);
 
-      if (!response || !response.data || !response.data.id) {
+      if (!response?.data?.id) {
         console.error("Resposta inválida do backend:", response);
         return;
       }
@@ -90,69 +118,30 @@ const Post: React.FC<PostProps> = ({
   };
 
   return (
-    <div className="post-container">
-      <div className="post-header" onClick={toggleExpand}>
-        <div className="profile-header-post">
-          <div className="profile-image">
-            <img src={LogoSecretaria} alt="" className="imagem-perfil-post" />
-          </div>
-          <div className="profile-name-post">Secretaria das Mulheres</div>
-        </div>
-        <h2 className="post-title">{title}</h2>
-        <p
-          className={`post-description ${
-            isDescriptionExpanded ? "expanded" : ""
-          }`}
-        >
-          {description}
-        </p>
-        {description.split("\n").length > 3 && (
-          <button
-            className="ver-mais-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsDescriptionExpanded(!isDescriptionExpanded);
-            }}
-          >
-            {isDescriptionExpanded ? "Ver menos" : "Ver mais"}
-          </button>
-        )}
+    <>
+      <div className="post-container" onClick={openModal}>
         {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
-
-        <div className="comments-count-box">
-          <IonIcon icon={chatbubbleSharp} className="chatbubble-icon" />
-          <p className="comments-count">{comments.length} Comentário(os) </p>
-        </div>
+        <h2 className="post-title">{title}</h2>
+        <IonIcon
+          icon={isFavorite ? star : starOutline}
+          className={`favorite-icon ${isFavorite ? "favorited" : ""}`}
+          onClick={toggleFavorite}
+        />
       </div>
 
-      <div className={`post-comments ${isExpanded ? "expanded" : ""}`}>
-        <div className="add-comment">
-          <input
-            type="text"
-            placeholder="Deixe aqui sua opinião..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            onFocus={(e) => e.stopPropagation()}
-          />
-          <button onClick={handleAddComment} disabled={!user}>
-            Enviar
-          </button>
-        </div>
-        {showSuccess && <p className="success-message">Comentário enviado!</p>}
-
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <CommentItem
-              key={comment.id}
-              comentario={comment.comentario}
-              createdAt={comment.createdAt}
-            />
-          ))
-        ) : (
-          <p className="sem-comentarios">Sem comentários.</p>
-        )}
-      </div>
-    </div>
+      {isModalOpen && (
+        <PostModal
+          title={title}
+          imageUrl={imageUrl}
+          description={description}
+          comments={comments}
+          newComment={newComment}
+          setNewComment={setNewComment}
+          handleAddComment={handleAddComment}
+          onClose={closeModal}
+        />
+      )}
+    </>
   );
 };
 

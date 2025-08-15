@@ -1,33 +1,41 @@
 .feed-container {
-    min-height: 100vh;
-    padding: 1.5rem;
-    align-items: center;
-
-}
-
-
-.feed-title {
-    font-size: 2.5rem;
-    color: #1e3a8a;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 2rem;
+  padding: 16px;
 }
 
 .feed-posts {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 1.5rem;
+  display: grid; /* Layout padrão (vertical) */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
 }
 
-.background-image-feed {
-    position: absolute;
-    width: 80%;
-    opacity: 0.3;
-    bottom: 30%;
-    left: 65%;
-    transform: translateX(-50%) translateY(-5%) scale(1);
-    z-index: -1;
+/* Estilo para layout horizontal */
+.feed-container.horizontal .feed-posts {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 12px;
+  flex-wrap: nowrap; /* Garante que os itens não quebrem para a próxima linha */
+}
+
+/* Estilizando os posts para o layout horizontal */
+.feed-posts > * {
+  flex: 0 0 auto; /* Impede que os posts se estiquem */
+  width: 300px; /* Largura fixa para cada post */
+  background-color: #ead9eb; /* Fundo rosa suave para os posts */
+  border-radius: 8px; /* Bordas arredondadas para destacar o fundo */
+  padding: 8px; /* Espaçamento interno para melhor aparência */
+}
+
+/* Estilizando o scroll */
+.feed-posts::-webkit-scrollbar {
+  height: 8px;
+}
+
+.feed-posts::-webkit-scrollbar-thumb {
+  background-color: #720079;
+  border-radius: 8px;
+}
+
+.feed-posts::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
 }

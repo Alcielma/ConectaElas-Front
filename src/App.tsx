@@ -15,6 +15,7 @@ import UserChat from "./pages/UserChat";
 import { SplashScreen } from "@capacitor/splash-screen";
 import Sobre from "./pages/Sobre";
 import ConfirmacaoCodigo from "./pages/ConfirmacaoCodigo";
+import CategoriaPosts from "./pages/CategoriaPosts";
 
 // Core CSS required for Ionic components to work properly
 import "@ionic/react/css/core.css";
@@ -113,6 +114,7 @@ const App: React.FC = () => {
                 <Route exact path="/">
                   <Redirect to="/login" />
                 </Route>
+                <Route path="/categoria/:categoria" component={CategoriaPosts} />
               </Switch>
             </IonRouterOutlet>
           </ChatProvider>

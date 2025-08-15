@@ -12,13 +12,38 @@ const BannerService = {
   async fetchBanners(): Promise<Banner[]> {
     try {
       const response = await api.get("/banners?populate=*");
+      console.log("Dados recebidos da API:", response.data); // Log para depuração
 
-      return response.data.data.map((item: any) => ({
-        id: item.id,
-        Link: item.Link,
-        Titulo: item.Titulo,
-        imageUrl: `${import.meta.env.VITE_API_URL}${item.Upload[0].url}`,
-      }));
+      // Verifica se response.data.data é um array
+      if (!Array.isArray(response.data.data)) {
+        console.error("Dados da API não são um array:", response.data.data);
+        return [];
+      }
+
+      return response.data.data
+        .filter((item: any) => {
+          // Log para verificar o valor de Link_imagem
+          console.log("Verificando item:", item.id, "Link_imagem:", item.Link_imagem);
+          // Verifica se o item tem Link_imagem ou Upload válido
+          const hasLinkImagem = item && item.Link_imagem && typeof item.Link_imagem === 'string' && item.Link_imagem.trim() !== '';
+          const hasUpload = item && item.Upload && Array.isArray(item.Upload) && item.Upload.length > 0;
+          if (!hasLinkImagem && !hasUpload) {
+            console.warn(`Item inválido ignorado:`, item);
+            return false;
+          }
+          return true;
+        })
+        .map((item: any) => {
+          console.log("Mapeando item:", item.id, "Imagem selecionada:", item.Link_imagem || item.Upload?.[0]?.url);
+          return {
+            id: item.id || 0,
+            Link: item.Link || "#",
+            Titulo: item.Titulo || "Título Padrão",
+            imageUrl: item.Link_imagem 
+              ? item.Link_imagem 
+              : `${import.meta.env.VITE_API_URL}${item.Upload?.[0]?.url || "/default-image.jpg"}`,
+          };
+        });
     } catch (error) {
       console.error("Erro ao buscar banners:", error);
       return [];
