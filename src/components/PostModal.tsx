@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { IonIcon } from "@ionic/react";
+import { arrowBack } from "ionicons/icons";
 import CommentItem from "./CommentItem";
 import "./PostModal.css";
 
@@ -31,20 +33,23 @@ const PostModal: React.FC<PostModalProps> = ({
     handleAddComment,
     onClose,
 }) => {
-    console.log("Descrição no PostModal:", description); // Log para depuração
     return ReactDOM.createPortal(
         <div className="modal-overlay">
-            <div className="modal-content">
-                <button
-                    onClick={onClose}
-                    aria-label="Fechar"
-                    className="close-btnX">
-                    &times;
-                </button>
+            <div className="modal-content" >
 
-                <h2>{title}</h2>
-                {imageUrl && <img src={imageUrl} alt={title} className="modal-image" />}
-                <p>{description || "Sem descrição disponível."}</p>
+                {/* Seta branca para voltar */}
+                <div className="modal-header">
+                    <IonIcon
+                        icon={arrowBack}
+                        className="voltar-seta-modal"
+                        onClick={onClose}
+                    />
+                    <h2>{title}</h2>
+                    {imageUrl && <img src={imageUrl} alt={title} className="modal-image" />}
+                    <p>{description || "Sem descrição disponível."}</p>
+                    
+                </div>
+
                 <div className="modal-comments">
                     <h4>Comentários</h4>
                     <div className="add-comment">

@@ -132,8 +132,8 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
       </div>
 
       {expanded && (
-        <div className="comments-section">
-          <div className="comment-input">
+        <div className="modal-comments">
+          <div className="add-comment">
             <input
               type="text"
               placeholder="Deixe um comentário..."
@@ -142,41 +142,20 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
             />
             <button onClick={handleAddComment}>Enviar</button>
           </div>
-          {comments.length > 0 ? (
-            <div
-              className="comments-list"
-              ref={commentsListRef}
-              onScroll={(e) => {
-                const element = e.currentTarget;
-                if (element.scrollTop === 0 && !isLoading && visibleComments < comments.length) {
-                  setIsLoading(true);
-                  const scrollHeight = element.scrollHeight;
-                  setVisibleComments((prev) => Math.min(prev + 3, comments.length));
-                  setTimeout(() => {
-                    if (commentsListRef.current) {
-                      const newScrollHeight = commentsListRef.current.scrollHeight;
-                      commentsListRef.current.scrollTop = newScrollHeight - scrollHeight;
-                    }
-                    setIsLoading(false);
-                  }, 100);
-                }
-              }}
-            >
-              {comments.slice(0, visibleComments).map((c) => (
-                <CommentItem key={c.id} comentario={c.comentario} createdAt={c.createdAt} />
-              ))}
-              {comments.length > visibleComments && (
-                <button
-                  className="load-more-comments"
-                  onClick={() => setVisibleComments((prev) => prev + 3)}
-                >
-                  Ver mais comentários
-                </button>
-              )}
-            </div>
-          ) : (
-            <p className="sem-comentarios">Sem comentários ainda.</p>
-          )}
+
+          <div className="comments-container" ref={commentsListRef}>
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comentario={comment.comentario}
+                  createdAt={comment.createdAt}
+                />
+              ))
+            ) : (
+              <p className="sem-comentarios">Sem comentários ainda.</p>
+            )}
+          </div>
         </div>
       )}
     </div>

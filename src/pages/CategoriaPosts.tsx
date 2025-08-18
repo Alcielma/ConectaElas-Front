@@ -5,8 +5,10 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
+  IonIcon,
 } from "@ionic/react";
 import { useParams } from "react-router-dom";
+import { arrowBack } from "ionicons/icons";
 import ExpandedPostList from "../components/ExpandedPostList";
 import { getAll } from "../Services/postService";
 import { useAuth } from "../Contexts/AuthContext";
@@ -62,30 +64,38 @@ const CategoriaPosts: React.FC = () => {
     }
   }, [categoria, fetchPosts]);
 
+  const handleGoBack = () => {
+    window.history.back(); // Função para voltar para a página anterior
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          {/* Seta de voltar */}
+          <IonIcon
+            icon={arrowBack}
+            className="voltar-seta"
+            onClick={handleGoBack}
+          />
           <IonTitle>Posts: {categoria}</IonTitle>
         </IonToolbar>
       </IonHeader>
-
-      <button className="close-btn" onClick={() => window.history.back()} aria-label="Fechar">
-        &times;
-      </button>
 
       <IonContent className="custom-background">
         {postsFiltrados.length === 0 && (
           <p className="no-posts">Nenhum post encontrado para {categoria}.</p>
         )}
         <ExpandedPostList
-          posts={postsFiltrados.map((post) => ({
-            id: post.id,
-            title: post.Titulo,
-            description: post.Descricao,
-            imageUrl: post.imageUrl,
-            comments: post.comentarios,
-          })).reverse()}
+          posts={postsFiltrados
+            .map((post) => ({
+              id: post.id,
+              title: post.Titulo,
+              description: post.Descricao,
+              imageUrl: post.imageUrl,
+              comments: post.comentarios,
+            }))
+            .reverse()}
           onFavoriteToggle={handleFavoriteToggle}
         />
       </IonContent>
