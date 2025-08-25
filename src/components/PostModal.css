@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-   background-color: #FFF0F5;
+  background-color: #FFF0F5;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,15 +14,15 @@
 }
 
 .modal-content {
-  background: #FFF0F5; /* Rosa bem clarinho */
-  border-radius: 0;
-  padding: 20px;
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
   position: relative;
-  box-sizing: border-box;
-  margin: 0;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh; /* 👈 limita a altura do modal */
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  overflow-y: auto; /* 👈 habilita rolagem dentro do modal */
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
 }
 
 .modal-content p {
@@ -33,6 +33,7 @@
   white-space: pre-wrap;
 }
 
+/* A imagem não deve estourar o modal */
 .modal-image {
   width: 100%;
   max-height: 300px;
@@ -42,7 +43,7 @@
 }
 
 .close-btnX {
- position: absolute;
+  position: absolute;
   top: 12px;
   right: 12px;
   background-color: #dd2273;
@@ -58,7 +59,32 @@
   transition: background-color 0.2s;
 }
 
+/* Cabeçalho do modal */
 
+.modal-header {
+  display: flex;
+  flex-direction: column; /* Mudança aqui: coloca os elementos em coluna */
+  align-items: flex-start; /* Alinha à esquerda */
+  gap: 12px; /* Espaço entre seta e título */
+  margin-bottom: 15px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #303030;
+  width: 100%; /* Ocupa toda a largura disponível */
+}
+
+.voltar-seta-modal {
+  font-size: 28px;
+  color: #c3007a;
+  cursor: pointer;
+  z-index: 500;
+  align-self: flex-start; /* Garante que a seta fique no início */
+}
+
+/* Comentários */
 .modal-comments {
   margin-top: 20px;
 }
@@ -69,6 +95,7 @@
   color: #333;
 }
 
+/* Campo adicionar comentário */
 .add-comment {
   display: flex;
   gap: 10px;
@@ -76,24 +103,23 @@
   padding: 8px;
   border-bottom: 2px solid #720079;
   border-radius: 10px;
-    border: 1px solid #E0E0E0;
-  
+  border: 1px solid #E0E0E0;
 }
 
 .add-comment input {
   flex: 1;
   padding: 8px;
   border-radius: 10px;
-  border: 1px solid #E0E0E0; /* Borda cinza clarinha nas laterais e topo */
-  border-bottom: 2px solid #720079; /* Linha roxa na parte inferior sempre visível */
-  background-color: #720079;
-  color: #c3007a;
+  border: 1px solid #E0E0E0;
+  border-bottom: 2px solid #720079;
+  background-color: #fff;
+  color: #333;
 }
 
 .add-comment input:focus {
-  outline: none; /* Remove a borda padrão de foco */
-  border: 1px solid #E0E0E0; /* Mantém a borda cinza nas laterais e topo */
-  border-bottom: 2px solid #720079; /* Mantém a linha roxa na parte inferior */
+  outline: none;
+  border: 1px solid #E0E0E0;
+  border-bottom: 2px solid #720079;
 }
 
 .add-comment input::placeholder {
@@ -101,46 +127,34 @@
   color: #888888bd;
 }
 
-.add-comment button {
-  padding: 8px 12px;
-  border-radius: 10px;
-  background-color: #c3007a;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.add-comment button:hover {
-  background-color: #a1005f;
-}
-
 .sem-comentarios {
   color: #a0a0a0;
   font-size: 0.9rem;
 }
+
+/* Ícone de favorito */
 .favorite-icon {
-    font-size: 24px;
-    color: #c3007a; /* Rosa para não selecionada */
-    background-color: #fff0f5; /* Fundo rosa claro */
-    border-radius: 50%;
-    padding: 5px;
-    cursor: pointer;
-    transition: color 0.2s, background-color 0.2s;
-    z-index: 10;
+  font-size: 24px;
+  color: #c3007a;
+  background-color: #fff0f5;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+  z-index: 10;
 }
 
 .favorite-icon:hover {
-    color: #a1005f; /* Rosa mais escuro no hover */
-    background-color: #ffe4e1; /* Fundo rosa um pouco mais escuro */
+  color: #a1005f;
+  background-color: #ffe4e1;
 }
 
 .favorite-icon.favorited {
-    color: #ffd700; /* Amarelo para selecionada */
-    background-color: #ffe4e1; /* Fundo amarelo claro */
+  color: #ffd700;
+  background-color: #ffe4e1;
 }
 
 .favorite-icon.favorited:hover {
-    color: #ffcc00; /* Amarelo mais escuro no hover */
-    background-color: #ffe4e1; /* Fundo amarelo um pouco mais escuro */
+  color: #ffcc00;
+  background-color: #ffe4e1;
 }

@@ -43,89 +43,96 @@
   object-fit: cover;
 }
 
-.toggle-comments {
-  margin: 1rem 0;
-  background-color: var(--cor-secundaria);
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 10px;
+.favorite-icon {
+  font-size: 24px;
+  color: #c3007a; /* Rosa para não selecionada */
+  background-color: #fff0f5; /* Fundo rosa claro */
+  border-radius: 50%;
+  padding: 5px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s;
+  transition: color 0.2s, background-color 0.2s;
 }
 
-.toggle-comments:hover {
-  background-color: var(--cor-secundaria-hover);
-}
-
-.comment-input {
-  display: flex;
-  gap: 10px;
-  margin-top: 1rem;
-  margin-bottom: 12px;
-}
-
-.comment-input input {
+.add-comment input {
   flex: 1;
-  padding: 8px;
-  border-radius: 10px;
-  border: none;
-  background-color: white;
-  color: #474747;
-}
-
-.comment-input input::placeholder {
-  font-size: 0.9rem;
-  color: #888888bd;
-}
-
-.comment-input button {
   padding: 8px 12px;
   border-radius: 10px;
-  background-color: var(--cor-secundaria);
+  border: 1px solid #E0E0E0;
+  border-bottom: 2px solid #720079;
+  background-color: #ffffff;
+  color: #333;
+  font-size: 0.9rem;
+  min-width: 0;
+}
+
+.add-comment input:focus {
+  outline: none;
+  border: 1px solid #E0E0E0;
+  border-bottom: 2px solid #720079;
+}
+
+.add-comment input::placeholder {
+  font-size: 0.9rem;
+  color: #E0E0E0;
+}
+
+.add-comment button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background-color: #c3007a;
   color: #fff;
   border: none;
   cursor: pointer;
   font-weight: bold;
-  transition: background-color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: fit-content;
 }
 
-.comment-input button:hover {
-  background-color: var(--cor-secundaria-hover);
+.add-comment button:hover {
+  background-color: #a1005f;
 }
 
-.comments-section {
+/* Caixa de comentários */
+.modal-comments {
+  margin-top: 20px;
   width: 100%;
-  margin-top: 1rem;
+  box-sizing: border-box;
 }
 
-.sem-comentarios {
-  color: #a0a0a0;
-  font-size: 0.9rem;
+.comments-container {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #E0E0E0 #f3f3f3; /* Firefox: cinza escuro no thumb, cinza claro no fundo */
 }
 
-.favorite-icon {
-    font-size: 24px;
-    color: #c3007a; /* Rosa para não selecionada */
-    background-color: #fff0f5; /* Fundo rosa claro */
-    border-radius: 50%;
-    padding: 5px;
-    cursor: pointer;
-    transition: color 0.2s, background-color 0.2s;
+/* Scrollbar no Chrome/Edge */
+.comments-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.comments-container::-webkit-scrollbar-thumb {
+  background-color: #E0E0E0; /* 👈 barrinha cinza escuro */
+  border-radius: 10px;
+}
+
+.comments-container::-webkit-scrollbar-track {
+  background: #f3f3f3; /* 👈 fundo cinza claro */
 }
 
 .favorite-icon:hover {
-    color: #a1005f; /* Rosa mais escuro no hover */
-    background-color: #ffe83e; /* Fundo rosa um pouco mais escuro */
+  color: #a1005f;
+  background-color: #ffe83e;
 }
 
 .favorite-icon.favorited {
-    color: #ffd700; /* Amarelo para selecionada */
-    background-color: #fffacd; /* Fundo amarelo claro */
+  color: #ffd700;
+  background-color: #fffacd;
 }
 
 .favorite-icon.favorited:hover {
-    color: #ffcc00; /* Amarelo mais escuro no hover */
-    background-color: #fff8dc; /* Fundo amarelo um pouco mais escuro */
+  color: #ffcc00;
+  background-color: #fff8dc;
 }

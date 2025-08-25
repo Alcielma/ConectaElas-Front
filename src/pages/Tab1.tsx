@@ -20,7 +20,7 @@ const Tab1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className="header-gradient">
-          <IonTitle className="title-centered">Menu Principal</IonTitle>
+          <IonTitle className="title-centered">Conecta Elas</IonTitle>
         </IonToolbar>
       </IonHeader>
 
