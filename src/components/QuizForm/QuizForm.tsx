@@ -19,6 +19,7 @@ import "./QuizForm.css";
 interface NovaResposta {
   texto: string;
   correta: boolean;
+  explicacao: string;
 }
 
 interface NovaPergunta {
@@ -40,6 +41,7 @@ interface QuizFormProps {
   onQuestaoChange: (index: number, value: string) => void;
   onRespostaChange: (perguntaIndex: number, respostaIndex: number, value: string) => void;
   onCorrecaoChange: (perguntaIndex: number, respostaIndex: number, value: boolean) => void;
+  onExplicacaoChange: (perguntaIndex: number, respostaIndex: number, value: string) => void;
   onAddPergunta: () => void;
   onRemovePergunta: (index: number) => void;
   onAddResposta: (perguntaIndex: number) => void;
@@ -56,6 +58,7 @@ const QuizForm: React.FC<QuizFormProps> = ({
   onQuestaoChange,
   onRespostaChange,
   onCorrecaoChange,
+  onExplicacaoChange,
   onAddPergunta,
   onRemovePergunta,
   onAddResposta,
@@ -88,6 +91,7 @@ const QuizForm: React.FC<QuizFormProps> = ({
               onQuestaoChange={onQuestaoChange}
               onRespostaChange={onRespostaChange}
               onCorrecaoChange={onCorrecaoChange}
+              onExplicacaoChange={onExplicacaoChange}
               onAddResposta={onAddResposta}
               onRemoveResposta={onRemoveResposta}
               onRemovePergunta={onRemovePergunta}

@@ -39,6 +39,7 @@ interface Resposta {
   id: number;
   Resposta: string;
   Correcao: boolean;
+  Explicacao?: string;
 }
 
 interface NovoQuiz {
@@ -54,6 +55,7 @@ interface NovaPergunta {
 interface NovaResposta {
   texto: string;
   correta: boolean;
+  explicacao: string;
 }
 
 const QuizManagement: React.FC = () => {
@@ -68,12 +70,12 @@ const QuizManagement: React.FC = () => {
 
   const [novoQuiz, setNovoQuiz] = useState<NovoQuiz>({
     titulo: "",
-    perguntas: [{ questao: "", respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] }]
+    perguntas: [{ questao: "", respostas: [{ texto: "", correta: false, explicacao: "" }, { texto: "", correta: false, explicacao: "" }] }]
   });
 
   const [quizParaEditar, setQuizParaEditar] = useState<NovoQuiz>({
     titulo: "",
-    perguntas: [{ questao: "", respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] }]
+    perguntas: [{ questao: "", respostas: [{ texto: "", correta: false, explicacao: "" }, { texto: "", correta: false, explicacao: "" }] }]
   });
   
   const [quizIdParaEditar, setQuizIdParaEditar] = useState<number | null>(null);
@@ -149,6 +151,7 @@ const QuizManagement: React.FC = () => {
             data: {
               Resposta: resposta.texto,
               Correcao: resposta.correta,
+              Explicacao: resposta.explicacao || "",
               pergunta: {
                 id: perguntaId
               }
@@ -163,7 +166,7 @@ const QuizManagement: React.FC = () => {
       // Limpar formulário e fechar modal
       setNovoQuiz({
         titulo: "",
-        perguntas: [{ questao: "", respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] }]
+        perguntas: [{ questao: "", respostas: [{ texto: "", correta: false, explicacao: "" }, { texto: "", correta: false, explicacao: "" }] }]
       });
       setShowCreateModal(false);
 
@@ -207,7 +210,8 @@ const QuizManagement: React.FC = () => {
             novaPergunta.respostas = pergunta.respostas.map((resposta: any) => {
               return {
                 texto: resposta.Resposta || '',
-                correta: resposta.Correcao || false
+                correta: resposta.Correcao || false,
+                explicacao: resposta.Explicacao === null ? '' : resposta.Explicacao || ''
               };
             });
           }
@@ -216,7 +220,10 @@ const QuizManagement: React.FC = () => {
           if (novaPergunta.respostas.length < 2) {
             const respostasAdicionais = 2 - novaPergunta.respostas.length;
             for (let i = 0; i < respostasAdicionais; i++) {
-              novaPergunta.respostas.push({ texto: '', correta: false });
+              novaPergunta.respostas.push({
+                texto: '', correta: false,
+                explicacao: ""
+              });
             }
           }
           
@@ -228,7 +235,13 @@ const QuizManagement: React.FC = () => {
       if (quizFormatado.perguntas.length === 0) {
         quizFormatado.perguntas = [{ 
           questao: "", 
-          respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] 
+          respostas: [{
+            texto: "", correta: false,
+            explicacao: ""
+          }, {
+            texto: "", correta: false,
+            explicacao: ""
+          }] 
         }];
       }
       
@@ -313,6 +326,7 @@ const handleUpdateQuiz = async () => {
           data: {
             Resposta: resposta.texto,
             Correcao: resposta.correta,
+            Explicacao: resposta.explicacao || "",
             pergunta: {
               id: perguntaId
             }
@@ -327,7 +341,7 @@ const handleUpdateQuiz = async () => {
     // Limpar formulário e fechar modal
     setQuizParaEditar({
       titulo: "",
-      perguntas: [{ questao: "", respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] }]
+      perguntas: [{ questao: "", respostas: [{ texto: "", correta: false, explicacao: "" }, { texto: "", correta: false, explicacao: "" }] }]
     });
     setQuizIdParaEditar(null);
     setShowEditModal(false);
@@ -397,11 +411,17 @@ const handleUpdateQuiz = async () => {
     perguntas[perguntaIndex].respostas[respostaIndex].correta = value;
     setNovoQuiz(prev => ({ ...prev, perguntas }));
   };
+  
+  const handleExplicacaoChange = (perguntaIndex: number, respostaIndex: number, value: string) => {
+    const perguntas = [...novoQuiz.perguntas];
+    perguntas[perguntaIndex].respostas[respostaIndex].explicacao = value;
+    setNovoQuiz(prev => ({ ...prev, perguntas }));
+  };
 
   const addPergunta = () => {
     setNovoQuiz(prev => ({
       ...prev,
-      perguntas: [...prev.perguntas, { questao: "", respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] }]
+      perguntas: [...prev.perguntas, { questao: "", respostas: [{ texto: "", correta: false, explicacao: "" }, { texto: "", correta: false, explicacao: "" }] }]
     }));
   };
 
@@ -415,7 +435,7 @@ const handleUpdateQuiz = async () => {
 
   const addResposta = (perguntaIndex: number) => {
     const perguntas = [...novoQuiz.perguntas];
-    perguntas[perguntaIndex].respostas.push({ texto: "", correta: false });
+    perguntas[perguntaIndex].respostas.push({ texto: "", correta: false, explicacao: "" });
     setNovoQuiz(prev => ({ ...prev, perguntas }));
   };
 
@@ -449,11 +469,17 @@ const handleUpdateQuiz = async () => {
     perguntas[perguntaIndex].respostas[respostaIndex].correta = value;
     setQuizParaEditar(prev => ({ ...prev, perguntas }));
   };
+  
+  const handleExplicacaoEditChange = (perguntaIndex: number, respostaIndex: number, value: string) => {
+    const perguntas = [...quizParaEditar.perguntas];
+    perguntas[perguntaIndex].respostas[respostaIndex].explicacao = value;
+    setQuizParaEditar(prev => ({ ...prev, perguntas }));
+  };
 
   const addPerguntaEdit = () => {
     setQuizParaEditar(prev => ({
       ...prev,
-      perguntas: [...prev.perguntas, { questao: "", respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] }]
+      perguntas: [...prev.perguntas, { questao: "", respostas: [{ texto: "", correta: false, explicacao: "" }, { texto: "", correta: false, explicacao: "" }] }]
     }));
   };
 
@@ -467,7 +493,10 @@ const handleUpdateQuiz = async () => {
 
   const addRespostaEdit = (perguntaIndex: number) => {
     const perguntas = [...quizParaEditar.perguntas];
-    perguntas[perguntaIndex].respostas.push({ texto: "", correta: false });
+    perguntas[perguntaIndex].respostas.push({
+      texto: "", correta: false,
+      explicacao: ""
+    });
     setQuizParaEditar(prev => ({ ...prev, perguntas }));
   };
 
@@ -498,7 +527,7 @@ const handleUpdateQuiz = async () => {
             onCreateClick={() => {
               setNovoQuiz({
                 titulo: "",
-                perguntas: [{ questao: "", respostas: [{ texto: "", correta: false }, { texto: "", correta: false }] }]
+                perguntas: [{ questao: "", respostas: [{ texto: "", correta: false, explicacao: "" }, { texto: "", correta: false, explicacao: "" }] }]
               });
               setShowCreateModal(true);
             }}
@@ -512,74 +541,75 @@ const handleUpdateQuiz = async () => {
           />
         </div>
 
-        {/* Modal de Criação de Quiz */}
-        <IonModal isOpen={showCreateModal} onDidDismiss={() => setShowCreateModal(false)}>
-          <IonHeader>
-            <IonToolbar className="header-gradient">
-              <IonTitle className="title-centered">Criar Novo Quiz</IonTitle>
-              <IonButtons slot="end">
-                <IonButton
-                  className="close-button"
-                  fill="clear"
-                  onClick={() => setShowCreateModal(false)}
-                >
-                  <IonIcon icon={close} />
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
+  {/* Modal de Criação de Quiz */}
+<IonModal isOpen={showCreateModal} onDidDismiss={() => setShowCreateModal(false)}>
+  <IonHeader>
+    <IonToolbar className="header-gradient">
+      <IonTitle className="title-centered">Criar Novo Quiz</IonTitle>
+      <IonButtons slot="end">
+        <IonButton
+          className="close-button"
+          fill="clear"
+          onClick={() => setShowCreateModal(false)}
+        >
+          <IonIcon icon={close} />
+        </IonButton>
+      </IonButtons>
+    </IonToolbar>
+  </IonHeader>
 
-          <QuizForm
-            isOpen={showCreateModal}
-            onClose={() => setShowCreateModal(false)}
-            quiz={novoQuiz}
-            isEditing={false}
-            onTituloChange={handleTituloChange}
-            onQuestaoChange={handleQuestaoChange}
-            onRespostaChange={handleRespostaChange}
-            onCorrecaoChange={handleCorrecaoChange}
-            onAddPergunta={addPergunta}
-            onRemovePergunta={removePergunta}
-            onAddResposta={addResposta}
-            onRemoveResposta={removeResposta}
-            onSave={handleCreateQuiz}
-          />
-        </IonModal>
+  <QuizForm
+    isOpen={showCreateModal}
+    onClose={() => setShowCreateModal(false)}
+    quiz={novoQuiz}
+    isEditing={false}
+    onTituloChange={handleTituloChange}
+    onQuestaoChange={handleQuestaoChange}
+    onRespostaChange={handleRespostaChange}
+    onCorrecaoChange={handleCorrecaoChange}
+    onExplicacaoChange={handleExplicacaoChange} // Corrigido
+    onAddPergunta={addPergunta}
+    onRemovePergunta={removePergunta}
+    onAddResposta={addResposta}
+    onRemoveResposta={removeResposta}
+    onSave={handleCreateQuiz}
+  />
+</IonModal>
 
-        {/* Modal de Edição de Quiz */}
-        <IonModal isOpen={showEditModal} onDidDismiss={() => setShowEditModal(false)}>
-          <IonHeader>
-            <IonToolbar className="header-gradient">
-              <IonTitle className="title-centered">Editar Quiz</IonTitle>
-              <IonButtons slot="end">
-                <IonButton
-                  className="close-button"
-                  fill="clear"
-                  onClick={() => setShowEditModal(false)}
-                >
-                  <IonIcon icon={close} />
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
+{/* Modal de Edição de Quiz */}
+<IonModal isOpen={showEditModal} onDidDismiss={() => setShowEditModal(false)}>
+  <IonHeader>
+    <IonToolbar className="header-gradient">
+      <IonTitle className="title-centered">Editar Quiz</IonTitle>
+      <IonButtons slot="end">
+        <IonButton
+          className="close-button"
+          fill="clear"
+          onClick={() => setShowEditModal(false)}
+        >
+          <IonIcon icon={close} />
+        </IonButton>
+      </IonButtons>
+    </IonToolbar>
+  </IonHeader>
 
-          <QuizForm
-            isOpen={showEditModal}
-            onClose={() => setShowEditModal(false)}
-            quiz={quizParaEditar}
-            isEditing={true}
-            onTituloChange={handleTituloEditChange}
-            onQuestaoChange={handleQuestaoEditChange}
-            onRespostaChange={handleRespostaEditChange}
-            onCorrecaoChange={handleCorrecaoEditChange}
-            onAddPergunta={addPerguntaEdit}
-            onRemovePergunta={removePerguntaEdit}
-            onAddResposta={addRespostaEdit}
-            onRemoveResposta={removeRespostaEdit}
-            onSave={handleUpdateQuiz}
-          />
-        </IonModal>
-
+  <QuizForm
+    isOpen={showEditModal}
+    onClose={() => setShowEditModal(false)}
+    quiz={quizParaEditar}
+    isEditing={true}
+    onTituloChange={handleTituloEditChange}
+    onQuestaoChange={handleQuestaoEditChange}
+    onRespostaChange={handleRespostaEditChange}
+    onCorrecaoChange={handleCorrecaoEditChange}
+    onExplicacaoChange={handleExplicacaoEditChange} // Corrigido
+    onAddPergunta={addPerguntaEdit}
+    onRemovePergunta={removePerguntaEdit}
+    onAddResposta={addRespostaEdit}
+    onRemoveResposta={removeRespostaEdit}
+    onSave={handleUpdateQuiz}
+  />
+</IonModal>
         {/* Alerta de Confirmação de Exclusão */}
         <IonAlert
           isOpen={showDeleteAlert}

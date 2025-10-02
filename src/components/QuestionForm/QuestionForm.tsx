@@ -17,6 +17,7 @@ import "./QuestionForm.css";
 interface NovaResposta {
   texto: string;
   correta: boolean;
+  explicacao: string;
 }
 
 interface NovaPergunta {
@@ -31,6 +32,7 @@ interface QuestionFormProps {
   onQuestaoChange: (index: number, value: string) => void;
   onRespostaChange: (perguntaIndex: number, respostaIndex: number, value: string) => void;
   onCorrecaoChange: (perguntaIndex: number, respostaIndex: number, value: boolean) => void;
+  onExplicacaoChange: (perguntaIndex: number, respostaIndex: number, value: string) => void;
   onAddResposta: (perguntaIndex: number) => void;
   onRemoveResposta: (perguntaIndex: number, respostaIndex: number) => void;
   onRemovePergunta: (index: number) => void;
@@ -43,6 +45,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
   onQuestaoChange,
   onRespostaChange,
   onCorrecaoChange,
+  onExplicacaoChange,
   onAddResposta,
   onRemoveResposta,
   onRemovePergunta,
@@ -106,6 +109,18 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                 <IonIcon icon={removeCircle} />
               </IonButton>
             </div>
+          </div>
+          <div className="input-container">
+            <label className="input-label">Explicação</label>
+            <IonTextarea
+              className="custom-input"
+              value={resposta.explicacao}
+              onIonChange={(e) =>
+                onExplicacaoChange(perguntaIndex, respostaIndex, e.detail.value || "")
+              }
+              placeholder="Digite a explicação para esta resposta"
+              rows={2}
+            />
           </div>
         </div>
       ))}
