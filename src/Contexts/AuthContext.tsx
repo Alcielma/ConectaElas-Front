@@ -12,6 +12,7 @@ import { useIonRouter } from "@ionic/react";
 import { IHTTPReturn } from "../Services/apiTypes";
 
 interface User {
+  nome: string | undefined;
   id: number;
   username: string;
   name?: string;
@@ -88,6 +89,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       email: userData.email,
       tipo: userData.Tipo,
       isOnboardingViewed: userData.is_onboarding_viewed,
+      nome: undefined
     };
 
     setAuthToken(jwt);

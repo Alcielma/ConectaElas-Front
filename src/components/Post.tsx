@@ -5,6 +5,9 @@ import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
 import CommentItem from "./CommentItem";
 import PostModal from "./PostModal";
+import Toast from "./Toast";
+import { isPostFavorited, addToFavorites, removeFromFavorites } from "../Services/FavoritesService";
+import api from "../Services/api";
 import "./Post.css";
 
 interface Comment {
@@ -20,6 +23,7 @@ interface PostProps {
   description: string;
   imageUrl: string | null;
   comments: Comment[]; // Changed to 'comments' to match PostModal prop and resolve type error
+  onFavoriteChange?: () => void; // Função para notificar mudanças nos favoritos
 }
 
 const Post: React.FC<PostProps> = ({
@@ -28,8 +32,8 @@ const Post: React.FC<PostProps> = ({
   description,
   imageUrl,
   comments: initialComments, // Renamed to avoid conflict with state
+  onFavoriteChange,
 }) => {
-  console.log("Descrição no Post:", description); // Log para depuração
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState(
@@ -40,35 +44,88 @@ const Post: React.FC<PostProps> = ({
   );
   const [showSuccess, setShowSuccess] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteId, setFavoriteId] = useState<number | null>(null);
+  const [toast, setToast] = useState({
+    isOpen: false,
+    message: "",
+    type: "success" as "success" | "error" | "info"
+  });
 
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user?.id) {
-      const key = `favorites_${user.id}`;
-      const favorites = JSON.parse(localStorage.getItem(key) || "[]");
-      setIsFavorite(favorites.includes(id));
-    }
+    const checkFavoriteStatus = async () => {
+      if (user?.id) {
+        try {
+          const favorite = await isPostFavorited(user.id, id);
+          setIsFavorite(!!favorite);
+          if (favorite) {
+            setFavoriteId(favorite.id);
+          } else {
+            setFavoriteId(null);
+          }
+        } catch (error) {
+          console.error("Erro ao verificar status de favorito:", error);
+        }
+      }
+    };
+    
+    checkFavoriteStatus();
   }, [user, id]);
 
-  const toggleFavorite = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Impede que o clique no ícone abra o modal
+  const toggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!user?.id) {
-      console.error("Usuário não está logado.");
+      setToast({
+        isOpen: true,
+        message: "Você precisa estar logado para favoritar posts.",
+        type: "error"
+      });
       return;
     }
 
-    const key = `favorites_${user.id}`;
-    let favorites = JSON.parse(localStorage.getItem(key) || "[]");
-
-    if (isFavorite) {
-      favorites = favorites.filter((f: number) => f !== id);
-    } else {
-      favorites.push(id);
+    try {
+      if (isFavorite && favoriteId) {
+        const favorite = await isPostFavorited(user.id, id);
+        if (!favorite || !favorite.documentId) {
+          throw new Error('Não foi possível obter o documentId do favorito');
+        }
+        await api.delete(`/favoritos/${favorite.documentId}`);
+        setIsFavorite(false);
+        setFavoriteId(null);
+        
+        setToast({
+          isOpen: true,
+          message: "Post removido dos favoritos.",
+          type: "info"
+        });
+        if (onFavoriteChange) {
+          onFavoriteChange();
+        }
+      } else {
+        const response = await addToFavorites(user.id, id);
+        if (response?.data?.id) {
+          setIsFavorite(true);
+          setFavoriteId(response.data.id);
+          
+          setToast({
+            isOpen: true,
+            message: "Post adicionado aos favoritos!",
+            type: "success"
+          });
+          if (onFavoriteChange) {
+            onFavoriteChange();
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Erro ao atualizar favoritos para post ${id}:`, error);
+      setToast({
+        isOpen: true,
+        message: "Erro ao atualizar favoritos. Tente novamente.",
+        type: "error"
+      });
     }
-
-    localStorage.setItem(key, JSON.stringify(favorites));
-    setIsFavorite(!isFavorite);
   };
 
   const openModal = () => setIsModalOpen(true);
@@ -141,6 +198,13 @@ const Post: React.FC<PostProps> = ({
           onClose={closeModal}
         />
       )}
+
+      <Toast
+        isOpen={toast.isOpen}
+        message={toast.message}
+        type={toast.type}
+        onDidDismiss={() => setToast({ ...toast, isOpen: false })}
+      />
     </>
   );
 };

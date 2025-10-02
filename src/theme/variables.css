@@ -1,5 +1,3 @@
-/* variables.css ou global.css */
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 :root {
@@ -7,18 +5,16 @@
   --cor-principal: #dd2273;
   --cor-secundaria: #720079;
   --cor-secundaria-hover: #3d0341;
-  /* --cor-fundo: #f5f7fa; */
   --cor-fundo: #fff;
-  /* Define a variável de cor */
 
-  --ion-color-primary: var(--cor-principal); /* Cor principal (rosa) */
+  --ion-color-primary: var(--cor-principal);
   --ion-color-primary-rgb: 221, 34, 115;
-  --ion-color-primary-contrast: #ffffff; /* Cor do texto (branco) */
+  --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #c21e65; /* Tom mais escuro */
-  --ion-color-primary-tint: #e03881; /* Tom mais claro */
+  --ion-color-primary-shade: #c21e65;
+  --ion-color-primary-tint: #e03881;
 
-  --ion-color-secondary: var(--cor-secundaria); /* Roxo */
+  --ion-color-secondary: var(--cor-secundaria);
   --ion-color-secondary-rgb: 114, 0, 121;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
@@ -28,81 +24,248 @@
   --ion-background-color: #fff;
 }
 
-/* Estilizando o IonToolbar */
-ion-toolbar {
-  --background: var(--cor-principal);
-  --color: #ffffff;
-  --border-color: #000000;
+/* ESTILOS GLOBAIS FORTALECIDOS */
+
+/* Estilizando o IonToolbar com maior especificidade */
+ion-app ion-header ion-toolbar,
+ion-page ion-header ion-toolbar,
+.header-gradient {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary)) !important;
+  --color: #ffffff !important;
+  --border-color: transparent !important;
+  background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary)) !important;
+  color: #ffffff !important;
+  --min-height: 56px !important;
+  height: 56px !important;
+}
+/* CORREÇÃO PARA O BOTÃO DE VOLTAR - IGUAL AO POST MODAL */
+ion-app ion-header ion-toolbar ion-buttons,
+ion-page ion-header ion-toolbar ion-buttons {
+  position: relative !important;
+  z-index: 10 !important;
 }
 
-ion-toolbar chat-input-toolbar {
-  background-color: white;
+ion-app ion-header ion-toolbar ion-back-button,
+ion-page ion-header ion-toolbar ion-back-button {
+  --color: #ffffff !important;
+  --padding-start: 8px !important;
+  --padding-end: 8px !important;
+  margin: 0 !important;
+  height: 40px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
 }
 
-/* Centralizando o IonTitle */
-ion-toolbar ion-title {
-  text-align: center;
-  width: 100%;
-  position: relative;
-  font-weight: 800;
+/* Ícone do botão de voltar - EXATAMENTE IGUAL AO POST MODAL */
+ion-app ion-header ion-toolbar ion-back-button ion-icon,
+ion-page ion-header ion-toolbar ion-back-button ion-icon {
+  font-size: 28px !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  z-index: 500 !important;
+  align-self: flex-start !important;
+  width: 28px !important;
+  height: 28px !important;
 }
 
-ion-tab-bar {
-  --background: white;
-  --color: white;
-  --color-selected: #ffffff;
-  --ion-color-primary: #ffffff;
-  border: #cccccc;
-  box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25);
+/* Remove qualquer texto do botão de voltar */
+ion-app ion-header ion-toolbar ion-back-button .button-inner,
+ion-page ion-header ion-toolbar ion-back-button .button-inner {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
 }
 
-ion-tab-button {
-  --color: var(--cor-principal);
-  /* Cor do texto */
-  --color-selected: var(--cor-secundaria);
-  /* Cor do texto quando ativo */
-  --ripple-color: rgba(255, 255, 255, 0.3);
-  /* Cor do efeito ripple */
+ion-app ion-header ion-toolbar ion-back-button span,
+ion-page ion-header ion-toolbar ion-back-button span {
+  display: none !important;
 }
 
-:host(.button-solid) {
-  --background: #24ce9e;
-  --color: var(--ion-color-primary-contrast, #fff);
+/* CORREÇÃO PARA O TÍTULO CENTRALIZADO */
+ion-app ion-header ion-toolbar ion-title,
+ion-page ion-header ion-toolbar ion-title,
+.title-centered {
+  text-align: center !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: calc(100% - 120px) !important; /* Deixa espaço para os botões */
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-native-wrapper.sc-ion-input-ios {
-  --background: var(--cor-principal);
+
+/* Tab Bar */
+ion-app ion-tab-bar {
+  --background: white !important;
+  --color: white !important;
+  --color-selected: #ffffff !important;
+  --ion-color-primary: #ffffff !important;
+  border: #cccccc !important;
+  box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25) !important;
 }
 
+ion-app ion-tab-button {
+  --color: var(--cor-principal) !important;
+  --color-selected: var(--cor-secundaria) !important;
+  --ripple-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+
+/* BOTÕES GLOBAIS */
+ion-app ion-button,
+ion-page ion-button,
+.quiz-button,
+.nav-button,
+.action-button {
+  --color: #ffffff !important;
+  color: #ffffff !important;
+  --background: #dd2273 !important;
+  --background-hover: #c41e65 !important;
+  --box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+ion-app ion-button:hover,
+ion-page ion-button:hover,
+.quiz-button:hover,
+.nav-button:hover,
+.action-button:hover {
+  --box-shadow: 0 6px 12px rgba(221, 34, 115, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* CARDS DE PROGRESSO GLOBAIS */
+ion-app .progress-card,
+ion-page .progress-card,
+ion-app .summary-card,
+ion-page .summary-card,
+ion-app .result-summary-card,
+ion-page .result-summary-card,
+ion-app .answers-card,
+ion-page .answers-card,
+ion-app .question-card,
+ion-page .question-card {
+  border-radius: 16px !important;
+  background-color: #ffe6f0 !important;
+  color: #040404 !important;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 0 6px 6px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-3px) scale(1.01) !important;
+  transition: all 0.3s ease-in-out !important;
+}
+
+ion-app .progress-card:hover,
+ion-page .progress-card:hover,
+ion-app .summary-card:hover,
+ion-page .summary-card:hover,
+ion-app .result-summary-card:hover,
+ion-page .result-summary-card:hover,
+ion-app .answers-card:hover,
+ion-page .answers-card:hover,
+ion-app .question-card:hover,
+ion-page .question-card:hover {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 0 10px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* BADGES DE PERFORMANCE */
+ion-app .performance-badge,
+ion-page .performance-badge {
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  font-size: 0.75rem !important;
+  background-color: #dd2273 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* CONTAINERS DE CARREGAMENTO */
+ion-app .loading-container,
+ion-page .loading-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 200px !important;
+  background-color: #ffe6f0 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* TÍTULOS DE CARDS */
+ion-app ion-card-title,
+ion-page ion-card-title,
+ion-app .quiz-list-title,
+ion-page .quiz-list-title,
+ion-app .result-title,
+ion-page .result-title,
+ion-app .question-title,
+ion-page .question-title {
+  font-weight: bold !important;
+}
+
+/* FORÇA A APLICAÇÃO DO FUNDO DAS PÁGINAS */
+ion-app ion-content,
+ion-page ion-content {
+  --background: #f5f7fa !important;
+}
+
+/* MODO ESCURO FORTALECIDO */
 @media (prefers-color-scheme: dark) {
   :root.md,
   :root,
-  :host {
-    --ion-font-family: "Inter", sans-serif;
-    --cor-principal: #dd2273;
-    --cor-secundaria: #720079;
-    --cor-secundaria-hover: #3d0341;
-    /* --cor-fundo: #f5f7fa; */
-    --cor-fundo: #fff;
-    /* Define a variável de cor */
+  :host,
+  ion-app,
+  body {
+    --ion-font-family: "Inter", sans-serif !important;
+    --cor-principal: #dd2273 !important;
+    --cor-secundaria: #720079 !important;
+    --cor-secundaria-hover: #3d0341 !important;
+    --cor-fundo: #fff !important;
+    background: #ffffff !important;
+    color: var(--ion-color-primary) !important;
 
-    --ion-color-primary: var(--cor-principal); /* Cor principal (rosa) */
-    --ion-color-primary-rgb: 221, 34, 115;
-    --ion-color-primary-contrast: #ffffff; /* Cor do texto (branco) */
-    --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #c21e65; /* Tom mais escuro */
-    --ion-color-primary-tint: #e03881; /* Tom mais claro */
+    --ion-color-primary: var(--cor-principal) !important;
+    --ion-color-primary-rgb: 221, 34, 115 !important;
+    --ion-color-primary-contrast: #ffffff !important;
+    --ion-color-primary-contrast-rgb: 255, 255, 255 !important;
+    --ion-color-primary-shade: #c21e65 !important;
+    --ion-color-primary-tint: #e03881 !important;
 
-    --ion-color-secondary: var(--cor-secundaria); /* Roxo */
-    --ion-color-secondary-rgb: 114, 0, 121;
-    --ion-color-secondary-contrast: #ffffff;
-    --ion-color-secondary-contrast-rgb: 255, 255, 255;
-    --ion-color-secondary-shade: #64006a;
-    --ion-color-secondary-tint: #801a86;
+    --ion-color-secondary: var(--cor-secundaria) !important;
+    --ion-color-secondary-rgb: 114, 0, 121 !important;
+    --ion-color-secondary-contrast: #ffffff !important;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255 !important;
+    --ion-color-secondary-shade: #64006a !important;
+    --ion-color-secondary-tint: #801a86 !important;
 
-    --ion-background-color: #fff;
-
-    --ion-item-background: #fff;
-    --ion-item-color: #000;
+    --ion-background-color: #fff !important;
+    --ion-item-background: #fff !important;
+    --ion-item-color: #000 !important;
   }
 }
+
+/* FORÇA A APLICAÇÃO EM TODOS OS ELEMENTOS */
+* {
+  box-sizing: border-box;
+}
+
+/* GARANTE QUE OS ESTILOS SEJAM APLICADOS APÓS O CARREGAMENTO */
+ion-app.hydrated,
+body.ionic-loaded {
+  --ion-color-primary: #dd2273 !important;
+  --ion-color-secondary: #720079 !important;
+}
+
+

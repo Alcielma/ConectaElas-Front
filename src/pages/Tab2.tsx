@@ -27,7 +27,7 @@ const Tab2: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar className="header-gradient">
           <IonTitle>{isAssistant ? "Área do Assistente" : "Conexões"}</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -48,7 +48,7 @@ const Tab2: React.FC = () => {
                 onClick={() => router.push("/tabs/chat", "forward")}
               >
                 <IonIcon icon={chatbubbleEllipsesSharp} className="card-icon" />
-                <p>Chat com a Secretaria das Mulheres</p>
+                <p>Chat (Secretaria da Mulhere)</p>
               </div>
               <div className="card-down">
                 <div

@@ -1,0 +1,409 @@
+.quiz-management-container {
+  max-width: 100%; /* Remove limitação de largura */
+  margin: 0 auto;
+  padding: 16px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.quiz-list-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin: 0;
+}
+
+.quiz-result-container {
+  max-width: 100%; /* Remove limitação de largura */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 2rem 0;
+}
+
+.title-centered {
+  text-align: center;
+  font-weight: 600;
+  color: white;
+}
+
+.header-gradient {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  color: white;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 8px;
+}
+
+.section-title h3, .section-title h4 {
+  margin: 0;
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+.pergunta-container {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 
+              0 6px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  background-color: #ffe6f0;
+  margin-top: 15px;
+  transform: translateY(-3px) scale(1.01);
+  width: 100%;
+  max-width: 100%; /* Remove limitação */
+}
+
+ion-label[position="floating"] {
+  margin-bottom: 8px;
+}
+
+ion-input, ion-textarea {
+  margin-top: 8px;
+}
+
+.pergunta-container:hover {
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
+              0 10px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.03);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.question-number {
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  font-size: 1.1rem;
+}
+
+.quiz-card {
+  margin-bottom: 16px;
+  border-radius: 16px;
+  background-color: #ffe6f0;
+  color: #040404;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 
+              0 6px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px) scale(1.01);
+  transition: all 0.3s ease-in-out;
+}
+
+.quiz-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
+              0 10px 10px rgba(0, 0, 0, 0.15);
+}
+
+.quiz-info {
+  margin-bottom: 16px;
+  color: var(--ion-color-medium);
+}
+
+ion-button[expand="block"] {
+  margin-top: 10px;
+  --background: #dd2273;
+  --background-hover: #c41e65;
+  --box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3);
+  --color: #ffffff !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease;
+}
+
+ion-button[expand="block"]:hover {
+  --box-shadow: 0 6px 12px rgba(221, 34, 115, 0.5);
+  transform: translateY(-2px);
+}
+
+.resposta-container {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: all 0.2s ease;
+}
+
+.navigation-buttons {
+  margin-top: 20px;
+}
+
+.navigation-buttons .action-button {
+  margin-bottom: 10px;
+  --background: #dd2273;
+  --background-hover: #c41e65;
+  --box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3);
+  --color: #ffffff !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease;
+}
+
+.navigation-buttons .action-button:hover {
+  --box-shadow: 0 6px 12px rgba(221, 34, 115, 0.5);
+  transform: translateY(-2px);
+}
+
+.resposta-container:hover {
+  background-color: #f0f0f0;
+}
+
+.add-button {
+  --background: #8e44ad;
+  --background-hover: #9b59b6;
+  --color: white;
+  margin-left: 10px;
+}
+
+.remove-button {
+  --background: #e74c3c;
+  --background-hover: #c0392b;
+  --color: white;
+}
+
+.action-button {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: white;
+  margin-top: 15px;
+  --border-radius: 10px;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  --background: linear-gradient(135deg, var(--ion-color-primary-shade), var(--ion-color-secondary-shade));
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.navigation-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+/* ESTILO PARA BOTÃO DE FECHAR - SEM FUNDO */
+.close-button {
+  --background: transparent !important;
+  --background-activated: transparent !important;
+  --background-hover: rgba(221, 34, 115, 0.1) !important;
+  --box-shadow: none !important;
+  --border-radius: 50% !important;
+  --color: #ffffff !important;
+  --padding-start: 8px !important;
+  --padding-end: 8px !important;
+  --padding-top: 8px !important;
+  --padding-bottom: 8px !important;
+  width: 40px !important;
+  height: 40px !important;
+  margin: 0 !important;
+}
+
+.close-button:hover {
+  --background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.close-button ion-icon {
+  font-size: 24px !important;
+}
+
+/* ESTILIZAÇÃO DOS MODAIS PARA TELAS GRANDES */
+ion-modal {
+  --width: 100%;
+  --max-width: 100%;
+  --height: 100%;
+  --max-height: 100%;
+}
+
+/* Conteúdo dos formulários nos modais */
+.quiz-form-container {
+  padding: 16px;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Media queries para diferentes tamanhos de tela */
+@media screen and (min-width: 768px) {
+  .quiz-management-container {
+    padding: 24px;
+    max-width: 100%;
+  }
+  
+  .pergunta-container {
+    max-width: 800px;
+    margin: 15px auto;
+  }
+  
+  .quiz-form-container {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  ion-modal {
+    --width: 100%;
+    --max-width: 100%;
+  }
+}
+
+/* Para telas desktop grandes */
+@media screen and (min-width: 1024px) {
+  .quiz-management-container {
+    padding: 32px;
+    max-width: 100%;
+  }
+  
+  .pergunta-container {
+    max-width: 1000px;
+    margin: 20px auto;
+  }
+  
+  .quiz-form-container {
+    padding: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  /* Layout em duas colunas para perguntas em telas grandes */
+  .perguntas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .pergunta-container {
+    margin: 0;
+    max-width: none;
+  }
+}
+
+/* Para telas muito grandes (1200px+) */
+@media screen and (min-width: 1200px) {
+  .pergunta-container {
+    max-width: 1200px;
+    margin: 20px auto;
+  }
+  
+  .quiz-form-container {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Layout em três colunas para telas muito grandes */
+  .perguntas-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+/* Para telas ultra grandes (1400px+) */
+@media screen and (min-width: 1400px) {
+  .quiz-form-container {
+    max-width: 1400px;
+    padding: 48px;
+  }
+  
+  .pergunta-container {
+    max-width: 1400px;
+  }
+}
+
+/* Estilização específica do conteúdo do modal */
+ion-modal ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+/* Responsive adjustments para mobile */
+@media (max-width: 576px) {
+  .pergunta-container {
+    padding: 10px;
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  .resposta-container {
+    padding: 5px;
+  }
+  
+  .quiz-form-container {
+    padding: 12px;
+    max-width: 100%;
+  }
+  
+  ion-modal {
+    --width: 100%;
+    --height: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pergunta-container {
+    padding: 8px;
+    margin: 8px;
+    max-width: calc(100% - 16px);
+  }
+  
+  .quiz-form-container {
+    padding: 8px;
+  }
+}
+
+/* Animações para entrada dos modais */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+ion-modal.modal-card {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Estilização para o scroll dos modais */
+ion-modal ion-content {
+  --overflow: auto;
+}
+
+/* Melhor aproveitamento da tela em modais */
+.modal-content-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+}

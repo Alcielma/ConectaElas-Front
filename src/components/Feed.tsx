@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Post from "./Post";
 import SkeletonPost from "./SkeletonPost";
 import { getAll } from "../Services/postService";
+import { getUserFavorites } from "../Services/FavoritesService";
 import { useAuth } from "../Contexts/AuthContext";
 import "./Feed.css";
 
@@ -28,46 +29,89 @@ interface FeedProps {
 export default function Feed({ selectedCategory, horizontalLimit }: FeedProps) {
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [favoritesUpdated, setFavoritesUpdated] = useState<number>(0);
   const { user } = useAuth();
+  
+  // Função para forçar a atualização dos favoritos
+  const updateFavorites = useCallback(() => {
+    setFavoritesUpdated(prev => prev + 1);
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response: PostData[] = await getAll();
-        console.log("Dados retornados pela API:", response);
-
-        setTimeout(() => {
-          let processedPosts: PostData[] = [];
+        if (selectedCategory === "Favoritos") {
+          if (user?.id) {
+            // Buscar favoritos do usuário usando a API do Strapi
+            const favorites = await getUserFavorites(user.id);
+            let favoritePosts: PostData[] = [];
+            
+            if (favorites && favorites.length > 0) {
+              // Extrair os posts dos favoritos
+              favorites.forEach((favorite: any) => {
+                // Verificar se favorite.posts existe e é um array
+                if (favorite.posts) {
+                  // Se for um array, iterar sobre ele
+                  if (Array.isArray(favorite.posts)) {
+                    (favorite.posts as any[]).forEach((post: any) => {
+                      // Verificar se o post já existe na lista para evitar duplicatas
+                      if (!favoritePosts.some(p => p.id === post.id)) {
+                        favoritePosts.push({
+                          id: post.id,
+                          Titulo: post.Title || 'Sem título',
+                          Descricao: post.Description || 'Sem descrição',
+                          Categoria: post.Categoria || '',
+                          imageUrl: post.Link || null,
+                          createdAt: post.createdAt,
+                          comentarios: []
+                        });
+                      }
+                    });
+                  } 
+                  // Se não for um array, pode ser um objeto único
+                  else if (typeof favorite.posts === 'object' && favorite.posts !== null) {
+                    const post = favorite.posts as any;
+                    if (!favoritePosts.some(p => p.id === post.id)) {
+                      favoritePosts.push({
+                        id: post.id,
+                        Titulo: post.Title || 'Sem título',
+                        Descricao: post.Description || 'Sem descrição',
+                        Categoria: post.Categoria || '',
+                        imageUrl: post.Link || null,
+                        createdAt: post.createdAt,
+                        comentarios: []
+                      });
+                    }
+                  }
+                }
+              });
+            } else {
+              console.log('Nenhum favorito encontrado para o usuário:', user.id);
+            }
+            setPosts(favoritePosts.slice(0, horizontalLimit || 5));
+          } else {
+            setPosts([]);
+          }
+        } else {
+          const response: PostData[] = await getAll();
           if (response && Array.isArray(response)) {
             const reversed = [...response].reverse();
-            if (selectedCategory === "Favoritos") {
-              if (user?.id) {
-                const key = `favorites_${user.id}`;
-                const favoriteIds = JSON.parse(localStorage.getItem(key) || "[]");
-                processedPosts = reversed
-                  .filter((p) => favoriteIds.includes(p.id))
-                  .slice(0, 5); // Limitar a 5 posts para Favoritos
-              } else {
-                processedPosts = [];
-              }
-            } else {
-              processedPosts = reversed
-                .filter((p) => p.Categoria === selectedCategory)
-                .slice(0, 5); // Limitar a 5 posts por categoria
-            }
+            const processedPosts = reversed
+              .filter((p) => p.Categoria === selectedCategory)
+              .slice(0, horizontalLimit || 5);
+            setPosts(processedPosts);
           }
-          setPosts(processedPosts);
-          setLoading(false);
-        }, 2000);
+        }
       } catch (error) {
         console.error("Erro ao buscar posts:", error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchPosts();
-  }, [selectedCategory, user]); // Adicionou 'user' para reagir a mudanças de login
+  }, [selectedCategory, user, horizontalLimit, favoritesUpdated]);
 
   let filteredPosts = posts;
 
@@ -98,6 +142,7 @@ export default function Feed({ selectedCategory, horizontalLimit }: FeedProps) {
               imageUrl={post.imageUrl}
               description={post.Descricao}
               comments={post.comentarios}
+              onFavoriteChange={updateFavorites}
             />
           ))}
         </div>

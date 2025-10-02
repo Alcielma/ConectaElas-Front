@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, useTransition } from "react";
 import {
   IonTabs,
   IonRouterOutlet,
@@ -6,15 +6,15 @@ import {
   IonTabButton,
   IonIcon,
   IonLabel,
+  IonSpinner,
 } from "@ionic/react";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, RouteComponentProps } from "react-router-dom";
 import {
-  chatboxSharp,
   homeSharp,
   personSharp,
   radioSharp,
-  helpCircleSharp,
   informationCircleSharp,
+  clipboardSharp,
 } from "ionicons/icons";
 import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
@@ -26,8 +26,16 @@ import Teste from "../pages/teste";
 import AngelContact from "../pages/AngelContact";
 import PrivateRoute from "./PrivateRoute";
 import Sobre from "../pages/Sobre";
+import QuizList from "../pages/QuizList";
+import QuizDetail from "../pages/QuizDetail";
+import QuizProgress from "../pages/QuizProgress";
+import TestLocalStorage from "../pages/TestLocalStorage";
+import QuizManagement from "../pages/QuizManagement";
+const QuizResult = React.lazy(() => import("../pages/QuizResult"));
 
 const TabsLayout: React.FC = () => {
+  const [isPending, startTransition] = useTransition();
+  
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -47,6 +55,25 @@ const TabsLayout: React.FC = () => {
           path="/tabs/AngelContact"
           component={AngelContact}
         />
+        <PrivateRoute exact path="/tabs/quiz" component={QuizList} />
+        <PrivateRoute exact path="/tabs/quiz-detail/:id" component={QuizDetail} />
+        <PrivateRoute exact path="/tabs/quiz-progress" component={QuizProgress} />
+        <PrivateRoute exact path="/tabs/quiz-management" component={QuizManagement} />
+        <PrivateRoute 
+          exact 
+          path="/tabs/quiz-result/:id" 
+          render={(props: RouteComponentProps) => (
+            <Suspense fallback={
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexDirection: 'column' }}>
+                <IonSpinner name="crescent" />
+                <p>Carregando resultado...</p>
+              </div>
+            }>
+             <QuizResult />
+            </Suspense>
+          )}
+        />
+        <Route exact path="/tabs/test-localstorage" component={TestLocalStorage} />
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom" selectedTab="tab2">
@@ -57,6 +84,10 @@ const TabsLayout: React.FC = () => {
         <IonTabButton tab="tab2" href="/tabs/tab2">
           <IonIcon aria-hidden="true" icon={radioSharp} />
           <IonLabel>Conexões</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="quiz" href="/tabs/quiz">
+          <IonIcon aria-hidden="true" icon={clipboardSharp} />
+          <IonLabel>Quiz</IonLabel>
         </IonTabButton>
         <IonTabButton tab="tab3" href="/tabs/Sobre">
           <IonIcon aria-hidden="true" icon={informationCircleSharp} />

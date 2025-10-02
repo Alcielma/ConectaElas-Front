@@ -14,7 +14,6 @@ import AuthService from "../Services/AuthService";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useIonRouter } from "@ionic/react";
-import { promise } from "zod";
 
 const NUM_DIGITS = 5;
 
@@ -49,12 +48,6 @@ const ConfirmacaoCodigo: React.FC = () => {
 
   const handleEnviarCodigo = async (codigo: string[]) => {
     const codigoDigitado = codigo.join("");
-
-    // if (codigoDigitado.length !== NUM_DIGITS) {
-    //   setErro("Digite todos os 5 dígitos do código.");
-    //   return;
-    // }
-
     setLoading(true);
     setErro("");
 
@@ -119,14 +112,8 @@ const ConfirmacaoCodigo: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          {/* <IonButtons slot="start">
-            <IonBackButton defaultHref="/login" />
-          </IonButtons> */}
+        <IonToolbar className="header-gradient">
           <IonTitle className="center-title">Confirmação de e-mail</IonTitle>
-          {/* <IonButtons slot="end">
-            <div style={{ width: "44px" }} />
-          </IonButtons> */}
         </IonToolbar>
       </IonHeader>
       <IonContent className="confirmacao-content" fullscreen>

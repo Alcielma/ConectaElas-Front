@@ -46,7 +46,7 @@ const PostModal: React.FC<PostModalProps> = ({
                     />
                     <h2>{title}</h2>
                     {imageUrl && <img src={imageUrl} alt={title} className="modal-image" />}
-                    <p>{description || "Sem descrição disponível."}</p>
+                   <p className="modal-description">{description || "Sem descrição disponível."}</p>
                     
                 </div>
 

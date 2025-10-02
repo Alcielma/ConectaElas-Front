@@ -72,7 +72,7 @@ const AssistantChat: React.FC = () => {
   return (
     <IonPage className="Chat-root">
       <IonHeader className="Chat-header">
-        <IonToolbar>
+        <IonToolbar className="header-gradient">
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>

@@ -45,7 +45,7 @@ const AssistantChatList: React.FC = () => {
   return (
     <>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar className="header-gradient">
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>

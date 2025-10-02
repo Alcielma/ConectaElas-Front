@@ -1,0 +1,94 @@
+.quiz-list-container {
+  padding: 16px;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.quiz-list-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin: 0;
+}
+
+.quiz-list-title,
+ion-card-title {
+  color: var(--ion-color-primary);
+}
+
+.quiz-card {
+  margin-bottom: 16px;
+  border-radius: 16px;
+  background-color: #ffe6f0; /* rosa clarinho */
+  color: #040404;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 
+              0 6px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px) scale(1.01);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Quando passa o mouse (web) */
+.quiz-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
+              0 10px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+
+.quiz-info {
+  margin-bottom: 16px;
+  color: var(--ion-color-medium);
+}
+
+
+.quiz-button {
+  margin-top: 10px;
+  min-width: 120px;
+  --background: #dd2273; /* Cor rosa sólida para os botões */
+  --background-hover: #c41e65; /* Rosa um pouco mais escuro no hover */
+  --box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3);
+  --color: #ffffff !important; /* Texto branco com !important para sobrescrever outros estilos */
+  color: #ffffff !important; /* Texto branco direto no elemento */
+  transition: all 0.3s ease;
+}
+
+.progress-button {
+  --border-color: #dd2273;
+  --color: #dd2273;
+  --background-hover: rgba(221, 34, 115, 0.1);
+  font-weight: 500;
+}
+
+.quiz-button:hover {
+  --box-shadow: 0 6px 12px rgba(221, 34, 115, 0.5);
+  transform: translateY(-2px);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.no-quizzes {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--ion-color-medium);
+}
+
+.header-gradient {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: white;
+}
+
+.title-centered {
+  text-align: center;
+}

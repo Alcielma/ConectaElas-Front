@@ -7,8 +7,8 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { IonIcon } from "@ionic/react";
-import { pencilSharp } from "ionicons/icons";
-import { useAuth } from "../Contexts/AuthContext";
+import { pencilSharp, settingsSharp } from "ionicons/icons";
+import { useAuth } from "../Contexts/AuthContext"; // Importação correta da pasta Contexts
 import Modal from "../components/Modal";
 import { useHistory } from "react-router-dom";
 import "./Tab3.css";
@@ -16,7 +16,7 @@ import AuthService from "../Services/AuthService";
 import { useIonRouter } from "@ionic/react";
 
 const Tab3: React.FC = () => {
-  const { user, logout, authToken, updateUser } = useAuth();
+  const { user, logout, authToken, updateUser, isAssistant } = useAuth();
   const history = useHistory();
   const router = useIonRouter();
 
@@ -62,7 +62,6 @@ const Tab3: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    // history.replace("/login");
     router.push("/Login", "forward");
   };
 
@@ -148,8 +147,8 @@ const Tab3: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Perfil</IonTitle>
+        <IonToolbar className="header-gradient">
+          <IonTitle className="title-centered">Perfil</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -176,6 +175,7 @@ const Tab3: React.FC = () => {
                   <IonIcon icon={pencilSharp} />
                 </button>
               </div>
+              
               <div className="info-section">
                 <div className="info">
                   <h3 className="profile-label">Email: </h3>
@@ -192,20 +192,31 @@ const Tab3: React.FC = () => {
                   <IonIcon icon={pencilSharp} />
                 </button>
               </div>
-            </div>
 
-            {/* <button
-              className="profile-section profile-link-button"
-              onClick={() => router.push("/tabs/sobre", "forward")}
-            >
-              <div className="saiba-mais-box">
-                <h3 className="profile-label">
-                  {" "}
-                  Saiba mais sobre o Conecta Elas
-                </h3>
+              {/* Mostrar tipo de usuário */}
+              <div className="info-section">
+                <div className="info">
+                  <h3 className="profile-label">Tipo de Conta: </h3>
+                  <p className="profile-data">
+                    {user?.tipo === 'Assistente' ? 'Assistente' : 'Usuário'}
+                  </p>
+                </div>
               </div>
-            </button> */}
+            </div>
           </div>
+
+          {/* BOTÃO DE GERENCIAMENTO - APENAS PARA ASSISTENTES */}
+          {isAssistant && (
+            <div className="profile-footer">
+              <button 
+                className="management-button" 
+                onClick={() => router.push("/tabs/quiz-management", "forward")}
+              >
+                <IonIcon icon={settingsSharp} />
+                Gerenciamento de Quiz
+              </button>
+            </div>
+          )}
 
           <div className="profile-footer">
             <button className="logout-button" onClick={handleLogout}>

@@ -7,3 +7,7 @@
   cursor: pointer;
   z-index: 1000;
 }
+
+.custom-background {
+  --background: #ffffff; /* Fundo branco */
+}

@@ -1,0 +1,235 @@
+.quiz-progress-container {
+  --background: #f5f7fa;
+}
+
+.header-gradient {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: white;
+}
+
+.title-centered {
+  text-align: center;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+}
+
+.loading-container p {
+  margin-top: 1rem;
+  color: #666;
+}
+
+.progress-summary {
+  margin-bottom: 1.5rem;
+}
+
+.summary-card {
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 
+              0 6px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background: #ffe6f0;
+  transform: translateY(-3px) scale(1.01);
+  transition: all 0.3s ease-in-out;
+}
+
+.summary-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
+              0 10px 10px rgba(0, 0, 0, 0.15);
+}
+
+.summary-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.stat-item ion-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 1.5rem 0 1rem;
+  padding-left: 0.5rem;
+  border-left: 4px solid var(--ion-color-primary);
+}
+
+.progress-card {
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  background-color: #ffe6f0;
+  color: #040404;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 
+              0 6px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px) scale(1.01);
+  transition: all 0.3s ease-in-out;
+}
+
+.progress-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
+              0 10px 10px rgba(0, 0, 0, 0.15);
+}
+
+.quiz-progress-details {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progress-score {
+  display: flex;
+  align-items: baseline;
+  margin-right: 1rem;
+  min-width: 60px;
+}
+
+.score-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.score-total {
+  font-size: 1rem;
+  color: #666;
+  margin-left: 2px;
+}
+
+.progress-bar-container {
+  flex: 1;
+}
+
+.progress-percentage {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.quiz-meta {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.quiz-meta ion-icon {
+  margin-right: 0.5rem;
+}
+
+.quiz-date {
+  margin-right: auto;
+}
+
+.performance-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  background-color: #dd2273;
+  color: #ffffff !important;
+  box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3);
+  transition: all 0.3s ease;
+}
+
+.performance-badge:hover {
+  box-shadow: 0 6px 12px rgba(221, 34, 115, 0.5);
+  transform: translateY(-2px);
+}
+
+.no-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70%;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.no-progress h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* ...existing code... */
+
+/* Estilização para o swipe to delete */
+.full-width {
+  width: 100%;
+  margin: 0;
+}
+
+.swipe-instruction {
+  text-align: center;
+  color: var(--ion-color-medium);
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+/* Item sliding styling */
+ion-item-sliding {
+  margin-bottom: 16px;
+}
+
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+}
+
+ion-item-options {
+  border: none;
+}
+
+ion-item-option {
+  font-weight: bold;
+}
+
+/* Animação suave para o delete */
+ion-item-sliding.item-sliding-active-slide .progress-card {
+  transform: translateX(-10px);
+  transition: transform 0.3s ease;
+}
+
+/* Media queries para responsividade */
+@media screen and (min-width: 768px) {
+  .swipe-instruction {
+    font-size: 16px;
+  }
+}

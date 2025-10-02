@@ -1,7 +1,12 @@
 /* Cabeçalho com gradiente */
 .header-gradient {
-  background: linear-gradient(90deg, #c3007a, #d94fbd);
-  color: white;
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: white;
+}
+
+ion-toolbar {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: #fff;
 }
 
 .title-centered {
