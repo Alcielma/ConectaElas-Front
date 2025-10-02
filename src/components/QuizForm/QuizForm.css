@@ -1,0 +1,100 @@
+.quiz-result-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 8px;
+}
+
+.section-title h3, .section-title h4 {
+  margin: 0;
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+/* REMOVE O FUNDO BRANCO E A LINHA DO ION-ITEM */
+ion-item {
+  --background: transparent !important;
+  --border-width: 0 !important;
+  --inner-border-width: 0 !important;
+  --border-color: transparent !important;
+  --inner-padding-end: 0 !important;
+  --inner-padding-start: 0 !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  margin: 0 !important;
+}
+
+/* ESTILO PARA O LABEL */
+ion-item ion-label {
+  color: var(--ion-color-primary) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+}
+
+.navigation-buttons {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+.navigation-buttons .action-button {
+  margin-bottom: 10px;
+  --background: #dd2273;
+  --background-hover: #c41e65;
+  --box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3);
+  --color: #ffffff !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease;
+}
+
+.navigation-buttons .action-button:hover {
+  --box-shadow: 0 6px 12px rgba(221, 34, 115, 0.5);
+  transform: translateY(-2px);
+}
+
+.action-button {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: white;
+  margin-top: 15px;
+  --border-radius: 10px;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  --background: linear-gradient(135deg, var(--ion-color-primary-shade), var(--ion-color-secondary-shade));
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Estilização do input */
+.custom-input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  width: 100%;
+  --background: #fff !important;
+  --color: #333 !important;
+  --placeholder-color: #999 !important;
+}
+
+/* Ao focar */
+.custom-input:focus-within {
+  border-color: #dd2273;
+  background-color: #ffe6f0;
+  box-shadow: 0 0 6px rgba(221, 34, 115, 0.3);
+  --background: #ffe6f0 !important;
+}

@@ -1,0 +1,206 @@
+.quiz-detail-container {
+  padding: 16px;
+}
+
+.quiz-progress {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.quiz-progress span {
+  font-weight: 500;
+  color: var(--ion-color-primary);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #dd2273, #ff69b4);
+  transition: width 0.3s ease;
+}
+
+.question-card {
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(221, 34, 115, 0.2);
+}
+
+.question-title {
+  color: var(--ion-color-primary);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Estilização das opções de resposta */
+.option-item {
+  --border-radius: 12px;
+  --background: #ffffff;
+  --color: #333333;
+  margin-bottom: 12px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.option-item:hover {
+  border-color: #dd2273;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(221, 34, 115, 0.2);
+}
+
+/* Opção selecionada */
+.option-item.selected {
+  --background: #ffe6f0;
+  border-color: #dd2273;
+  box-shadow: 0 4px 12px rgba(221, 34, 115, 0.3);
+}
+
+/* Estilização do radio button - BOLINHA MAIOR E CORRIGIDA */
+.option-item ion-radio {
+  --color: #ffffff;
+  --color-checked: #ffffff;
+  --border-radius: 50%;
+  --inner-border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  margin-right: 12px;
+  margin-left: 16px; /* Empurra mais para a direita */
+}
+
+/* Radio button não selecionado - bolinha branca com borda rosa */
+.option-item ion-radio:not(.radio-checked) {
+  --background: #ffffff;
+  --border-color: #dd2273;
+  --border-style: solid;
+  --border-width: 2px;
+}
+
+/* Radio button selecionado - bolinha TODA ROSA */
+.option-item ion-radio.radio-checked {
+  --background: #dd2273;
+  --border-color: #dd2273;
+  --checkmark-color: #ffffff;
+}
+
+/* Força o fundo da bolinha selecionada para ficar toda rosa */
+.option-item ion-radio.radio-checked::part(container) {
+  background-color: #dd2273 !important;
+  border-color: #dd2273 !important;
+}
+
+/* Remove a marca interna branca para ficar toda rosa */
+.option-item ion-radio.radio-checked::part(mark) {
+  display: none;
+}
+
+.option-item ion-label {
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+}
+
+.option-item.selected ion-label {
+  color: #dd2273;
+  font-weight: 600;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 30px;
+  padding: 0 10px;
+}
+
+.nav-button {
+  --background: #dd2273;
+  --background-hover: #c41e65;
+  --color: #ffffff;
+  --border-radius: 25px;
+  --box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3);
+  font-weight: 600;
+  height: 44px;
+  min-width: 120px;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  --box-shadow: 0 6px 12px rgba(221, 34, 115, 0.5);
+  transform: translateY(-2px);
+}
+
+.nav-button[fill="outline"] {
+  --background: transparent;
+  --color: #dd2273;
+  --border-color: #dd2273;
+}
+
+.nav-button[fill="outline"]:hover {
+  --background: rgba(221, 34, 115, 0.1);
+}
+
+.nav-button:disabled {
+  --background: #cccccc;
+  --color: #666666;
+  --box-shadow: none;
+  opacity: 0.6;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  text-align: center;
+}
+
+.loading-container ion-spinner {
+  --color: #dd2273;
+  margin-bottom: 16px;
+}
+
+.error-container {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ion-color-medium);
+}
+
+.error-container p {
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.header-gradient {
+  --background: linear-gradient(135deg, #dd2273, #ff69b4);
+  --color: white;
+}
+
+.title-centered {
+  text-align: center;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navigation-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .nav-button {
+    width: 100%;
+  }
+  
+  .option-item {
+    margin-bottom: 8px;
+  }
+}
