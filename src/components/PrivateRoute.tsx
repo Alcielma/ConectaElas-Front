@@ -1,15 +1,17 @@
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, RouteComponentProps } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
 import Login from "../pages/Login";
 
 interface PrivateRouteProps {
-  component: React.ComponentType<any>;
+  component?: React.ComponentType<RouteComponentProps>;
+  render?: (props: RouteComponentProps) => JSX.Element;
   path: string;
   exact?: boolean;
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   component: Component,
+  render,
   ...rest
 }) => {
   const { user } = useAuth();
@@ -17,7 +19,12 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   return (
     <Route
       {...rest}
-      render={(props) => (user ? <Component {...props} /> : <Login />)}
+      render={(props) => {
+        if (!user) return <Login />;
+        if (Component) return <Component {...props} />;
+        if (render) return render(props);
+        return null;
+      }}
     />
   );
 };

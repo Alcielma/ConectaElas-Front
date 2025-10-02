@@ -87,11 +87,11 @@ const UserChat: React.FC = () => {
   return (
     <IonPage className="Chat-root">
       <IonHeader className="Chat-header">
-        <IonToolbar>
+        <IonToolbar className="header-gradient">
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>
-          <IonTitle className="center-title">Secretaria das Mulheres</IonTitle>
+          <IonTitle className="center-title">Secretaria da Mulhere</IonTitle>
           <IonButtons slot="end">
             <div style={{ width: "44px" }} />
           </IonButtons>
@@ -135,16 +135,6 @@ const UserChat: React.FC = () => {
               Mulher!
             </p>
           )}
-          {/* {isTyping && (
-            <div className="message-bubble-typing received typing-visible">
-              <p>Digitando...</p>
-              <div className="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          )} */}
           <div ref={chatEndRef} />
         </div>
       </IonContent>

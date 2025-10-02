@@ -4,6 +4,8 @@ import { chatbubble, star, starOutline } from "ionicons/icons";
 import CommentItem from "./CommentItem";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
+import { isPostFavorited, addToFavorites, removeFromFavorites } from "../Services/FavoritesService";
+import api from "../Services/api";
 import "./ExpandedPostList.css";
 
 interface Comment {
@@ -23,7 +25,7 @@ interface Post {
 
 interface ExpandedPostListProps {
   posts: Post[];
-  onFavoriteToggle: () => void; // Added callback prop
+  onFavoriteToggle: () => void; 
 }
 
 const ExpandedPostList: React.FC<ExpandedPostListProps> = ({ posts, onFavoriteToggle }) => {
@@ -51,36 +53,57 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
   const [visibleComments, setVisibleComments] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const commentsListRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user?.id) {
-      const key = `favorites_${user.id}`;
-      const favorites = JSON.parse(localStorage.getItem(key) || "[]");
-      setIsFavorite(favorites.includes(post.id));
-    }
+    const checkFavoriteStatus = async () => {
+      if (user?.id) {
+        try {
+          const favorite = await isPostFavorited(user.id, post.id);
+          setIsFavorite(!!favorite);
+          if (favorite) {
+            setFavoriteId(favorite.id);
+          } else {
+            setFavoriteId(null);
+          }
+        } catch (error) {
+        }
+      }
+    };
+    
+    checkFavoriteStatus();
   }, [user, post.id]);
 
-  const toggleFavorite = (e: React.MouseEvent) => {
+  const toggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user?.id) {
       console.error("Usuário não está logado.");
       return;
     }
 
-    const key = `favorites_${user.id}`;
-    let favorites = JSON.parse(localStorage.getItem(key) || "[]");
-
-    if (isFavorite) {
-      favorites = favorites.filter((f: number) => f !== post.id);
-    } else {
-      favorites.push(post.id);
+    try {
+      if (isFavorite && favoriteId) {
+        const favorite = await isPostFavorited(user.id, post.id);
+        if (!favorite || !favorite.documentId) {
+          throw new Error('Não foi possível obter o documentId do favorito');
+        }
+        await api.delete(`/favoritos/${favorite.documentId}`);
+        setIsFavorite(false);
+        setFavoriteId(null);
+        onFavoriteToggle();
+      } else {
+        const response = await addToFavorites(user.id, post.id);
+        if (response?.data?.id) {
+          setIsFavorite(true);
+          setFavoriteId(response.data.id);
+          onFavoriteToggle();
+        }
+      }
+    } catch (error) {
+      console.error(`Erro ao atualizar favoritos para post ${post.id}:`, error);
     }
-
-    localStorage.setItem(key, JSON.stringify(favorites));
-    setIsFavorite(!isFavorite);
-    onFavoriteToggle(); // Notify parent to update posts
   };
 
   const handleAddComment = async () => {

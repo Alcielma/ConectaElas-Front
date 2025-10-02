@@ -6,6 +6,16 @@
     background-color: var(--cor-fundo);
 }
 
+ion-toolbar {
+    --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+    --color: #fff;
+}
+
+.header-gradient {
+    --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+    --color: white;
+}
+
 
 .card-container {
     display: flex;

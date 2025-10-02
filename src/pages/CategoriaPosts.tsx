@@ -12,6 +12,7 @@ import { arrowBack } from "ionicons/icons";
 import ExpandedPostList from "../components/ExpandedPostList";
 import { getAll } from "../Services/postService";
 import { useAuth } from "../Contexts/AuthContext";
+import { getUserFavorites } from "../Services/FavoritesService";
 import "./CategoriaPosts.css";
 
 interface Comment {
@@ -37,18 +38,62 @@ const CategoriaPosts: React.FC = () => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const allPosts: Post[] = await getAll();
-      let filtrados: Post[] = [];
       if (categoria.toLowerCase() === "favoritos") {
         if (user?.id) {
-          const key = `favorites_${user.id}`;
-          const favoriteIds = JSON.parse(localStorage.getItem(key) || "[]");
-          filtrados = allPosts.filter((p) => favoriteIds.includes(p.id));
+          // Buscar favoritos do usuário usando a API do Strapi
+          const favorites = await getUserFavorites(user.id);
+          let favoritePosts: Post[] = [];
+          
+          if (favorites && favorites.length > 0) {
+            // Extrair os posts dos favoritos
+            favorites.forEach((favorite: any) => {
+              // Verificar se favorite.posts existe e é um array
+              if (favorite.posts) {
+                // Se for um array, iterar sobre ele
+                if (Array.isArray(favorite.posts)) {
+                  (favorite.posts as any[]).forEach((post: any) => {
+                    // Verificar se o post já existe na lista para evitar duplicatas
+                    if (!favoritePosts.some(p => p.id === post.id)) {
+                      favoritePosts.push({
+                        id: post.id,
+                        Titulo: post.Title || 'Sem título',
+                        Descricao: post.Description || 'Sem descrição',
+                        Categoria: post.Categoria || '',
+                        imageUrl: post.Link || null,
+                        comentarios: []
+                      });
+                    }
+                  });
+                } 
+                // Se não for um array, pode ser um objeto único
+                else if (typeof favorite.posts === 'object' && favorite.posts !== null) {
+                  const post = favorite.posts as any;
+                  if (!favoritePosts.some(p => p.id === post.id)) {
+                    favoritePosts.push({
+                      id: post.id,
+                      Titulo: post.Title || 'Sem título',
+                      Descricao: post.Description || 'Sem descrição',
+                      Categoria: post.Categoria || '',
+                      imageUrl: post.Link || null,
+                      comentarios: []
+                    });
+                  }
+                }
+              }
+            });
+            setPostsFiltrados(favoritePosts);
+          } else {
+            setPostsFiltrados([]);
+          }
+        } else {
+          setPostsFiltrados([]);
         }
       } else {
-        filtrados = allPosts.filter((p) => p.Categoria === categoria);
+        // Buscar posts normais por categoria
+        const allPosts: Post[] = await getAll();
+        const filtrados = allPosts.filter((p) => p.Categoria === categoria);
+        setPostsFiltrados(filtrados);
       }
-      setPostsFiltrados(filtrados);
     } catch (error) {
       console.error("Erro ao carregar posts:", error);
     }

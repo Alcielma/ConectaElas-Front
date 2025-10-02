@@ -92,16 +92,11 @@ const AngelContactService = {
 
   async deleteContact(authToken: string, documentId: string): Promise<boolean> {
     try {
-      console.log(`Enviando DELETE para /contato-do-anjos/${documentId}`);
-
       await api.delete(`/contato-do-anjos/${documentId}`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
-
-      console.log("Contato removido com sucesso da API!");
       return true;
     } catch (error) {
-      console.error("Erro ao excluir contato do anjo:", error);
       return false;
     }
   },

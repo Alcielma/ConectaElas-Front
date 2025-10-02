@@ -153,7 +153,7 @@ const AngelContactPage: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar className="header-gradient">
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/tab1" />
           </IonButtons>

@@ -11,9 +11,7 @@ import TabsLayout from "./components/TabsLayout";
 import AssistantChat from "./pages/AssistantChat";
 import AssistantChatList from "./pages/AssistantChatList";
 import Onboarding from "./pages/Onboarding";
-import UserChat from "./pages/UserChat";
 import { SplashScreen } from "@capacitor/splash-screen";
-import Sobre from "./pages/Sobre";
 import ConfirmacaoCodigo from "./pages/ConfirmacaoCodigo";
 import CategoriaPosts from "./pages/CategoriaPosts";
 
