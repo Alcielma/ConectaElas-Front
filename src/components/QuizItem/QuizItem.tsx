@@ -38,7 +38,7 @@ const QuizItem: React.FC<QuizItemProps> = ({ quiz, onEdit, onDelete }) => {
       </IonCardHeader>
       <IonCardContent>
         <p className="quiz-info">{quiz.perguntas?.length || 0} perguntas</p>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px', gap: '10px' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
           <IonButton fill="solid" color="primary" onClick={() => onEdit(quiz)}>
             <IonIcon slot="start" icon={create} />
             Editar

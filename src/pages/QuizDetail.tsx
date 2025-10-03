@@ -35,6 +35,7 @@ interface Pergunta {
   Questao: string;
   opcoes?: string[];
   opcoesCorretas?: boolean[];
+  opcoesExplicacoes?: string[];
 }
 
 interface Quiz {
@@ -58,7 +59,6 @@ const QuizDetail: React.FC = () => {
     setRespostas({});
     localStorage.removeItem("quizResult");
   });
-
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -124,11 +124,13 @@ const QuizDetail: React.FC = () => {
         const respostaUsuario = respostas[pergunta.id] || "";
         let correta = false;
         let corretaResposta = "";
+        let explicacaoSelecionada = "Sem explicação disponível.";
 
-        if (pergunta.opcoes && pergunta.opcoesCorretas) {
+        if (pergunta.opcoes && pergunta.opcoesCorretas && pergunta.opcoesExplicacoes) {
           const indexResposta = pergunta.opcoes.findIndex(opcao => opcao === respostaUsuario);
-          if (indexResposta !== -1 && pergunta.opcoesCorretas[indexResposta]) {
-            correta = true;
+          if (indexResposta !== -1) {
+            correta = pergunta.opcoesCorretas[indexResposta];
+            explicacaoSelecionada = pergunta.opcoesExplicacoes[indexResposta];
           }
           const indexCorreta = pergunta.opcoesCorretas.findIndex(opcaoCorreta => opcaoCorreta === true);
           if (indexCorreta !== -1) {
@@ -137,6 +139,11 @@ const QuizDetail: React.FC = () => {
         } else {
           corretaResposta = "Sim";
           correta = respostaUsuario === "Sim";
+          explicacaoSelecionada = {
+            "Sim": "Você escolheu 'Sim', que é a resposta correta para esta pergunta.",
+            "Não": "Você escolheu 'Não', mas a resposta correta é 'Sim'.",
+            "Talvez": "Você escolheu 'Talvez', mas a resposta correta é 'Sim'."
+          }[respostaUsuario] || "Sem explicação disponível.";
         }
 
         return {
@@ -144,17 +151,15 @@ const QuizDetail: React.FC = () => {
           pergunta: pergunta.Questao,
           resposta: respostaUsuario,
           correta: correta,
-          corretaResposta: corretaResposta
+          corretaResposta: corretaResposta,
+          explicacao: explicacaoSelecionada
         };
       }),
     };
 
-    
     try {
-      
       const resultadoString = JSON.stringify(resultado);
       localStorage.setItem("quizResult", resultadoString);
-      const testeSalvo = localStorage.getItem("quizResult");
       startTransition(() => {
         history.replace(`/tabs/quiz-result/${quiz.id}`);
       });

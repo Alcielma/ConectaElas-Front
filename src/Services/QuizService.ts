@@ -6,10 +6,12 @@ interface Resposta {
   documentId: string;
   Resposta: string;
   Correcao: boolean;
+  Explicacao: string | null; // Campo para explicação, permitindo null
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
   locale: string | null;
+  pontuacao: string | null;
 }
 
 // Interface para perguntas do quiz
@@ -21,9 +23,10 @@ interface Pergunta {
   updatedAt: string;
   publishedAt: string;
   locale: string | null;
-  respostas: Resposta[];   
-  opcoes?: string[];           
-  opcoesCorretas?: boolean[];  
+  respostas: Resposta[];
+  opcoes?: string[];
+  opcoesCorretas?: boolean[];
+  opcoesExplicacoes?: string[]; // Array para explicações mapeadas
 }
 
 // Interface para o quiz
@@ -65,12 +68,13 @@ export async function getAllQuizzes() {
       };
     }
 
-    // Mapear opcoes e opcoesCorretas
+    // Mapear opcoes, opcoesCorretas e opcoesExplicacoes
     quizResponse.data.forEach(quiz => {
       quiz.perguntas?.forEach(pergunta => {
         pergunta.respostas = pergunta.respostas ?? [];
         pergunta.opcoes = pergunta.respostas.map(r => r.Resposta);
         pergunta.opcoesCorretas = pergunta.respostas.map(r => r.Correcao);
+        pergunta.opcoesExplicacoes = pergunta.respostas.map(r => r.Explicacao || "Sem explicação disponível.");
       });
     });
 
@@ -101,6 +105,7 @@ export async function getQuizById(id: number) {
       pergunta.respostas = pergunta.respostas ?? [];
       pergunta.opcoes = pergunta.respostas.map(r => r.Resposta);
       pergunta.opcoesCorretas = pergunta.respostas.map(r => r.Correcao);
+      pergunta.opcoesExplicacoes = pergunta.respostas.map(r => r.Explicacao || "Sem explicação disponível.");
     });
 
     return { data: quiz };
@@ -115,11 +120,12 @@ export interface QuizResult {
   quizId: number;
   quizTitle: string;
   totalPerguntas: number;
-  respostas: { 
-    perguntaId: number; 
-    pergunta: string; 
-    resposta: string; 
-    correta: boolean; // Indica se a resposta está correta
-    corretaResposta: string; // A resposta correta para exibir quando o usuário errar
+  respostas: {
+    perguntaId: number;
+    pergunta: string;
+    resposta: string;
+    correta: boolean;
+    corretaResposta: string;
+    explicacao: string; // Explicação da resposta selecionada
   }[];
 }
