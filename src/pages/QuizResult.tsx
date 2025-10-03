@@ -30,6 +30,7 @@ interface Resposta {
   resposta: string;
   correta: boolean;
   corretaResposta: string;
+  explicacao: string;
 }
 
 interface ResultadoQuiz {
@@ -195,9 +196,14 @@ const QuizResult: React.FC = () => {
                     />
                   </div>
                   {expandedAnswers[resposta.perguntaId] && (
-                    <div className="correct-answer">
-                      <span className="correct-answer-text">Resposta correta: <strong>{resposta.corretaResposta}</strong></span>
-                    </div>
+                    <>
+                      <div className="correct-answer">
+                        <span className="correct-answer-text">Resposta correta: <strong>{resposta.corretaResposta}</strong></span>
+                      </div>
+                      <div className={`explanation ${resposta.correta ? 'correct' : 'wrong'}`}>
+                        <span className="explanation-text">Explicação da sua resposta: {resposta.explicacao}</span>
+                      </div>
+                    </>
                   )}
                 </div>
                 {index < resultado.respostas.length - 1 && <hr className="answer-divider" />}
@@ -211,13 +217,10 @@ const QuizResult: React.FC = () => {
             expand="block"
             className="nav-button"
             onClick={() => {
-              // Limpa o resultado do quiz atual
               localStorage.removeItem("quizResult");
               localStorage.removeItem(`quizProgress_${resultado?.quizId}`);
               localStorage.removeItem("currentQuiz");
-
-              // Navega manualmente
-              history.replace("/tabs/quiz"); // ou history.push("/tabs/quiz") se preferir
+              history.replace("/tabs/quiz");
             }}
           >
             Voltar para Quizzes
