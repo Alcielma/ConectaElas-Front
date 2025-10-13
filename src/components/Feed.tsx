@@ -62,7 +62,7 @@ export default function Feed({ selectedCategory, horizontalLimit }: FeedProps) {
                           Titulo: post.Title || 'Sem título',
                           Descricao: post.Description || 'Sem descrição',
                           Categoria: post.Categoria || '',
-                          imageUrl: post.Link || null,
+                          imageUrl: post.Link || (post.Uploadpost && post.Uploadpost.length > 0 ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}` : null),
                           createdAt: post.createdAt,
                           comentarios: []
                         });
@@ -78,7 +78,7 @@ export default function Feed({ selectedCategory, horizontalLimit }: FeedProps) {
                         Titulo: post.Title || 'Sem título',
                         Descricao: post.Description || 'Sem descrição',
                         Categoria: post.Categoria || '',
-                        imageUrl: post.Link || null,
+                        imageUrl: post.Link || (post.Uploadpost && post.Uploadpost.length > 0 ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}` : null),
                         createdAt: post.createdAt,
                         comentarios: []
                       });

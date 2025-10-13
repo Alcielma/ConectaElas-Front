@@ -52,10 +52,19 @@ interface FavoritesResponse {
   };
 }
 
+// Função para verificar se uma URL é de vídeo
+export function isVideoUrl(url: string | null): boolean {
+  if (!url) return false;
+  return url.toLowerCase().endsWith('.mp4') || 
+         url.toLowerCase().endsWith('.webm') || 
+         url.toLowerCase().endsWith('.ogg') ||
+         url.includes('video');
+}
+
 // Buscar todos os favoritos do usuário
 export async function getUserFavorites(userId: number) {
   try {
-    const response = await api.get<FavoritesResponse>(`/favoritos?populate=posts&filters[usuario][id][$eq]=${userId}`);
+    const response = await api.get<FavoritesResponse>(`/favoritos?populate[posts][populate]=Uploadpost&filters[usuario][id][$eq]=${userId}`);
     console.log('Resposta da API de favoritos:', response.data);
     return response.data.data;
   } catch (error) {

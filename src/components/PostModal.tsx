@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
 import CommentItem from "./CommentItem";
+import { isVideoUrl } from "../Services/FavoritesService";
 import "./PostModal.css";
 
 interface Comment {
@@ -45,7 +46,18 @@ const PostModal: React.FC<PostModalProps> = ({
                         onClick={onClose}
                     />
                     <h2>{title}</h2>
-                    {imageUrl && <img src={imageUrl} alt={title} className="modal-image" />}
+                    {imageUrl && (
+                        isVideoUrl(imageUrl) ? (
+                            <video 
+                                src={imageUrl} 
+                                className="modal-image" 
+                                controls 
+                                preload="metadata"
+                            />
+                        ) : (
+                            <img src={imageUrl} alt={title} className="modal-image" />
+                        )
+                    )}
                    <p className="modal-description">{description || "Sem descrição disponível."}</p>
                     
                 </div>

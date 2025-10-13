@@ -174,10 +174,36 @@ const Post: React.FC<PostProps> = ({
     }
   };
 
+  // Função para verificar se a URL é de um vídeo
+  const isVideoUrl = (url: string) => {
+    return url.toLowerCase().endsWith('.mp4') || 
+           url.toLowerCase().endsWith('.webm') || 
+           url.toLowerCase().endsWith('.ogg') ||
+           url.includes('video');
+  };
+
   return (
     <>
       <div className="post-container" onClick={openModal}>
-        {imageUrl && <img src={imageUrl} alt={title} className="post-image" />}
+        {imageUrl && (
+        isVideoUrl(imageUrl) ? (
+          <video 
+            src={imageUrl} 
+            controls 
+            preload="metadata"
+            className="post-image"
+            onClick={(e) => e.stopPropagation()}
+            style={{ width: '100%', borderRadius: '8px' }}
+          />
+        ) : (
+          <img
+            src={imageUrl}
+            alt={title}
+            className="post-image"
+            onClick={(e) => e.stopPropagation()}
+          />
+        )
+      )}
         <h2 className="post-title">{title}</h2>
         <IonIcon
           icon={isFavorite ? star : starOutline}
