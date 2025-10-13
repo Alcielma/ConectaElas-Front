@@ -59,7 +59,12 @@ const CategoriaPosts: React.FC = () => {
                         Titulo: post.Title || 'Sem título',
                         Descricao: post.Description || 'Sem descrição',
                         Categoria: post.Categoria || '',
-                        imageUrl: post.Link || null,
+                        imageUrl: post.Link || 
+                          (post.Uploadpost && 
+                           post.Uploadpost.length > 0 && 
+                           post.Uploadpost[0]?.url
+                            ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}`
+                            : null),
                         comentarios: []
                       });
                     }
@@ -74,7 +79,12 @@ const CategoriaPosts: React.FC = () => {
                       Titulo: post.Title || 'Sem título',
                       Descricao: post.Description || 'Sem descrição',
                       Categoria: post.Categoria || '',
-                      imageUrl: post.Link || null,
+                      imageUrl: post.Link || 
+                        (post.Uploadpost && 
+                         post.Uploadpost.length > 0 && 
+                         post.Uploadpost[0]?.url
+                          ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}`
+                          : null),
                       comentarios: []
                     });
                   }

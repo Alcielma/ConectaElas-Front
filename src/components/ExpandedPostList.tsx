@@ -4,7 +4,7 @@ import { chatbubble, star, starOutline } from "ionicons/icons";
 import CommentItem from "./CommentItem";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
-import { isPostFavorited, addToFavorites, removeFromFavorites } from "../Services/FavoritesService";
+import { isPostFavorited, addToFavorites, removeFromFavorites, isVideoUrl } from "../Services/FavoritesService";
 import api from "../Services/api";
 import "./ExpandedPostList.css";
 
@@ -146,7 +146,18 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
           onClick={toggleFavorite}
         />
       </div>
-      {post.imageUrl && <img src={post.imageUrl} alt={post.title} />}
+      {post.imageUrl && (
+        isVideoUrl(post.imageUrl) ? (
+          <video 
+            src={post.imageUrl} 
+            controls 
+            preload="metadata"
+            style={{ width: '100%', borderRadius: '8px' }}
+          />
+        ) : (
+          <img src={post.imageUrl} alt={post.title} />
+        )
+      )}
       <p>{post.description || "Descrição não disponível"}</p>
 
       <div className={`comments-count-box ${expanded ? "active" : ""}`} onClick={() => setExpanded((prev) => !prev)}>
