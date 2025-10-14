@@ -99,33 +99,51 @@
 /* Campo adicionar comentário */
 .add-comment {
   display: flex;
-  gap: 10px;
+  padding: 10px;
   margin-bottom: 12px;
-  padding: 8px;
-  border-bottom: 2px solid #720079;
-  border-radius: 10px;
-  border: 1px solid #E0E0E0;
+  background-color: #fff;
+  border-radius: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .add-comment input {
   flex: 1;
-  padding: 8px;
-  border-radius: 10px;
-  border: 1px solid #E0E0E0;
-  border-bottom: 2px solid #720079;
-  background-color: #fff;
-  color: #333;
+  padding: 8px 12px;
+  border-radius: 25px;
+  border: none;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 16px;
+  --padding-start: 0;
+  --padding-end: 0;
 }
 
 .add-comment input:focus {
   outline: none;
-  border: 1px solid #E0E0E0;
-  border-bottom: 2px solid #720079;
+  border: none;
 }
 
 .add-comment input::placeholder {
-  font-size: 0.9rem;
-  color: #888888bd;
+  font-size: 16px;
+  color: #666666;
+}
+
+/* Botão de enviar comentário */
+.add-comment button {
+  padding: 8px 16px;
+  border-radius: 25px;
+  background-color: #dd2273;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-left: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.add-comment button:hover {
+  background-color: #c41e65;
 }
 
 .sem-comentarios {
