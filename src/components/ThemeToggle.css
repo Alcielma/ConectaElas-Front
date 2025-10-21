@@ -1,0 +1,39 @@
+.theme-toggle-btn {
+  position: fixed;
+  right: 16px;
+  top: 18px;
+  bottom: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  color: #ffffff; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10000;
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.06);
+}
+
+.theme-toggle-btn ion-icon {
+  font-size: 24px;
+}
+
+body.dark-theme .theme-toggle-btn {
+  color: #eaeaea; 
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+body.dark-theme .theme-toggle-btn ion-icon {
+  color: #eaeaea;
+}
