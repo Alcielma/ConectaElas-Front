@@ -19,7 +19,6 @@
   font-weight: 600;
 }
 
-/* REMOVE O FUNDO BRANCO E A LINHA DO ION-ITEM */
 ion-item {
   --background: transparent !important;
   --border-width: 0 !important;
@@ -32,7 +31,6 @@ ion-item {
   margin: 0 !important;
 }
 
-/* ESTILO PARA O LABEL */
 ion-item ion-label {
   color: var(--ion-color-primary) !important;
   font-weight: 600 !important;
@@ -77,7 +75,6 @@ ion-item ion-label {
   transform: translateY(-2px);
 }
 
-/* Estilização do input */
 .custom-input {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -91,7 +88,6 @@ ion-item ion-label {
   --placeholder-color: #999 !important;
 }
 
-/* Ao focar */
 .custom-input:focus-within {
   border-color: #dd2273;
   background-color: #ffe6f0;

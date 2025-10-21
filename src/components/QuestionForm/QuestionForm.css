@@ -58,7 +58,6 @@
   --border-color: #ccc;
   --highlight-color-focused: transparent;
   --color: #333 !important;
-  /* ADICIONE ESTAS LINHAS PARA O CURSOR */
   --caret-color: #dd2273 !important;
   caret-color: #dd2273 !important;
 }
@@ -69,16 +68,13 @@
   background-color: #ffe6f8 !important;
   box-shadow: 0 0 6px rgba(221, 34, 115, 0.3);
   transition: all 0.2s ease;
-  /* GARANTE QUE O CURSOR APAREÇA NO FOCO */
   --caret-color: #dd2273 !important;
   caret-color: #dd2273 !important;
 }
 
-/* Input ocupa o espaço restante */
 .custom-input.with-toggle {
   flex: 1;
-  min-width: 0; /* Permite que o input encolha */
-  /* CURSOR PARA INPUT COM TOGGLE */
+  min-width: 0; 
   --caret-color: #dd2273 !important;
   caret-color: #dd2273 !important;
 }
@@ -95,7 +91,6 @@
   background-color: #f0f0f0;
 }
 
-/* LAYOUT RESPONSIVO PARA INPUT COM TOGGLE E BOTÃO */
 .input-container-with-toggle {
   display: flex;
   align-items: center;
@@ -136,13 +131,11 @@
   transform: translateX(24px);
 }
 
-/* Input ocupa o espaço restante */
 .custom-input.with-toggle {
   flex: 1;
-  min-width: 0; /* Permite que o input encolha */
+  min-width: 0; 
 }
 
-/* Botão de remover */
 .remove-button-inside {
   --color: #e74c3c;
   --color-hover: #c0392b;
@@ -186,7 +179,6 @@
   transform: translateY(-2px);
 }
 
-/* RESPONSIVIDADE */
 @media (min-width: 768px) {
   .pergunta-container {
     padding: 20px;
@@ -282,4 +274,44 @@
     align-self: flex-end;
     margin-left: 0;
   }
+}
+
+body.dark-theme .pergunta-container {
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+  color: #ffffff;
+}
+
+body.dark-theme .question-number {
+  color: #ffffff;
+}
+
+body.dark-theme .input-label {
+  color: #eaeaea;
+}
+
+body.dark-theme .resposta-container {
+  background-color: #1f1f1f;
+  border: 1px solid #2a2a2a;
+  color: #ffffff;
+}
+
+body.dark-theme .custom-input,
+body.dark-theme .custom-textarea {
+  background-color: #1f1f1f !important;
+  --background: #1f1f1f !important;
+  color: #ffffff !important;
+  --color: #ffffff !important;
+  border: 1px solid #2a2a2a;
+  --border-color: #2a2a2a !important;
+  --placeholder-color: #b0b0b0 !important;
+}
+
+body.dark-theme .custom-input:focus-within,
+body.dark-theme .custom-textarea:focus-within {
+  background-color: #2a2a2a !important;
+  --background: #2a2a2a !important;
+  border-color: #dd2273;
+  box-shadow: none;
 }

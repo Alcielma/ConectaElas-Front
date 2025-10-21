@@ -3,30 +3,27 @@
 }
 
 .feed-posts {
-  display: grid; /* Layout padrão (vertical) */
+  display: grid; 
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
 
-/* Estilo para layout horizontal */
 .feed-container.horizontal .feed-posts {
   display: flex;
   flex-direction: row;
   overflow-x: auto;
   gap: 12px;
-  flex-wrap: nowrap; /* Garante que os itens não quebrem para a próxima linha */
+  flex-wrap: nowrap; 
 }
 
-/* Estilizando os posts para o layout horizontal */
 .feed-posts > * {
-  flex: 0 0 auto; /* Impede que os posts se estiquem */
-  width: 300px; /* Largura fixa para cada post */
-  background-color: #ead9eb; /* Fundo rosa suave para os posts */
-  border-radius: 8px; /* Bordas arredondadas para destacar o fundo */
-  padding: 8px; /* Espaçamento interno para melhor aparência */
+  flex: 0 0 auto; 
+  width: 300px; 
+  background-color: #ead9eb;
+  border-radius: 8px; 
+  padding: 8px; 
 }
 
-/* Estilizando o scroll */
 .feed-posts::-webkit-scrollbar {
   height: 8px;
 }

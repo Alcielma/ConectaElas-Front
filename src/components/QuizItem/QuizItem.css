@@ -20,7 +20,6 @@
   color: var(--ion-color-medium);
 }
 
-/* Personalizar o botão de excluir */
 .quiz-card ion-button[color="danger"] {
   --color: #ffffff !important;
   --background: #dc3545 !important;
@@ -31,28 +30,33 @@
   --background: #c82333 !important;
 }
 
-/* Garantir que o ícone também fique branco */
 .quiz-card ion-button[color="danger"] ion-icon {
   color: #ffffff !important;
 }
 
-/* Forçar o texto do botão a ficar branco */
 .quiz-card ion-button[color="danger"] .button-inner {
   color: #ffffff !important;
 }
-
-/* Alternativa para elementos de texto internos */
 .quiz-card ion-button[color="danger"] span {
   color: #ffffff !important;
 }
-
-/* Para todos os elementos filhos do botão */
 .quiz-card ion-button[color="danger"] * {
   color: #ffffff !important;
 }
 
-/* Seletor mais específico para o Ionic */
 .quiz-card .ion-color-danger {
   --ion-color-base: #dc3545 !important;
   --ion-color-contrast: #ffffff !important;
+}
+
+body.dark-theme .quiz-card {
+  background-color: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .quiz-card ion-card-title,
+body.dark-theme .quiz-info {
+  color: #eaeaea;
 }

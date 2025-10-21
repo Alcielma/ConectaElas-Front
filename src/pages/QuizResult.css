@@ -255,6 +255,41 @@ ion-toolbar {
 }
 
 /* Detalhes da resposta */
+body.dark-theme .answers-card {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .answer-detail {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+}
+
+body.dark-theme .answer-detail.correct {
+  background-color: #193c2b;
+  color: #8ae8a0;
+}
+
+body.dark-theme .answer-detail.wrong {
+  background-color: #3d1f1f;
+  color: #f5a0a0;
+}
+
+body.dark-theme .question-number,
+body.dark-theme .score-label,
+body.dark-theme .loading-container,
+body.dark-theme .error-container {
+  color: #eaeaea;
+}
+
+body.dark-theme .question-title {
+  color: #ffffff;
+}
+
+/* Detalhes da resposta */
 .answer-detail {
   display: flex;
   align-items: flex-start;

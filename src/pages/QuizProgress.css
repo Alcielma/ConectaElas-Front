@@ -253,3 +253,37 @@ ion-item-option[color="danger"] * {
     font-size: 16px;
   }
 }
+
+body.dark-theme .quiz-progress-container {
+  --background: var(--bg);
+  background-color: var(--bg);
+}
+
+body.dark-theme .summary-card {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .progress-card {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .section-title {
+  color: #ffffff;
+  border-left-color: var(--ion-color-primary);
+}
+
+body.dark-theme .stat-label,
+body.dark-theme .quiz-meta,
+body.dark-theme .score-total {
+  color: #eaeaea;
+}
+
+body.dark-theme .score-value {
+  color: #ffffff;
+}
