@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IonIcon } from "@ionic/react";
-import { chatbubble, star, starOutline } from "ionicons/icons";
+import { chatbubble, bookmark, bookmarkOutline } from "ionicons/icons";
 import CommentItem from "./CommentItem";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
@@ -140,11 +140,6 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
     <div className="expanded-post">
       <div className="post-header">
         <h2>{post.title}</h2>
-        <IonIcon
-          icon={isFavorite ? star : starOutline}
-          className={`favorite-icon ${isFavorite ? "favorited" : ""}`}
-          onClick={toggleFavorite}
-        />
       </div>
       {post.imageUrl && (
         isVideoUrl(post.imageUrl) ? (
@@ -159,10 +154,19 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
         )
       )}
       <p>{post.description || "Descrição não disponível"}</p>
-
-      <div className={`comments-count-box ${expanded ? "active" : ""}`} onClick={() => setExpanded((prev) => !prev)}>
-        <IonIcon icon={chatbubble} className="chatbubble-icon" />
+      
+      <div className="post-icons">
+        <IonIcon
+          icon={chatbubble}
+          className={`comment-icon ${expanded ? "active" : ""}`}
+          onClick={() => setExpanded((prev) => !prev)}
+        />
         <span className="comments-count">{comments.length}</span>
+        <IonIcon
+          icon={isFavorite ? bookmark : bookmarkOutline}
+          className={`favorite-iconn ${isFavorite ? "favorited" : ""}`}
+          onClick={toggleFavorite}
+        />
       </div>
 
       {expanded && (

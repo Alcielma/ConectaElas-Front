@@ -146,7 +146,7 @@ const AssistantChat: React.FC = () => {
             <IonIcon
               icon={send}
               size="large"
-              style={{ cursor: "pointer", color: "white", marginLeft: "8px" }}
+              style={{ cursor: "pointer", marginLeft: "8px" }}
               onClick={handleSendMessage}
             />
           </div>

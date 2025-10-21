@@ -43,6 +43,15 @@ ion-toolbar {
   padding: 0 4px;
 }
 
+/* Modo escuro: títulos e link em rosa padrão do app */
+body.dark-theme .categoria-title {
+  color: var(--cor-principal) !important;
+}
+
+body.dark-theme .ver-todos {
+  color: var(--cor-principal) !important;
+}
+
 .categoria-title {
   color: #720079;
   font-size: 18px;

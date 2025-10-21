@@ -16,7 +16,7 @@
 .modal-content {
   position: relative;
   width: 95%;
-  max-width: 420px; /* Reduzido para ficar mais estreito */
+  max-width: 420px; 
   max-height: 90vh;
   background: white;
   border-radius: 12px;
@@ -29,12 +29,11 @@
   margin: 10px 0;
   color: #000;
   font-size: 1rem;
-  max-width: 100%; /* Garante que não ultrapasse o modal */
-  word-break: break-word; /* Quebra palavras longas */
+  max-width: 100%; 
+  word-break: break-word; 
   white-space: pre-wrap;
 }
 
-/* A imagem não deve estourar o modal */
 .modal-image {
   width: 100%;
   max-height: 300px;
@@ -60,13 +59,11 @@
   transition: background-color 0.2s;
 }
 
-/* Cabeçalho do modal */
-
 .modal-header {
   display: flex;
-  flex-direction: column; /* Mudança aqui: coloca os elementos em coluna */
-  align-items: flex-start; /* Alinha à esquerda */
-  gap: 12px; /* Espaço entre seta e título */
+  flex-direction: column; 
+  align-items: flex-start; 
+  gap: 12px;
   margin-bottom: 15px;
 }
 
@@ -74,7 +71,7 @@
   margin: 0;
   font-size: 1.2rem;
   color: #303030;
-  width: 100%; /* Ocupa toda a largura disponível */
+  width: 100%; 
 }
 
 .voltar-seta-modal {
@@ -82,10 +79,9 @@
   color: #c3007a;
   cursor: pointer;
   z-index: 500;
-  align-self: flex-start; /* Garante que a seta fique no início */
+  align-self: flex-start; 
 }
 
-/* Comentários */
 .modal-comments {
   margin-top: 20px;
 }
@@ -96,7 +92,6 @@
   color: #333;
 }
 
-/* Campo adicionar comentário */
 .add-comment {
   display: flex;
   padding: 10px;
@@ -127,8 +122,6 @@
   font-size: 16px;
   color: #666666;
 }
-
-/* Botão de enviar comentário */
 .add-comment button {
   padding: 8px 16px;
   border-radius: 25px;
@@ -155,7 +148,6 @@
 .favorite-icon {
   font-size: 24px;
   color: #c3007a;
-  background-color: #fff0f5;
   border-radius: 50%;
   padding: 5px;
   cursor: pointer;
@@ -165,15 +157,42 @@
 
 .favorite-icon:hover {
   color: #a1005f;
-  background-color: #ffe4e1;
 }
 
 .favorite-icon.favorited {
-  color: #ffd700;
-  background-color: #ffe4e1;
+  color: #c3007a;
 }
 
 .favorite-icon.favorited:hover {
-  color: #ffcc00;
-  background-color: #ffe4e1;
+  color: #a1005f;
+}
+body.dark-theme .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+body.dark-theme .modal-content {
+  background: #1e1e1e;
+  color: #eaeaea;
+  border: 1px solid #2a2a2a;
+  box-shadow: none;
+}
+
+body.dark-theme .modal-header h2,
+body.dark-theme .modal-description,
+body.dark-theme .modal-comments h4 {
+  color: #eaeaea;
+}
+
+body.dark-theme .add-comment {
+  background-color: #1f1f1f;
+  box-shadow: none;
+}
+
+body.dark-theme .add-comment input {
+  background-color: #1f1f1f;
+  color: #f5f5f5;
+}
+
+body.dark-theme .add-comment input::placeholder {
+  color: #b0b0b0;
 }

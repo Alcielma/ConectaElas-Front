@@ -6,6 +6,12 @@
   --cor-secundaria: #720079;
   --cor-secundaria-hover: #3d0341;
   --cor-fundo: #fff;
+  /* Novas variáveis base de tema */
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --text-color: #0f0f0f;
+  --muted-color: #666666;
+  --border-color: #e0e0e0;
 
   --ion-color-primary: var(--cor-principal);
   --ion-color-primary-rgb: 221, 34, 115;
@@ -21,7 +27,7 @@
   --ion-color-secondary-shade: #64006a;
   --ion-color-secondary-tint: #801a86;
 
-  --ion-background-color: #fff;
+  --ion-background-color: var(--bg);
 }
 
 /* ESTILOS GLOBAIS FORTALECIDOS */
@@ -105,11 +111,11 @@ ion-page ion-header ion-toolbar ion-title,
 
 /* Tab Bar */
 ion-app ion-tab-bar {
-  --background: white !important;
-  --color: white !important;
-  --color-selected: #ffffff !important;
-  --ion-color-primary: #ffffff !important;
-  border: #cccccc !important;
+  --background: var(--surface) !important;
+  --color: var(--text-color) !important;
+  --color-selected: var(--ion-color-primary-contrast) !important;
+  --ion-color-primary: var(--ion-color-primary) !important;
+  border: var(--border-color) !important;
   box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25) !important;
 }
 
@@ -155,8 +161,8 @@ ion-page .answers-card,
 ion-app .question-card,
 ion-page .question-card {
   border-radius: 16px !important;
-  background-color: #ffe6f0 !important;
-  color: #040404 !important;
+  background-color: var(--surface) !important;
+  color: var(--text-color) !important;
   box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 0 6px 6px rgba(0, 0, 0, 0.1) !important;
   transform: translateY(-3px) scale(1.01) !important;
   transition: all 0.3s ease-in-out !important;
@@ -218,7 +224,7 @@ ion-page .question-title {
 /* FORÇA A APLICAÇÃO DO FUNDO DAS PÁGINAS */
 ion-app ion-content,
 ion-page ion-content {
-  --background: #f5f7fa !important;
+  --background: var(--bg) !important;
 }
 
 /* MODO ESCURO FORTALECIDO */
@@ -228,32 +234,33 @@ ion-page ion-content {
   :host,
   ion-app,
   body {
-    --ion-font-family: "Inter", sans-serif !important;
-    --cor-principal: #dd2273 !important;
-    --cor-secundaria: #720079 !important;
-    --cor-secundaria-hover: #3d0341 !important;
-    --cor-fundo: #fff !important;
-    background: #ffffff !important;
-    color: var(--ion-color-primary) !important;
-
-    --ion-color-primary: var(--cor-principal) !important;
-    --ion-color-primary-rgb: 221, 34, 115 !important;
-    --ion-color-primary-contrast: #ffffff !important;
-    --ion-color-primary-contrast-rgb: 255, 255, 255 !important;
-    --ion-color-primary-shade: #c21e65 !important;
-    --ion-color-primary-tint: #e03881 !important;
-
-    --ion-color-secondary: var(--cor-secundaria) !important;
-    --ion-color-secondary-rgb: 114, 0, 121 !important;
-    --ion-color-secondary-contrast: #ffffff !important;
-    --ion-color-secondary-contrast-rgb: 255, 255, 255 !important;
-    --ion-color-secondary-shade: #64006a !important;
-    --ion-color-secondary-tint: #801a86 !important;
-
-    --ion-background-color: #fff !important;
-    --ion-item-background: #fff !important;
-    --ion-item-color: #000 !important;
+    /* Não força branco; usa variáveis para compatibilidade */
+    --ion-background-color: var(--bg) !important;
+    --ion-item-background: var(--surface) !important;
+    --ion-item-color: var(--text-color) !important;
   }
+}
+
+/* Tema escuro manual via data-theme */
+:root[data-theme="dark"] {
+  --bg: #121212 !important;
+  --surface: #1e1e1e !important;
+  --text-color: #eaeaea !important;
+  --muted-color: #b0b0b0 !important;
+  --border-color: #2a2a2a !important;
+
+  --ion-background-color: var(--bg) !important;
+}
+
+/* Cabeçalho no tema escuro igual à TabBar */
+body.dark-theme ion-app ion-header ion-toolbar,
+body.dark-theme ion-page ion-header ion-toolbar,
+body.dark-theme .header-gradient {
+  --background: var(--surface) !important;
+  background: var(--surface) !important;
+  --color: #ffffff !important;
+  --border-color: var(--border-color) !important;
+  box-shadow: none !important;
 }
 
 /* FORÇA A APLICAÇÃO EM TODOS OS ELEMENTOS */

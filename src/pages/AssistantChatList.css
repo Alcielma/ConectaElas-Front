@@ -126,3 +126,43 @@
   color: #4a5568;
   font-weight: 500;
 }
+
+body.dark-theme .chat-list-container {
+  background-color: var(--bg);
+}
+
+body.dark-theme .chat-item {
+  background-color: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .chat-name {
+  color: #ffffff;
+}
+
+body.dark-theme .chat-message {
+  color: #eaeaea;
+}
+
+body.dark-theme .no-chats {
+  color: #eaeaea;
+}
+
+body.dark-theme .refreshing-indicator {
+  color: #eaeaea;
+}
+
+body.dark-theme .chat-item.unread {
+  background-color: #1a1a1a;
+  border-left-color: var(--cor-principal);
+}
+
+body.dark-theme .chat-item.unread .chat-name {
+  color: #ffffff;
+}
+
+body.dark-theme .chat-item.unread .chat-message {
+  color: #eaeaea;
+}

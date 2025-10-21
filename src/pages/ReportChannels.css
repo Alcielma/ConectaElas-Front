@@ -1,3 +1,14 @@
+body.dark-theme .report-channels-content {
+  --background: var(--bg);
+  background-color: var(--bg);
+}
+
+body.dark-theme .report-card {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
 .report-channels-content {
     --background: #f8ebf3;
     display: flex;

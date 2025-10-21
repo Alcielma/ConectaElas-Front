@@ -83,3 +83,17 @@
         background-color: #e0e0e0;
     }
 }
+
+/* MODO ESCURO (toggle)*/  
+body.dark-theme .skeleton-post {
+    background: #1e1e1e;
+    box-shadow: none;
+    border: 1px solid #2a2a2a;
+}
+
+body.dark-theme .skeleton-profile-image,
+body.dark-theme .skeleton-profile-name-post,
+body.dark-theme .skeleton-image,
+body.dark-theme .skeleton-text {
+    background-color: #2a2a2a;
+}

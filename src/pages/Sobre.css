@@ -1,3 +1,22 @@
+body.dark-theme .sobre-content {
+  background-color: var(--bg);
+}
+
+body.dark-theme .sobre-text-container {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .sobre-text-container h2 {
+  color: #ffffff;
+}
+
+body.dark-theme .sobre-text-container p,
+body.dark-theme .sobre-text {
+  color: #eaeaea;
+}
 .sobre-content {
     background-color: white;
     padding: 20px;

@@ -92,3 +92,25 @@ ion-card-title {
 .title-centered {
   text-align: center;
 }
+
+body.dark-theme .quiz-list-container {
+  --background: var(--bg);
+  background-color: var(--bg);
+}
+
+body.dark-theme .quiz-card {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .quiz-header .quiz-list-title,
+body.dark-theme .quiz-card ion-card-title {
+  color: #ffffff;
+}
+
+body.dark-theme .quiz-info,
+body.dark-theme .no-quizzes {
+  color: #eaeaea;
+}

@@ -175,6 +175,20 @@
   text-align: center;
 }
 
+body.dark-theme .onboarding-page {
+  background-color: var(--bg);
+  color: var(--text-color);
+}
+
+body.dark-theme .onboarding-page p {
+  color: var(--muted-color);
+}
+
+body.dark-theme .input-group-name input {
+  background-color: #1f1f1f !important;
+  color: var(--text-color) !important;
+}
+
 .input-group-name input {
   width: 100%;
   background-color: #dddddd80 !important;

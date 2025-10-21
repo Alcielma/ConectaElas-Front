@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { IonIcon } from "@ionic/react";
-import { star, starOutline } from "ionicons/icons";
+import { bookmark, bookmarkOutline } from "ionicons/icons";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
 import CommentItem from "./CommentItem";
@@ -183,34 +183,36 @@ const Post: React.FC<PostProps> = ({
   };
 
   return (
-    <>
-      <div className="post-container" onClick={openModal}>
+  <>
+    <div className="post-container" onClick={openModal}>
+      <div className="post-content">
         {imageUrl && (
-        isVideoUrl(imageUrl) ? (
-          <video 
-            src={imageUrl} 
-            controls 
-            preload="metadata"
-            className="post-image"
-            onClick={(e) => e.stopPropagation()}
-            style={{ width: '100%', borderRadius: '8px' }}
-          />
-        ) : (
-          <img
-            src={imageUrl}
-            alt={title}
-            className="post-image"
-            onClick={(e) => e.stopPropagation()}
-          />
-        )
-      )}
-        <h2 className="post-title">{title}</h2>
+          isVideoUrl(imageUrl) ? (
+            <video 
+              src={imageUrl} 
+              controls 
+              preload="metadata"
+              className="post-image"
+              onClick={(e) => e.stopPropagation()}
+              style={{ width: '100%', borderRadius: '8px' }}
+            />
+          ) : (
+            <img
+              src={imageUrl}
+              alt={title}
+              className="post-image"
+              onClick={(e) => e.stopPropagation()}
+            />
+          )
+        )}
         <IonIcon
-          icon={isFavorite ? star : starOutline}
+          icon={isFavorite ? bookmark : bookmarkOutline}
           className={`favorite-icon ${isFavorite ? "favorited" : ""}`}
           onClick={toggleFavorite}
         />
       </div>
+      <h2 className="post-title">{title}</h2>
+    </div>
 
       {isModalOpen && (
         <PostModal

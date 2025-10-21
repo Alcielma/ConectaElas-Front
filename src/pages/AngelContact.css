@@ -228,3 +228,39 @@ ion-toolbar {
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
 }
+
+body.dark-theme .angel-contact-content {
+  background: var(--bg);
+}
+
+body.dark-theme .aviso {
+  color: #ffffff;
+}
+
+body.dark-theme .contact-card {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .modal-container {
+  background: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .form-group label {
+  color: #ffffff;
+}
+
+body.dark-theme .form-group input {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #2a2a2a;
+}
+
+body.dark-theme .ion-page {
+  background-color: var(--bg);
+}

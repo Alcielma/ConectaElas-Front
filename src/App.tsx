@@ -30,6 +30,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 import "./theme/variables.css";
 import EsqueceuSenha from "./pages/EsqueceuSenha";
 import { StatusBar, Style } from "@capacitor/status-bar";
+import { ThemeProvider } from "./Contexts/ThemeContext";
+import ThemeToggle from "./components/ThemeToggle";
 
 setupIonicReact();
 
@@ -82,43 +84,46 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <IonApp>
-      <IonReactRouter>
-        <AuthProvider>
-          <ChatProvider>
-            <IonRouterOutlet>
-              <Switch>
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/onboarding" component={Onboarding} />
-                <Route
-                  exact
-                  path="/confirmacao-codigo"
-                  component={ConfirmacaoCodigo}
-                />
-                <Route exact path="/esqueceu-senha" component={EsqueceuSenha} />
+    <ThemeProvider>
+      <IonApp>
+        <IonReactRouter>
+          <AuthProvider>
+            <ChatProvider>
+              <IonRouterOutlet>
+                <Switch>
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/onboarding" component={Onboarding} />
+                  <Route
+                    exact
+                    path="/confirmacao-codigo"
+                    component={ConfirmacaoCodigo}
+                  />
+                  <Route exact path="/esqueceu-senha" component={EsqueceuSenha} />
 
-                <PrivateRoute path="/tabs" component={TabsLayout} />
+                  <PrivateRoute path="/tabs" component={TabsLayout} />
 
-                <Route
-                  exact
-                  path="/assistantChats"
-                  component={AssistantChatList}
-                />
-                <Route
-                  path="/assistantChats/:chatId"
-                  component={AssistantChat}
-                />
+                  <Route
+                    exact
+                    path="/assistantChats"
+                    component={AssistantChatList}
+                  />
+                  <Route
+                    path="/assistantChats/:chatId"
+                    component={AssistantChat}
+                  />
 
-                <Route exact path="/">
-                  <Redirect to="/login" />
-                </Route>
-                <Route path="/categoria/:categoria" component={CategoriaPosts} />
-              </Switch>
-            </IonRouterOutlet>
-          </ChatProvider>
-        </AuthProvider>
-      </IonReactRouter>
-    </IonApp>
+                  <Route exact path="/">
+                    <Redirect to="/login" />
+                  </Route>
+                  <Route path="/categoria/:categoria" component={CategoriaPosts} />
+                </Switch>
+              </IonRouterOutlet>
+            </ChatProvider>
+          </AuthProvider>
+          <ThemeToggle />
+        </IonReactRouter>
+      </IonApp>
+    </ThemeProvider>
   );
 };
 
