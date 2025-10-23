@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
-    /* background: rgba(202, 202, 202, 0.404); */
     border-radius: 10px;
     border-bottom: solid #dddddd;
     margin-bottom: 10px;
@@ -13,9 +12,8 @@
 
 .comment-item p {
     margin: 5px 0 0;
-    color: #000000;
+    color: #000000; 
 }
-
 
 .toggle-expand {
     background: none;
@@ -28,10 +26,33 @@
     align-self: flex-start;
 }
 
-
 .comment-date {
     font-size: 12px;
     color: #666;
     display: block;
     margin-bottom: 5px;
+}
+
+body.dark-theme .comment-item {
+    border-bottom: solid #333;
+}
+
+body.dark-theme .comment-item p {
+    color: #ffffff !important;
+}
+
+body.dark-theme .comment-date {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .comment-item {
+    border-bottom: solid #333;
+}
+
+[data-theme="dark"] .comment-item p {
+    color: #ffffff !important; 
+}
+
+[data-theme="dark"] .comment-date {
+    color: #b0b0b0;
 }
