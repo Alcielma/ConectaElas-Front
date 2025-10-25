@@ -3,9 +3,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; 
     min-height: 100vh;
     padding: 20px;
+    overflow-y: auto; 
 }
 
 .angel-contact-container {
@@ -15,6 +16,35 @@
     gap: 15px;
     width: 100%;
     max-width: 400px;
+    flex: 1;
+}
+
+.contacts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-height: 70vh; 
+    overflow-y: auto;
+    padding-right: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 transparent;
+}
+.contacts-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.contacts-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.contacts-list::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    border-radius: 3px;
+}
+
+.contacts-list::-webkit-scrollbar-thumb:hover {
+    background-color: #a8a8a8;
 }
 
 .aviso {
@@ -36,6 +66,7 @@
     color: #333;
     transition: transform 0.2s ease, background-color 0.3s ease;
     width: 100%;
+    flex-shrink: 0; 
 }
 
 .contact-link {
@@ -63,6 +94,11 @@
     margin-right: 15px;
 }
 
+.buttons-card-angel {
+    display: flex;
+    gap: 10px;
+}
+
 .delete-btn {
     background: none;
     border: none;
@@ -81,12 +117,7 @@
 
 .delete-btn ion-icon:hover {
     color: darkred;
-    ;
 }
-
-/* .delete-btn:hover {
-    background: darkred;
-} */
 
 .edit-btn {
     background: none;
@@ -105,12 +136,8 @@
 }
 
 .edit-btn ion-icon:hover {
-    color: #299677;
+    color: #167e60;
 }
-
-/* .edit-btn:hover {
-    background: #167e60;
-} */
 
 .add-contact-btn {
     margin-top: 20px;
@@ -124,12 +151,34 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .add-contact-btn:hover {
     background: var(--cor-secundaria-hover);
 }
 
+.modal-input {
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    color: #333;
+    width: 100%;
+    margin-bottom: 15px;
+    transition: border-color 0.2s ease;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--cor-secundaria);
+    box-shadow: 0 0 0 3px rgba(221, 34, 115, 0.1);
+}
+
+.modal-input::placeholder {
+    color: #666;
+}
 
 .modal-container {
     padding: 20px;
@@ -229,38 +278,57 @@ ion-toolbar {
     transform: translateX(-50%) translateY(20px);
 }
 
+/* Tema escuro */
 body.dark-theme .angel-contact-content {
-  background: var(--bg);
+    background: var(--bg);
 }
 
 body.dark-theme .aviso {
-  color: #ffffff;
+    color: #ffffff;
 }
 
 body.dark-theme .contact-card {
-  background: var(--surface);
-  color: #ffffff;
-  box-shadow: none;
-  border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: #ffffff;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
 }
 
 body.dark-theme .modal-container {
-  background: var(--surface);
-  color: #ffffff;
-  box-shadow: none;
-  border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: #ffffff;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
 }
 
 body.dark-theme .form-group label {
-  color: #ffffff;
+    color: #ffffff;
 }
 
-body.dark-theme .form-group input {
-  background-color: #1f1f1f;
-  color: #ffffff;
-  border: 1px solid #2a2a2a;
+body.dark-theme .form-group input,
+body.dark-theme .modal-input {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    border: 1px solid #2a2a2a;
+}
+
+body.dark-theme .modal-input:focus {
+    border-color: var(--cor-secundaria);
+    box-shadow: 0 0 0 3px rgba(221, 34, 115, 0.2);
 }
 
 body.dark-theme .ion-page {
-  background-color: var(--bg);
+    background-color: var(--bg);
+}
+
+body.dark-theme .contacts-list {
+    scrollbar-color: #555 transparent;
+}
+
+body.dark-theme .contacts-list::-webkit-scrollbar-thumb {
+    background-color: #555;
+}
+
+body.dark-theme .contacts-list::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
 }

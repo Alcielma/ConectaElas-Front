@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   IonHeader,
   IonPage,
@@ -30,20 +30,23 @@ const AngelContactPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false); // Modal de edição
-  const [selectedContactId, setSelectedContactId] = useState<string | null>(
-    null
-  );
-  const [selectedContactName, setSelectedContactName] = useState<string | null>(
-    null
-  );
-  const [selectedContactNumber, setSelectedContactNumber] = useState<
-    string | null
-  >(null); // Número do contato
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
+  const [selectedContactName, setSelectedContactName] = useState<string | null>(null);
+  const [selectedContactNumber, setSelectedContactNumber] = useState<string | null>(null);
   const [nome, setNome] = useState("");
   const [numero, setNumero] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isHiding, setIsHiding] = useState(false);
+
+  const sortedContacts = useMemo(() => {
+    return [...contacts].sort((a, b) => 
+      a.Nome.localeCompare(b.Nome, 'pt-BR', { 
+        sensitivity: 'base',
+        numeric: true 
+      })
+    );
+  }, [contacts]);
 
   useEffect(() => {
     if (!authToken || !user) return;
@@ -159,7 +162,7 @@ const AngelContactPage: React.FC = () => {
           </IonButtons>
           <IonTitle className="center-title">Contato do Anjo</IonTitle>
           <IonButtons slot="end">
-            <div style={{ width: "44px" }} />{" "}
+            <div style={{ width: "44px" }} />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -170,49 +173,56 @@ const AngelContactPage: React.FC = () => {
         )}
 
         <div className="angel-contact-container">
-          {contacts.length === 0 && !loading && (
+          {sortedContacts.length === 0 && !loading && (
             <p className="aviso">Nenhum contato cadastrado.</p>
           )}
 
-          {contacts.map((contact) => (
-            <div key={contact.id} className="contact-card">
-              <a href={`tel:${contact.Numero}`} className="contact-link">
-                <div className="contact-info">
-                  <IonIcon icon={callSharp} className="contact-icon" />
-                  <div className="info-card-angel">
-                    <h3>{contact.Nome}</h3>
-                    <p>{contact.Numero}</p>
-                  </div>
+          {sortedContacts.length > 0 && (
+            <div className="contacts-list">
+              {sortedContacts.map((contact) => (
+                <div key={contact.id} className="contact-card">
+                  <a href={`tel:${contact.Numero}`} className="contact-link">
+                    <div className="contact-info">
+                      <IonIcon icon={callSharp} className="contact-icon" />
+                      <div className="info-card-angel">
+                        <h3>{contact.Nome}</h3>
+                        <p>{contact.Numero}</p>
+                      </div>
+                    </div>
+                    <div className="buttons-card-angel">
+                      <button
+                        className="edit-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openEditModal(contact);
+                        }}
+                        aria-label={`Editar contato ${contact.Nome}`}
+                      >
+                        <IonIcon icon={pencilSharp} />
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedContactId(contact.documentId);
+                          setSelectedContactName(contact.Nome);
+                          setShowDeleteModal(true);
+                        }}
+                        aria-label={`Excluir contato ${contact.Nome}`}
+                      >
+                        <IonIcon icon={trash} />
+                      </button>
+                    </div>
+                  </a>
                 </div>
-                <div className="buttons-card-angel">
-                  <button
-                    className="edit-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      openEditModal(contact);
-                    }}
-                  >
-                    <IonIcon icon={pencilSharp} />
-                  </button>
-                  <button
-                    className="delete-btn"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedContactId(contact.documentId);
-                      setSelectedContactName(contact.Nome);
-                      setShowDeleteModal(true);
-                    }}
-                  >
-                    <IonIcon icon={trash} />
-                  </button>
-                </div>
-              </a>
+              ))}
             </div>
-          ))}
+          )}
 
           <button
             className="add-contact-btn"
             onClick={() => setShowModal(true)}
+            aria-label="Adicionar novo contato"
           >
             <IonIcon icon={addCircleOutline} />
             Adicionar Contato
@@ -231,6 +241,7 @@ const AngelContactPage: React.FC = () => {
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             placeholder="Nome"
+            aria-label="Nome do contato"
           />
           <input
             type="tel"
@@ -238,6 +249,7 @@ const AngelContactPage: React.FC = () => {
             value={numero}
             onChange={(e) => setNumero(e.target.value)}
             placeholder="Número"
+            aria-label="Número do telefone"
           />
         </Modal>
 
@@ -253,6 +265,7 @@ const AngelContactPage: React.FC = () => {
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             placeholder="Nome"
+            aria-label="Nome do contato"
           />
           <input
             type="tel"
@@ -260,6 +273,7 @@ const AngelContactPage: React.FC = () => {
             value={numero}
             onChange={(e) => setNumero(e.target.value)}
             placeholder="Número"
+            aria-label="Número do telefone"
           />
         </Modal>
 
@@ -267,9 +281,8 @@ const AngelContactPage: React.FC = () => {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleDeleteContact}
-          title={`Você deseja excluir ${selectedContactName}?`}
+          title={`Excluir ${selectedContactName}?`}
         >
-          <p>Tem certeza que deseja excluir este contato?</p>
         </Modal>
 
         {showToast && (
