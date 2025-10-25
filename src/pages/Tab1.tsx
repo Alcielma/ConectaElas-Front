@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   IonContent,
@@ -15,6 +15,8 @@ const categorias = ["Notícia", "Informativo", "Favoritos"];
 
 const Tab1: React.FC = () => {
   const history = useHistory();
+  const [favoritesVersion, setFavoritesVersion] = useState(0);
+  const bumpFavoritesVersion = () => setFavoritesVersion((v) => v + 1);
 
   return (
     <IonPage>
@@ -45,7 +47,12 @@ const Tab1: React.FC = () => {
               </div>
 
               <div className="categoria-cards">
-                <Feed selectedCategory={categoria} horizontalLimit={5} /> {/* Alterado de 3 para 5 */}
+                <Feed 
+                  selectedCategory={categoria} 
+                  horizontalLimit={5} 
+                  favoritesVersion={favoritesVersion}
+                  onAnyFavoriteChange={bumpFavoritesVersion}
+                />
               </div>
             </div>
           ))}

@@ -24,9 +24,11 @@ interface PostData {
 interface FeedProps {
   selectedCategory: string | null;
   horizontalLimit?: number;
+  favoritesVersion?: number;
+  onAnyFavoriteChange?: () => void;
 }
 
-export default function Feed({ selectedCategory, horizontalLimit }: FeedProps) {
+export default function Feed({ selectedCategory, horizontalLimit, favoritesVersion, onAnyFavoriteChange }: FeedProps) {
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [favoritesUpdated, setFavoritesUpdated] = useState<number>(0);
@@ -35,7 +37,8 @@ export default function Feed({ selectedCategory, horizontalLimit }: FeedProps) {
   // Função para forçar a atualização dos favoritos
   const updateFavorites = useCallback(() => {
     setFavoritesUpdated(prev => prev + 1);
-  }, []);
+    if (onAnyFavoriteChange) onAnyFavoriteChange();
+  }, [onAnyFavoriteChange]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -111,7 +114,7 @@ export default function Feed({ selectedCategory, horizontalLimit }: FeedProps) {
     };
 
     fetchPosts();
-  }, [selectedCategory, user, horizontalLimit, favoritesUpdated]);
+  }, [selectedCategory, user, horizontalLimit, favoritesUpdated, favoritesVersion]);
 
   let filteredPosts = posts;
 
