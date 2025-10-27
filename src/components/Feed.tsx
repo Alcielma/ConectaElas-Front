@@ -3,6 +3,7 @@ import Post from "./Post";
 import SkeletonPost from "./SkeletonPost";
 import { getAll } from "../Services/postService";
 import { getUserFavorites } from "../Services/FavoritesService";
+import { getCommentsByPostId } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
 import "./Feed.css";
 
@@ -26,9 +27,10 @@ interface FeedProps {
   horizontalLimit?: number;
   favoritesVersion?: number;
   onAnyFavoriteChange?: () => void;
+  refreshKey?: number; // dispara refetch ao entrar na página
 }
 
-export default function Feed({ selectedCategory, horizontalLimit, favoritesVersion, onAnyFavoriteChange }: FeedProps) {
+export default function Feed({ selectedCategory, horizontalLimit, favoritesVersion, onAnyFavoriteChange, refreshKey }: FeedProps) {
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [favoritesUpdated, setFavoritesUpdated] = useState<number>(0);
@@ -52,14 +54,17 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
             
             if (favorites && favorites.length > 0) {
               // Extrair os posts dos favoritos
-              favorites.forEach((favorite: any) => {
+              for (const favorite of favorites) {
                 // Verificar se favorite.posts existe e é um array
                 if (favorite.posts) {
                   // Se for um array, iterar sobre ele
                   if (Array.isArray(favorite.posts)) {
-                    (favorite.posts as any[]).forEach((post: any) => {
+                    for (const post of favorite.posts as any[]) {
                       // Verificar se o post já existe na lista para evitar duplicatas
                       if (!favoritePosts.some(p => p.id === post.id)) {
+                        // Buscar comentários do post
+                        const comentarios = await getCommentsByPostId(post.id);
+                        
                         favoritePosts.push({
                           id: post.id,
                           Titulo: post.Title || 'Sem título',
@@ -67,15 +72,18 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
                           Categoria: post.Categoria || '',
                           imageUrl: post.Link || (post.Uploadpost && post.Uploadpost.length > 0 ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}` : null),
                           createdAt: post.createdAt,
-                          comentarios: []
+                          comentarios: comentarios
                         });
                       }
-                    });
+                    }
                   } 
                   // Se não for um array, pode ser um objeto único
                   else if (typeof favorite.posts === 'object' && favorite.posts !== null) {
                     const post = favorite.posts as any;
                     if (!favoritePosts.some(p => p.id === post.id)) {
+                      // Buscar comentários do post
+                      const comentarios = await getCommentsByPostId(post.id);
+                      
                       favoritePosts.push({
                         id: post.id,
                         Titulo: post.Title || 'Sem título',
@@ -83,12 +91,12 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
                         Categoria: post.Categoria || '',
                         imageUrl: post.Link || (post.Uploadpost && post.Uploadpost.length > 0 ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}` : null),
                         createdAt: post.createdAt,
-                        comentarios: []
+                        comentarios: comentarios
                       });
                     }
                   }
                 }
-              });
+              }
             } else {
               console.log('Nenhum favorito encontrado para o usuário:', user.id);
             }
@@ -99,8 +107,7 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
         } else {
           const response: PostData[] = await getAll();
           if (response && Array.isArray(response)) {
-            const reversed = [...response].reverse();
-            const processedPosts = reversed
+            const processedPosts = response
               .filter((p) => p.Categoria === selectedCategory)
               .slice(0, horizontalLimit || 5);
             setPosts(processedPosts);
@@ -114,7 +121,7 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
     };
 
     fetchPosts();
-  }, [selectedCategory, user, horizontalLimit, favoritesUpdated, favoritesVersion]);
+  }, [selectedCategory, user, horizontalLimit, favoritesUpdated, favoritesVersion, refreshKey]);
 
   let filteredPosts = posts;
 
