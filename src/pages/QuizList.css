@@ -1,3 +1,9 @@
+/* Override para listas no modo Material (.list-md) na página de QuizList */
+.list-md {
+  background: transparent !important; /* remove o fundo padrão branco */
+}
+
+/* Estilos existentes */
 .quiz-list-container {
   padding: 16px;
 }
@@ -38,8 +44,6 @@ ion-card-title {
   box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
               0 10px 10px rgba(0, 0, 0, 0.15);
 }
-
-
 
 .quiz-info {
   margin-bottom: 16px;
