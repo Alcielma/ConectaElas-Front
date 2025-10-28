@@ -34,56 +34,29 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [favoritesUpdated, setFavoritesUpdated] = useState<number>(0);
+  const [lastFetch, setLastFetch] = useState<number>(0);
   const { user } = useAuth();
   
-  // Função para forçar a atualização dos favoritos
+  // Força atualização dos favoritos
   const updateFavorites = useCallback(() => {
     setFavoritesUpdated(prev => prev + 1);
     if (onAnyFavoriteChange) onAnyFavoriteChange();
   }, [onAnyFavoriteChange]);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        if (selectedCategory === "Favoritos") {
-          if (user?.id) {
-            // Buscar favoritos do usuário usando a API do Strapi
-            const favorites = await getUserFavorites(user.id);
-            let favoritePosts: PostData[] = [];
-            
-            if (favorites && favorites.length > 0) {
-              // Extrair os posts dos favoritos
-              for (const favorite of favorites) {
-                // Verificar se favorite.posts existe e é um array
-                if (favorite.posts) {
-                  // Se for um array, iterar sobre ele
-                  if (Array.isArray(favorite.posts)) {
-                    for (const post of favorite.posts as any[]) {
-                      // Verificar se o post já existe na lista para evitar duplicatas
-                      if (!favoritePosts.some(p => p.id === post.id)) {
-                        // Buscar comentários do post
-                        const comentarios = await getCommentsByPostId(post.id);
-                        
-                        favoritePosts.push({
-                          id: post.id,
-                          Titulo: post.Title || 'Sem título',
-                          Descricao: post.Description || 'Sem descrição',
-                          Categoria: post.Categoria || '',
-                          imageUrl: post.Link || (post.Uploadpost && post.Uploadpost.length > 0 ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}` : null),
-                          createdAt: post.createdAt,
-                          comentarios: comentarios
-                        });
-                      }
-                    }
-                  } 
-                  // Se não for um array, pode ser um objeto único
-                  else if (typeof favorite.posts === 'object' && favorite.posts !== null) {
-                    const post = favorite.posts as any;
+  const fetchPosts = useCallback(async () => {
+    setLoading(true);
+    try {
+      if (selectedCategory === "Favoritos") {
+        if (user?.id) {
+          const favorites = await getUserFavorites(user.id);
+          let favoritePosts: PostData[] = [];
+          if (favorites && favorites.length > 0) {
+            for (const favorite of favorites) {
+              if (favorite.posts) {
+                if (Array.isArray(favorite.posts)) {
+                  for (const post of favorite.posts as any[]) {
                     if (!favoritePosts.some(p => p.id === post.id)) {
-                      // Buscar comentários do post
                       const comentarios = await getCommentsByPostId(post.id);
-                      
                       favoritePosts.push({
                         id: post.id,
                         Titulo: post.Title || 'Sem título',
@@ -91,40 +64,81 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
                         Categoria: post.Categoria || '',
                         imageUrl: post.Link || (post.Uploadpost && post.Uploadpost.length > 0 ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}` : null),
                         createdAt: post.createdAt,
-                        comentarios: comentarios
+                        comentarios
                       });
                     }
                   }
+                } else if (typeof favorite.posts === 'object' && favorite.posts !== null) {
+                  const post = favorite.posts as any;
+                  if (!favoritePosts.some(p => p.id === post.id)) {
+                    const comentarios = await getCommentsByPostId(post.id);
+                    favoritePosts.push({
+                      id: post.id,
+                      Titulo: post.Title || 'Sem título',
+                      Descricao: post.Description || 'Sem descrição',
+                      Categoria: post.Categoria || '',
+                      imageUrl: post.Link || (post.Uploadpost && post.Uploadpost.length > 0 ? `${import.meta.env.VITE_API_URL}${post.Uploadpost[0].url}` : null),
+                      createdAt: post.createdAt,
+                      comentarios
+                    });
+                  }
                 }
               }
-            } else {
-              console.log('Nenhum favorito encontrado para o usuário:', user.id);
             }
-            setPosts(favoritePosts.slice(0, horizontalLimit || 5));
           } else {
-            setPosts([]);
+            console.log('Nenhum favorito encontrado para o usuário:', user?.id);
           }
+          setPosts(favoritePosts.slice(0, horizontalLimit || 5));
         } else {
-          const response: PostData[] = await getAll();
-          if (response && Array.isArray(response)) {
-            const processedPosts = response
-              .filter((p) => p.Categoria === selectedCategory)
-              .slice(0, horizontalLimit || 5);
-            setPosts(processedPosts);
-          }
+          setPosts([]);
         }
-      } catch (error) {
-        console.error("Erro ao buscar posts:", error);
-      } finally {
-        setLoading(false);
+      } else {
+        const response: PostData[] = await getAll();
+        if (response && Array.isArray(response)) {
+          const processedPosts = response
+            .filter((p) => p.Categoria === selectedCategory)
+            .slice(0, horizontalLimit || 5);
+          setPosts(processedPosts);
+        }
+      }
+      setLastFetch(Date.now());
+    } catch (error) {
+      console.error("Erro ao buscar posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedCategory, user?.id, horizontalLimit, favoritesUpdated, favoritesVersion]);
+
+  // Carregar inicialmente e quando refreshKey mudar
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts, refreshKey]);
+
+  // Recarregar quando a página ganhar foco/visibilidade
+  useEffect(() => {
+    const handleFocus = () => {
+      const timeSinceLast = Date.now() - lastFetch;
+      if (timeSinceLast > 5000) {
+        fetchPosts();
       }
     };
-
-    fetchPosts();
-  }, [selectedCategory, user, horizontalLimit, favoritesUpdated, favoritesVersion, refreshKey]);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const timeSinceLast = Date.now() - lastFetch;
+        if (timeSinceLast > 5000) {
+          fetchPosts();
+        }
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [fetchPosts, lastFetch]);
 
   let filteredPosts = posts;
-
   if (horizontalLimit) {
     filteredPosts = filteredPosts.slice(0, horizontalLimit);
   }
