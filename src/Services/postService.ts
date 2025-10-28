@@ -17,7 +17,8 @@ interface PostData {
 
 export async function getAll() {
   try {
-    const response = await api.get("/posts?populate=*");
+    // Ordena pelos mais recentes e limita o payload; o timestamp evita cache
+    const response = await api.get(`/posts?sort=updatedAt:desc&pagination[pageSize]=15&populate=*&_=${Date.now()}`);
     const formattedPosts = response.data.data.map((post: any) => ({
       id: post.id,
       Titulo: post.Title,

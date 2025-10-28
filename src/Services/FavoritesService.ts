@@ -64,7 +64,9 @@ export function isVideoUrl(url: string | null): boolean {
 // Buscar todos os favoritos do usuário
 export async function getUserFavorites(userId: number) {
   try {
-    const response = await api.get<FavoritesResponse>(`/favoritos?populate[posts][populate]=Uploadpost&filters[usuario][id][$eq]=${userId}`);
+    const response = await api.get<FavoritesResponse>(
+      `/favoritos?populate[posts][populate][Uploadpost]=*&populate[posts][populate][comentarios]=*&filters[usuario][id][$eq]=${userId}`
+    );
     console.log('Resposta da API de favoritos:', response.data);
     return response.data.data;
   } catch (error) {
@@ -94,12 +96,18 @@ export async function addToFavorites(userId: number, postId: number) {
 }
 
 // Remover um post dos favoritos
-export async function removeFromFavorites(favoriteId: number) {
+export async function removeFromFavorites(favoriteId: number, postId: number) {
   try {
-    const response = await api.delete(`/favoritos/${favoriteId}`);
+    const response = await api.put(`/favoritos/${favoriteId}`, {
+      data: {
+        posts: {
+          disconnect: [postId]
+        }
+      }
+    });
     return response.data;
   } catch (error) {
-    console.error("Erro ao remover dos favoritos:", error);
+    console.error(`Erro ao remover o post ${postId} dos favoritos:`, error);
     throw error;
   }
 }

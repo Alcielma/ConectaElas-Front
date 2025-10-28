@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   IonContent,
   IonHeader,
@@ -11,13 +11,13 @@ import {
   IonCardTitle,
   IonCardContent,
   IonList,
-  IonItem,
-  IonLabel,
   IonButton,
   IonIcon,
   IonSpinner,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/react";
-import { clipboardOutline, ribbonOutline } from "ionicons/icons";
+import { clipboardOutline, ribbonOutline, refreshOutline } from "ionicons/icons";
 import { getAllQuizzes } from "../Services/QuizService";
 import "./QuizList.css";
 
@@ -31,44 +31,91 @@ interface Quiz {
 const QuizList: React.FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [lastFetch, setLastFetch] = useState<number>(0);
   const history = useHistory();
+  const location = useLocation();
 
-  useEffect(() => {
-    const fetchQuizzes = async () => {
-      try {
+  // Função para buscar quizzes (memoizada para evitar recriação)
+  const fetchQuizzes = useCallback(async (showLoading = true) => {
+    try {
+      if (showLoading) {
         setLoading(true);
-        const response = await getAllQuizzes();
-        // Ajuste para lidar com diferentes formatos de resposta
-        if ('data' in response && Array.isArray(response.data)) {
-          setQuizzes(
-            response.data.map((quiz: any) => ({
-              id: quiz.id,
-              documentId: quiz.documentId ?? "",
-              Titulo: quiz.Titulo ?? "",
-              perguntas: quiz.perguntas ?? [],
-            }))
-          );
-        } else if (Array.isArray(response)) {
-          setQuizzes(
-            response.map((quiz: any) => ({
-              id: quiz.id,
-              documentId: quiz.documentId ?? "",
-              Titulo: quiz.Titulo ?? "",
-              perguntas: quiz.perguntas ?? [],
-            }))
-          );
-        } else {
-          setQuizzes([]);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar quizzes:", error);
-      } finally {
+      }
+      
+      const response = await getAllQuizzes();
+      
+      // Ajuste para lidar com diferentes formatos de resposta
+      if ('data' in response && Array.isArray(response.data)) {
+        setQuizzes(
+          response.data.map((quiz: any) => ({
+            id: quiz.id,
+            documentId: quiz.documentId ?? "",
+            Titulo: quiz.Titulo ?? "",
+            perguntas: quiz.perguntas ?? [],
+          }))
+        );
+      } else if (Array.isArray(response)) {
+        setQuizzes(
+          response.map((quiz: any) => ({
+            id: quiz.id,
+            documentId: quiz.documentId ?? "",
+            Titulo: quiz.Titulo ?? "",
+            perguntas: quiz.perguntas ?? [],
+          }))
+        );
+      } else {
+        setQuizzes([]);
+      }
+      
+      setLastFetch(Date.now());
+    } catch (error) {
+      console.error("Erro ao carregar quizzes:", error);
+      setQuizzes([]);
+    } finally {
+      if (showLoading) {
         setLoading(false);
+      }
+    }
+  }, []);
+
+  // Carregamento inicial e sempre que a rota mudar
+  useEffect(() => {
+    fetchQuizzes(true);
+  }, [fetchQuizzes, location.pathname]);
+
+  // Recarregar quando a página voltar a ser focada
+  useEffect(() => {
+    const handleFocus = () => {
+      // Só recarrega se passou mais de 5 segundos desde a última busca
+      const timeSinceLastFetch = Date.now() - lastFetch;
+      if (timeSinceLastFetch > 5000) {
+        fetchQuizzes(false);
       }
     };
 
-    fetchQuizzes();
-  }, []);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const timeSinceLastFetch = Date.now() - lastFetch;
+        if (timeSinceLastFetch > 5000) {
+          fetchQuizzes(false);
+        }
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [fetchQuizzes, lastFetch]);
+
+  // Função para o pull-to-refresh
+  const handleRefresh = async (event: CustomEvent) => {
+    await fetchQuizzes(false);
+    event.detail.complete();
+  };
 
   const handleQuizSelect = (quizId: number) => {
     // Limpar qualquer resultado anterior no localStorage
@@ -76,15 +123,35 @@ const QuizList: React.FC = () => {
     history.push(`/tabs/quiz-detail/${quizId}`);
   };
 
+  const handleManualRefresh = () => {
+    fetchQuizzes(true);
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonTitle className="title-centered">Quizzes</IonTitle>
+          <IonButton 
+            slot="end" 
+            fill="clear" 
+            onClick={handleManualRefresh}
+            disabled={loading}
+          >
+          </IonButton>
         </IonToolbar>
       </IonHeader>
 
       <IonContent fullscreen className="custom-background">
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent
+            pullingIcon={refreshOutline}
+            pullingText="Puxe para atualizar"
+            refreshingSpinner="circles"
+            refreshingText="Atualizando..."
+          />
+        </IonRefresher>
+
         <div className="quiz-list-container">
           <div className="quiz-header">
             <h2 className="quiz-list-title">Quizzes Disponíveis</h2>
@@ -107,7 +174,7 @@ const QuizList: React.FC = () => {
           ) : quizzes.length > 0 ? (
             <IonList>
               {quizzes.map((quiz) => (
-                <IonCard key={quiz.id} className="quiz-card">
+                <IonCard key={`${quiz.id}-${lastFetch}`} className="quiz-card">
                   <IonCardHeader>
                     <IonCardTitle>{quiz.Titulo}</IonCardTitle>
                   </IonCardHeader>
@@ -138,6 +205,15 @@ const QuizList: React.FC = () => {
                 <li>Você pode não ter permissão para acessar os quizzes</li>
               </ul>
               <p>Tente novamente mais tarde ou entre em contato com o administrador.</p>
+              <IonButton 
+                expand="block" 
+                onClick={handleManualRefresh}
+                className="retry-button"
+                disabled={loading}
+              >
+                <IonIcon slot="start" icon={refreshOutline} />
+                Tentar Novamente
+              </IonButton>
             </div>
           )}
         </div>

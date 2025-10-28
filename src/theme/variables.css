@@ -134,9 +134,6 @@ ion-page ion-button,
 .action-button {
   --color: #ffffff !important;
   color: #ffffff !important;
-  --background: #dd2273 !important;
-  --background-hover: #c41e65 !important;
-  --box-shadow: 0 4px 8px rgba(221, 34, 115, 0.3) !important;
   transition: all 0.3s ease !important;
 }
 
