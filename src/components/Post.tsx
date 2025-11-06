@@ -22,8 +22,8 @@ interface PostProps {
   title: string;
   description: string;
   imageUrl: string | null;
-  comments: Comment[]; // Changed to 'comments' to match PostModal prop and resolve type error
-  onFavoriteChange?: () => void; // Função para notificar mudanças nos favoritos
+  comments: Comment[]; 
+  onFavoriteChange?: () => void;
 }
 
 const Post: React.FC<PostProps> = ({
