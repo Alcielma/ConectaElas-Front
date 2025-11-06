@@ -59,15 +59,15 @@
 
 /* Opção selecionada */
 .option-item.selected {
-  --background: #ffe6f0;
+  --background: #603848;
   border-color: #dd2273;
   box-shadow: 0 4px 12px rgba(221, 34, 115, 0.3);
 }
 
 /* Estilização do radio button - BOLINHA MAIOR E CORRIGIDA */
 .option-item ion-radio {
-  --color: #ffffff;
-  --color-checked: #ffffff;
+  --color: #dd2273;
+  --color-checked: #dd2273;
   --border-radius: 50%;
   --inner-border-radius: 50%;
   width: 28px;
@@ -139,7 +139,6 @@
 }
 
 .nav-button[fill="outline"] {
-  --background: transparent;
   --color: #dd2273;
   --border-color: #dd2273;
 }
