@@ -89,7 +89,7 @@ const TabsLayout: React.FC = () => {
           <IonIcon aria-hidden="true" icon={clipboardSharp} />
           <IonLabel>Quiz</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="tab3" href="/tabs/Sobre">
+        <IonTabButton tab="tab3" href="/tabs/sobre">
           <IonIcon aria-hidden="true" icon={informationCircleSharp} />
           <IonLabel>Sobre</IonLabel>
         </IonTabButton>

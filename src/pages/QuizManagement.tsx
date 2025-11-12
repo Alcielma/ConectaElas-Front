@@ -61,6 +61,7 @@ interface NovaResposta {
 const QuizManagement: React.FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
@@ -261,14 +262,21 @@ const QuizManagement: React.FC = () => {
 // Função para atualizar um quiz existente
 const handleUpdateQuiz = async () => {
   try {
+    // Prevenir duplo clique
+    if (isUpdating) return;
+    
+    setIsUpdating(true);
+    
     // Validar dados
     if (!quizParaEditar.titulo.trim()) {
       showToastMessage("O título do quiz é obrigatório", "warning");
+      setIsUpdating(false);
       return;
     }
     
     if (!quizIdParaEditar) {
       showToastMessage("ID do quiz não encontrado", "danger");
+      setIsUpdating(false);
       return;
     }
     // Buscar o quiz completo para obter o documentId e as perguntas/respostas atuais
@@ -350,6 +358,8 @@ const handleUpdateQuiz = async () => {
   } catch (error) {
     console.error("Erro ao atualizar quiz:", error);
     showToastMessage("Erro ao atualizar quiz", "danger");
+  } finally {
+    setIsUpdating(false);
   }
 };
 
@@ -598,6 +608,7 @@ const handleUpdateQuiz = async () => {
     onClose={() => setShowEditModal(false)}
     quiz={quizParaEditar}
     isEditing={true}
+    isUpdating={isUpdating}
     onTituloChange={handleTituloEditChange}
     onQuestaoChange={handleQuestaoEditChange}
     onRespostaChange={handleRespostaEditChange}
