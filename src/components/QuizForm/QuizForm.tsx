@@ -37,6 +37,7 @@ interface QuizFormProps {
   onClose: () => void;
   quiz: NovoQuiz;
   isEditing: boolean;
+  isUpdating?: boolean;
   onTituloChange: (value: string) => void;
   onQuestaoChange: (index: number, value: string) => void;
   onRespostaChange: (perguntaIndex: number, respostaIndex: number, value: string) => void;
@@ -54,6 +55,7 @@ const QuizForm: React.FC<QuizFormProps> = ({
   onClose,
   quiz,
   isEditing,
+  isUpdating = false,
   onTituloChange,
   onQuestaoChange,
   onRespostaChange,
@@ -112,9 +114,14 @@ const QuizForm: React.FC<QuizFormProps> = ({
               className="action-button"
               expand="block"
               onClick={onSave}
+              disabled={isUpdating}
             >
-              <IonIcon slot="start" icon={checkmark} />
-              {actionButtonText}
+              {isUpdating ? (
+                <IonIcon slot="start" icon="" />
+              ) : (
+                <IonIcon slot="start" icon={checkmark} />
+              )}
+              {isUpdating ? "Atualizando..." : actionButtonText}
             </IonButton>
           </div>
         </IonCardContent>

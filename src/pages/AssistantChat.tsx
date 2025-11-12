@@ -29,6 +29,45 @@ const AssistantChat: React.FC = () => {
   const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<[]>([]);
+  const inputRef = useRef<HTMLIonInputElement>(null);
+  const contentRef = useRef<HTMLIonContentElement>(null);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  // Detectar quando o teclado abre/fecha
+  useEffect(() => {
+    const handleKeyboardShow = () => {
+      setIsKeyboardOpen(true);
+      setTimeout(() => {
+        if (chatEndRef.current) {
+          chatEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+      }, 150);
+    };
+
+    const handleKeyboardHide = () => {
+      setIsKeyboardOpen(false);
+    };
+
+    const handleResize = () => {
+      const viewport = window.visualViewport;
+      if (viewport) {
+        const isOpen = viewport.height < window.innerHeight * 0.8;
+        if (isOpen) {
+          handleKeyboardShow();
+        } else {
+          handleKeyboardHide();
+        }
+      }
+    };
+
+    window.visualViewport?.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const messagesContainer = document.querySelector(".messages-container");
@@ -52,22 +91,64 @@ const AssistantChat: React.FC = () => {
 
   useEffect(() => {
     if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+      setTimeout(() => {
+        chatEndRef.current?.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "end",
+          inline: "nearest"
+        });
+      }, 100);
     }
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (message.trim() === "") return;
-    if (activeChat !== null) {
-      await sendMessage(activeChat.id, message);
-    }
+  const handleSendMessage = async (e?: React.MouseEvent | React.KeyboardEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    
+    if (!message.trim()) return;
+    if (activeChat === null) return;
+
+    const currentMessage = message;
     setMessage("");
+
+    try {
+      await sendMessage(activeChat.id, currentMessage);
+
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.setFocus();
+        }
+      }, 50);
+
+      setTimeout(() => {
+        if (chatEndRef.current) {
+          chatEndRef.current.scrollIntoView({ 
+            behavior: "smooth", 
+            block: "end"
+          });
+        }
+      }, 200);
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      setMessage(currentMessage);
+    }
   };
 
-  function handleMessageChange(message: string) {
-    setMessage(message);
+  const handleKeyPress = (e: any) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage(e);
+    }
+  };
+
+  const handleInputChange = (value: string) => {
+    setMessage(value);
     broadcastTyping();
-  }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+  };
 
   return (
     <IonPage className="Chat-root">
@@ -83,8 +164,12 @@ const AssistantChat: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="chat-content">
-        <div className="messages-container">
+      <IonContent 
+        ref={contentRef}
+        className="chat-content"
+        scrollEvents={true}
+      >
+        <div className={`messages-container ${isKeyboardOpen ? 'keyboard-open' : ''}`}>
           {messages.length ? (
             messages
               .sort(
@@ -119,35 +204,47 @@ const AssistantChat: React.FC = () => {
               Envie uma mensagem para iniciar seu chat!
             </p>
           )}
-          {/* {isTyping && (
-            <div className="message-bubble-typing received typing-visible">
-              <p>Digitando...</p>
-              <div className="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          )} */}
-          <div ref={chatEndRef} />
+          <div ref={chatEndRef} className="chat-end-marker" />
         </div>
       </IonContent>
 
-      <IonFooter>
+      <IonFooter className="ion-no-border">
         <IonToolbar className="chat-input-toolbar">
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div 
+            className="input-container"
+            style={{ 
+              display: "flex", 
+              alignItems: "center",
+              padding: "8px 16px",
+              backgroundColor: "white",
+              borderRadius: "25px",
+              margin: "10px"
+            }}
+          >
             <IonInput
+              ref={inputRef}
               value={message}
               placeholder="Digite sua mensagem..."
-              onIonChange={(e) => handleMessageChange(e.detail.value!)}
+              onIonInput={(e) => handleInputChange(e.detail.value!)}
+              onKeyPress={handleKeyPress}
               style={{ flex: 1 }}
-              className="caixa-enviar-mensagem"
+              enterkeyhint="send"
+              clearOnEdit={false}
+              autocapitalize="sentences"
+              spellcheck={true}
             />
             <IonIcon
               icon={send}
               size="large"
-              style={{ cursor: "pointer", marginLeft: "8px" }}
+              className="send-icon"
+              style={{ 
+                cursor: "pointer", 
+                marginLeft: "8px",
+                color: message.trim() ? "var(--cor-secundaria)" : "#ccc",
+                transition: "color 0.3s ease"
+              }}
               onClick={handleSendMessage}
+              onTouchStart={handleTouchStart}
             />
           </div>
         </IonToolbar>

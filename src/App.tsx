@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { App as CapacitorApp } from "@capacitor/app";
@@ -35,6 +35,94 @@ import ThemeToggle from "./components/ThemeToggle";
 
 setupIonicReact();
 
+// Componente responsável por tratar o botão físico de voltar
+const BackButtonHandler: React.FC = () => {
+  const history = useHistory();
+
+  const handleBackButton = (event: any) => {
+    const pathname = window.location.pathname;
+
+    // Ordem dos tabs mostrados na barra inferior (da esquerda para a direita)
+    const tabOrder = [
+      "/tabs/tab1", // Início
+      "/tabs/tab2", // Conexões
+      "/tabs/quiz", // Quiz
+      "/tabs/sobre", // Sobre (usar minúsculo para combinar com a rota)
+      "/tabs/tab3", // Perfil
+    ];
+
+    // Mapeia rotas internas para seu tab raiz correspondente
+    const tabGroupMap: { [key: string]: string } = {
+      "/tabs/chat": "/tabs/tab2",
+      "/tabs/ReportChannels": "/tabs/tab2",
+      "/tabs/AngelContact": "/tabs/tab2",
+      "/tabs/quiz-detail": "/tabs/quiz",
+      "/tabs/quiz-progress": "/tabs/quiz",
+      "/tabs/quiz-management": "/tabs/quiz",
+      "/tabs/quiz-result": "/tabs/quiz",
+    };
+
+    // Helper para checar prefixos
+    const startsWithAny = (route: string, prefixes: string[]) =>
+      prefixes.some((p) => route.startsWith(p));
+
+    // Se estiver fora de /tabs, tratar casos conhecidos e fallback para histórico
+    if (!pathname.startsWith("/tabs")) {
+      // Caso esteja nas rotas de chat externas, levar para Conexões
+      if (pathname.startsWith("/assistantChats")) {
+        event.preventDefault();
+        history.replace("/tabs/tab2");
+        return false;
+      }
+      // Fallback padrão
+      window.history.back();
+      return true;
+    }
+
+    // Dentro de /tabs: primeiro levar para o tab raiz do grupo quando em rotas internas
+    const groupPrefixes = Object.keys(tabGroupMap);
+    if (startsWithAny(pathname, groupPrefixes)) {
+      const groupRoot = groupPrefixes.find((p) => pathname.startsWith(p));
+      if (groupRoot) {
+        const target = tabGroupMap[groupRoot];
+        if (pathname !== target) {
+          event.preventDefault();
+          history.replace(target);
+          return false;
+        }
+      }
+    }
+
+    // Se já estiver em um tab raiz, mover para o tab anterior (ícone à esquerda)
+    const currentTabIndex = tabOrder.indexOf(pathname);
+    if (currentTabIndex > 0) {
+      const previousTab = tabOrder[currentTabIndex - 1];
+      event.preventDefault();
+      history.replace(previousTab);
+      return false;
+    }
+
+    // Se estiver no primeiro tab (Início), não voltar para login/home
+    if (pathname === "/tabs/tab1") {
+      event.preventDefault();
+      return false;
+    }
+
+    // Fallback: histórico padrão
+    window.history.back();
+    return true;
+  };
+
+  useEffect(() => {
+    CapacitorApp.addListener("backButton", handleBackButton);
+    return () => {
+      CapacitorApp.removeAllListeners();
+    };
+  }, []);
+
+  return null;
+};
+
 const App: React.FC = () => {
   useEffect(() => {
     const initializeStatusBar = async () => {
@@ -66,27 +154,13 @@ const App: React.FC = () => {
     }
   }, []);
 
-  const handleBackButton = (event: any) => {
-    if (window.location.pathname === "/tabs/tab1") {
-      event.preventDefault();
-      return false;
-    }
-    window.history.back();
-    return true;
-  };
-
-  useEffect(() => {
-    CapacitorApp.addListener("backButton", handleBackButton);
-
-    return () => {
-      CapacitorApp.removeAllListeners();
-    };
-  }, []);
+  
 
   return (
     <ThemeProvider>
       <IonApp>
         <IonReactRouter>
+          <BackButtonHandler />
           <AuthProvider>
             <ChatProvider>
               <IonRouterOutlet>
