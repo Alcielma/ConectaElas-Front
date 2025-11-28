@@ -16,6 +16,8 @@ import {
   IonSpinner,
   IonRefresher,
   IonRefresherContent,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/react";
 import { clipboardOutline, ribbonOutline, refreshOutline } from "ionicons/icons";
 import { getAllQuizzes } from "../Services/QuizService";
@@ -83,6 +85,16 @@ const QuizList: React.FC = () => {
     fetchQuizzes(true);
   }, [fetchQuizzes, location.pathname]);
 
+  useEffect(() => {
+    const handler = (ev: any) => {
+      ev.detail.register(10, () => {
+        history.replace("/tabs/games");
+      });
+    };
+    document.addEventListener("ionBackButton", handler as any);
+    return () => document.removeEventListener("ionBackButton", handler as any);
+  }, [history]);
+
   // Recarregar quando a página voltar a ser focada
   useEffect(() => {
     const handleFocus = () => {
@@ -131,6 +143,9 @@ const QuizList: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className="header-gradient">
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/tabs/games" />
+          </IonButtons>
           <IonTitle className="title-centered">Quizzes</IonTitle>
           <IonButton 
             slot="end" 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IonIcon } from "@ionic/react";
+import { useHistory } from "react-router-dom";
 import { chatbubble, bookmark, bookmarkOutline } from "ionicons/icons";
 import CommentItem from "./CommentItem";
 import { addComment } from "../Services/CommentService";
@@ -56,6 +57,20 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const commentsListRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+  const history = useHistory();
+
+  useEffect(() => {
+    const handler = (ev: any) => {
+      if (expanded) {
+        ev.detail.register(10, () => {
+          setExpanded(false);
+          history.push("/tabs/tab1");
+        });
+      }
+    };
+    document.addEventListener("ionBackButton", handler as any);
+    return () => document.removeEventListener("ionBackButton", handler as any);
+  }, [expanded, history]);
 
   useEffect(() => {
     const checkFavoriteStatus = async () => {

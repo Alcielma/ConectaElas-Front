@@ -91,6 +91,16 @@ const QuizResult: React.FC = () => {
     });
   }, [id]);
 
+  useEffect(() => {
+    const handler = (ev: any) => {
+      ev.detail.register(10, () => {
+        history.replace("/tabs/quiz");
+      });
+    };
+    document.addEventListener("ionBackButton", handler as any);
+    return () => document.removeEventListener("ionBackButton", handler as any);
+  }, [history]);
+
   const toggleAnswer = (perguntaId: string) => {
     setExpandedAnswers(prev => ({
       ...prev,

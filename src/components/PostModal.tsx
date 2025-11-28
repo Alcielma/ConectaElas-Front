@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import ReactDOM from "react-dom";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
@@ -25,15 +26,27 @@ interface PostModalProps {
 }
 
 const PostModal: React.FC<PostModalProps> = ({
-    title,
-    imageUrl,
-    description,
-    comments,
-    newComment,
-    setNewComment,
-    handleAddComment,
-    onClose,
+  title,
+  imageUrl,
+  description,
+  comments,
+  newComment,
+  setNewComment,
+  handleAddComment,
+  onClose,
 }) => {
+    const history = useHistory();
+
+    useEffect(() => {
+        const handler = (ev: any) => {
+            ev.detail.register(10, () => {
+                onClose();
+                history.push("/tabs/tab1");
+            });
+        };
+        document.addEventListener("ionBackButton", handler as any);
+        return () => document.removeEventListener("ionBackButton", handler as any);
+    }, [onClose, history]);
     return ReactDOM.createPortal(
         <div className="modal-overlay">
             <div className="modal-content" >
