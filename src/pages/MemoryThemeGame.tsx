@@ -1,0 +1,333 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonSpinner,
+  IonButton,
+  IonIcon,
+  IonModal,
+} from "@ionic/react";
+import { getMemoryThemeById, TemaMemoria } from "../Services/MemoryThemeService";
+import logoWhite from "../Assets/logoReverseRedondaWhite.png";
+import "./MemoryThemeGame.css";
+import { heart, heartDislike } from "ionicons/icons";
+
+interface RouteParams {
+  id: string;
+}
+
+type CardType = "image" | "text";
+
+interface MemoryCard {
+  key: string;
+  pairId: string;
+  type: CardType;
+  content: string;
+  flipped: boolean;
+  matched: boolean;
+}
+
+function sanitizeUrl(url: string | null): string {
+  if (!url) return "";
+  return url.replace(/[`'"\s]+/g, (m) => (m.includes("http") ? m : "")).trim();
+}
+
+const MemoryThemeGame: React.FC = () => {
+  const { id } = useParams<RouteParams>();
+  const history = useHistory();
+  const [theme, setTheme] = useState<TemaMemoria | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [cards, setCards] = useState<MemoryCard[]>([]);
+  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [moves, setMoves] = useState<number>(0);
+  const [lives, setLives] = useState<number>(10);
+  const audioCtxRef = useRef<any>(null);
+  const [showEndModal, setShowEndModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      audioCtxRef.current = new Ctx();
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      console.log("[MemoryGame] loading theme id", id);
+      const data = await getMemoryThemeById(parseInt(id));
+      
+      if (process.env.NODE_ENV !== "production") {
+        console.log("[Memory] tema:", data);
+      }
+
+      setTheme(data);
+      setLoading(false);
+    };
+    load();
+  }, [id]);
+
+  useEffect(() => {
+    const handler = (ev: any) => {
+      ev.detail.register(10, () => {
+        history.replace("/tabs/games/memory");
+      });
+    };
+    document.addEventListener("ionBackButton", handler as any);
+    return () => document.removeEventListener("ionBackButton", handler as any);
+  }, [history]);
+
+  const initialCards = useMemo(() => {
+    if (!theme || !Array.isArray(theme.cartas)) return [] as MemoryCard[];
+    const byId: Record<string, { hasImage: boolean; hasText: boolean; image?: string; text?: string }> = {};
+    theme.cartas.forEach((c) => {
+      const pid = String(c.identificacao ?? "");
+      if (!pid) return;
+      const link = sanitizeUrl(c.Link_imagem);
+      const uploaded = c.Imagem?.url ? `${import.meta.env.VITE_API_URL}${c.Imagem.url}` : "";
+      const img = link || uploaded;
+      const txt = c.Frase ?? "";
+      const entry = byId[pid] ?? { hasImage: false, hasText: false };
+      if (img) {
+        entry.hasImage = true;
+        entry.image = img;
+      }
+      if (txt) {
+        entry.hasText = true;
+        entry.text = txt;
+      }
+      byId[pid] = entry;
+    });
+    const pairs: MemoryCard[] = [];
+    Object.keys(byId).forEach((pid) => {
+      const e = byId[pid];
+      if (e.hasImage && e.hasText && e.image && e.text) {
+        pairs.push({ key: `${pid}-img`, pairId: pid, type: "image", content: e.image, flipped: false, matched: false });
+        pairs.push({ key: `${pid}-txt`, pairId: pid, type: "text", content: e.text, flipped: false, matched: false });
+      }
+    });
+    for (let i = pairs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = pairs[i];
+      pairs[i] = pairs[j];
+      pairs[j] = tmp;
+    }
+    return pairs;
+  }, [theme]);
+
+  useEffect(() => {
+    setCards(initialCards);
+    console.log("[MemoryGame] built cards", initialCards);
+    setOpenKeys([]);
+    setMoves(0);
+    setLives(10);
+  }, [initialCards]);
+
+  const playTone = (freq: number, duration: number, type: OscillatorType = "sine") => {
+    const ctx = audioCtxRef.current;
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    setTimeout(() => {
+      osc.stop();
+    }, duration);
+  };
+
+  const handleFlip = (key: string) => {
+    console.log("[MemoryGame] flip", key);
+    setCards((prev) => {
+      if (lives <= 0) return prev;
+      const target = prev.find((c) => c.key === key);
+      if (!target || target.flipped || target.matched) return prev;
+      const flippedCount = prev.filter((c) => c.flipped && !c.matched).length;
+      if (flippedCount >= 2) return prev;
+      const next = prev.map((c) => (c.key === key ? { ...c, flipped: true } : c));
+      const open = [...openKeys, key];
+      setOpenKeys(open);
+      if (open.length === 2) {
+        setMoves((m) => m + 1);
+        const [k1, k2] = open;
+        const c1 = next.find((c) => c.key === k1);
+        const c2 = next.find((c) => c.key === k2);
+        const isMatch = !!c1 && !!c2 && c1.pairId === c2.pairId && c1.type !== c2.type;
+        console.log("[MemoryGame] compare", { k1, k2, isMatch, c1, c2 });
+        if (isMatch) {
+          playTone(880, 180, "sine");
+          setTimeout(() => {
+            setCards((curr) => curr.map((c) => (c.key === k1 || c.key === k2 ? { ...c, matched: true } : c)));
+            setOpenKeys([]);
+          }, 300);
+        } else {
+          playTone(260, 220, "sawtooth");
+          setTimeout(() => {
+            setCards((curr) => curr.map((c) => (c.key === k1 || c.key === k2 ? { ...c, flipped: false } : c)));
+            setOpenKeys([]);
+            setLives((l) => Math.max(0, l - 1));
+          }, 800);
+        }
+      }
+      return next;
+    });
+  };
+
+  const allMatched = cards.length > 0 && cards.every((c) => c.matched);
+  const noPairs = !loading && theme && cards.length === 0;
+  const gameOver = lives <= 0;
+
+  const restartGame = () => {
+    const base = initialCards.map((c) => ({ ...c, flipped: false, matched: false }));
+    for (let i = base.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = base[i];
+      base[i] = base[j];
+      base[j] = tmp;
+    }
+    setCards(base);
+    setOpenKeys([]);
+    setMoves(0);
+    setLives(10);
+    setShowEndModal(false);
+  };
+
+  useEffect(() => {
+    if ((allMatched || gameOver) && cards.length > 0) {
+      setShowEndModal(true);
+    }
+  }, [allMatched, gameOver, cards.length]);
+
+  const goToThemes = () => {
+    setShowEndModal(false);
+    restartGame();
+    history.push("/tabs/games/memory");
+  };
+
+  if (loading) {
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar className="header-gradient">
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/tabs/games/memory" />
+            </IonButtons>
+            <IonTitle className="title-centered">Carregando tema</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          <div className="loading-container">
+            <IonSpinner name="crescent" />
+            <p>Carregando cartas...</p>
+          </div>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  if (!theme) {
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar className="header-gradient">
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/tabs/games/memory" />
+            </IonButtons>
+            <IonTitle className="title-centered">Tema não encontrado</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          <div className="error-container">
+            <p>Não foi possível encontrar o tema solicitado.</p>
+            <IonButton routerLink="/tabs/games/memory">Voltar</IonButton>
+          </div>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar className="header-gradient">
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/tabs/games/memory" />
+          </IonButtons>
+          <IonTitle className="title-centered">{theme.Nome_tema}</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen>
+        <div className="memory-status">
+          <span>Jogadas: {moves}</span>
+          <span className="lives"><IonIcon className="heart" icon={heart} /> {lives}</span>
+          {allMatched && <span className="done">Concluído</span>}
+          {gameOver && <span>Sem vidas</span>}
+        </div>
+        <IonModal isOpen={showEndModal} className="end-modal" backdropDismiss={false}>
+          <div className="modal-box">
+            <div className="modal-title">Jogo finalizado</div>
+            {gameOver ? (
+              <>
+                <div className="modal-message">Ops, acabou suas chances</div>
+                <IonIcon className="modal-icon fail" icon={heartDislike} />
+              </>
+            ) : (
+              <>
+                <div className="modal-message">Que legal! Você chegou até o final</div>
+                <div className="applause">👏👏👏</div>
+              </>
+            )}
+            <div className="modal-actions">
+              <IonButton onClick={restartGame}>Reiniciar o jogo</IonButton>
+              <IonButton fill="outline" onClick={goToThemes}>Voltar para temas</IonButton>
+            </div>
+          </div>
+        </IonModal>
+        {noPairs && (
+          <div className="no-quizzes" style={{ padding: 16 }}>
+            <p>Nenhum par válido encontrado para este tema.</p>
+            <p>Para formar um par, é necessário:</p>
+            <ul>
+              <li>Uma carta com imagem e outra com frase</li>
+              <li>Ambas compartilharem o mesmo campo de identificação</li>
+            </ul>
+          </div>
+        )}
+        <div className="memory-grid">
+          {cards.map((c) => (
+            <div
+              key={c.key}
+              className={`memory-card ${c.flipped || c.matched ? "flipped" : ""} ${c.matched ? "matched" : ""}`}
+              onClick={() => handleFlip(c.key)}
+            >
+              <div className="card-inner">
+                <div className="card-face card-front">
+                  {c.type === "image" ? (
+                    <img className="image" src={c.content} alt="Carta" />
+                  ) : (
+                    <div className="phrase">{c.content}</div>
+                  )}
+                </div>
+                <div className="card-face card-back">
+                  <img className="back-logo" src={logoWhite} alt="Conecta Elas" />
+                  <div className="back-title">Conecta Elas</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </IonContent>
+    </IonPage>
+  );
+};
+
+export default MemoryThemeGame;

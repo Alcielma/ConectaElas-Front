@@ -1,0 +1,38 @@
+.games-icon-btn {
+  position: fixed;
+  right: 52px; /* posiciona à esquerda do botão de tema */
+  top: 18px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10000;
+  transition: transform 0.2s ease;
+}
+
+.games-icon-btn:hover {
+  transform: scale(1.06);
+}
+
+.games-icon-btn ion-icon {
+  font-size: 24px;
+}
+
+body.dark-theme .games-icon-btn {
+  color: #eaeaea;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+body.dark-theme .games-icon-btn ion-icon {
+  color: #eaeaea;
+}

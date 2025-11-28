@@ -1,0 +1,64 @@
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.game-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.game-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.game-card.leaving {
+  animation: card-leave 300ms ease forwards;
+}
+
+@keyframes card-leave {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(120%, -20%) scale(0.92);
+  }
+}
+
+.game-card .icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  color: var(--ion-color-primary);
+}
+
+.game-card .label {
+  font-size: 14px;
+  text-align: center;
+}
+
+body.dark-theme .game-card {
+  background: var(--surface);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+/* Tema claro: textos em rosa na lista de jogos */
+[data-theme="light"] .game-card .label {
+  color: var(--cor-principal);
+}
