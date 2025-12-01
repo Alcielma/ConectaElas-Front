@@ -1,4 +1,3 @@
-/* Cabeçalho com gradiente */
 .header-gradient {
   --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
   --color: white;
@@ -14,25 +13,43 @@ ion-toolbar {
   font-weight: bold;
 }
 
-/* Corpo */
 .body-feed {
-  padding: 16px;
+  padding: 0px;
 }
 
-/* Carrossel com borda arredondada */
 .carrossel-wrapper {
-  border-radius: 12px;
+  width: 100vw;  
+  margin-left: calc(-50vw + 50%);  
+  margin-right: calc(-50vw + 50%);
+  margin-top: 0;
+  margin-bottom: 35px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
   overflow: hidden;
-  margin-bottom: 24px;
-  margin-left: auto; /* Centraliza horizontalmente */
-  margin-right: auto;
-  max-width: 23rem; /* Garante que o carrossel respeite a largura definida */
-  width: 100%; /* Permite responsividade */
 }
 
-/* Seções de categoria */
 .categoria-section {
+  padding: 0 16px;
   margin-bottom: 24px;
+}
+
+.header-gradient {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: white;
+}
+
+ion-toolbar {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-secondary));
+  --color: #fff;
+}
+
+.title-centered {
+  text-align: center;
+  font-weight: bold;
 }
 
 .categoria-header {
@@ -43,7 +60,6 @@ ion-toolbar {
   padding: 0 4px;
 }
 
-/* Modo escuro: títulos e link em rosa padrão do app */
 body.dark-theme .categoria-title {
   color: var(--cor-principal) !important;
 }
