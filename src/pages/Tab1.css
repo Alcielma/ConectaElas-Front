@@ -17,6 +17,12 @@ ion-toolbar {
   padding: 0px;
 }
 
+/* Dark theme: fundo preto na Home */
+body.dark-theme .custom-background {
+  --background: #000000;
+  background: #000000;
+}
+
 .carrossel-wrapper {
   width: 100vw;  
   margin-left: calc(-50vw + 50%);  
@@ -58,14 +64,6 @@ ion-toolbar {
   align-items: center;
   margin-bottom: 12px;
   padding: 0 4px;
-}
-
-body.dark-theme .categoria-title {
-  color: var(--cor-principal) !important;
-}
-
-body.dark-theme .ver-todos {
-  color: var(--cor-principal) !important;
 }
 
 .categoria-title {
