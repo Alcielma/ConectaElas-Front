@@ -87,8 +87,7 @@ const MemoryThemeGame: React.FC = () => {
     if (!theme || !Array.isArray(theme.cartas)) return [] as MemoryCard[];
     const byId: Record<string, { hasImage: boolean; hasText: boolean; image?: string; text?: string }> = {};
     theme.cartas.forEach((c) => {
-      const pid = String(c.identificacao ?? "");
-      if (!pid) return;
+      const pid = String(c.id);
       const link = sanitizeUrl(c.Link_imagem);
       const uploaded = c.Imagem?.url ? `${import.meta.env.VITE_API_URL}${c.Imagem.url}` : "";
       const img = link || uploaded;
@@ -319,7 +318,7 @@ const MemoryThemeGame: React.FC = () => {
             <p>Para formar um par, é necessário:</p>
             <ul>
               <li>Uma carta com imagem e outra com frase</li>
-              <li>Ambas compartilharem o mesmo campo de identificação</li>
+              <li>Ambas estarem cadastradas no mesmo registro (ID)</li>
             </ul>
           </div>
         )}
