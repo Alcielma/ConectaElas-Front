@@ -1,8 +1,8 @@
 .memory-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  padding: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 12px;
 }
 
 .memory-card {
@@ -43,6 +43,7 @@
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  text-align: center;
 }
 
 .card-front {
@@ -76,6 +77,9 @@
 .back-title {
   color: #ffffff;
   font-weight: 600;
+  text-align: center;
+  width: 100%;
+  padding: 0 4px;
 }
 
 .memory-status {
