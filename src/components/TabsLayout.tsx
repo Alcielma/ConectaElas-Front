@@ -32,6 +32,7 @@ import QuizManagement from "../pages/QuizManagement";
 import Games from "../pages/Games";
 import MemoryThemeList from "../pages/MemoryThemeList";
 import MemoryThemeGame from "../pages/MemoryThemeGame";
+
 const QuizResult = React.lazy(() => import("../pages/QuizResult"));
 
 const TabsLayout: React.FC = () => {
@@ -106,20 +107,58 @@ const TabsLayout: React.FC = () => {
           <IonIcon aria-hidden="true" icon={homeSharp} />
           <IonLabel>Início</IonLabel>
         </IonTabButton>
+        
         <IonTabButton tab="tab2" href="/tabs/tab2">
-          <IonIcon aria-hidden="true" icon={radioSharp} />
+          <span
+            style={{
+              display: 'inline-block',
+              width: '24px',
+              height: '24px',
+              WebkitMaskImage:
+                'url(/social-network-icon-set-community-connection-vector-symbol-global-connect-sign-globle-networking-ico.svg)',
+              maskImage:
+                'url(/social-network-icon-set-community-connection-vector-symbol-global-connect-sign-globle-networking-ico.svg)',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center',
+              backgroundColor: 'currentColor',
+              transition: 'color 0.3s ease',
+            }}
+          />
           <IonLabel>Conexões</IonLabel>
         </IonTabButton>
+        
         <IonTabButton tab="games" href="/tabs/games">
           <IonIcon aria-hidden="true" icon={gameControllerSharp} />
           <IonLabel>Jogos</IonLabel>
         </IonTabButton>
+        
         <IonTabButton tab="sobre" href="/tabs/sobre">
           <IonIcon aria-hidden="true" icon={informationCircleSharp} />
           <IonLabel>Sobre</IonLabel>
         </IonTabButton>
+        
         <IonTabButton tab="tab3" href="/tabs/tab3">
-          <IonIcon aria-hidden="true" icon={personSharp} />
+          <span
+            style={{
+              display: 'inline-block',
+              width: '24px',
+              height: '24px',
+              WebkitMaskImage: 'url(/perfilMulher.svg)',
+              maskImage: 'url(/perfilMulher.svg)',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center',
+              backgroundColor: 'currentColor',
+              transition: 'color 0.3s ease',
+            }}
+          />
           <IonLabel>Perfil</IonLabel>
         </IonTabButton>
       </IonTabBar>

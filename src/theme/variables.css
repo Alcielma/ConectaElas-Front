@@ -123,6 +123,13 @@ ion-app ion-tab-button {
   --color: var(--cor-principal) !important;
   --color-selected: var(--cor-secundaria) !important;
   --ripple-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--cor-principal) !important;
+  transition: color 0.2s ease !important;
+}
+
+ion-app ion-tab-button:hover {
+  --color: var(--cor-secundaria) !important;
+  color: var(--cor-secundaria) !important;
 }
 
 
@@ -216,6 +223,10 @@ ion-page .result-title,
 ion-app .question-title,
 ion-page .question-title {
   font-weight: bold !important;
+}
+
+:root {
+  --bg: #eaeaea;
 }
 
 /* FORÇA A APLICAÇÃO DO FUNDO DAS PÁGINAS */

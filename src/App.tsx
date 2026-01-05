@@ -14,6 +14,8 @@ import Onboarding from "./pages/Onboarding";
 import { SplashScreen } from "@capacitor/splash-screen";
 import ConfirmacaoCodigo from "./pages/ConfirmacaoCodigo";
 import CategoriaPosts from "./pages/CategoriaPosts";
+import { Capacitor } from "@capacitor/core";
+import { Keyboard, KeyboardResize } from "@capacitor/keyboard";
 
 // Core CSS required for Ionic components to work properly
 import "@ionic/react/css/core.css";
@@ -34,6 +36,12 @@ import { ThemeProvider } from "./Contexts/ThemeContext";
 import ThemeToggle from "./components/ThemeToggle";
 
 setupIonicReact();
+
+// Configuração do teclado para evitar sobreposição
+if (Capacitor.isNativePlatform()) {
+  Keyboard.setResizeMode({ mode: KeyboardResize.Body });
+  Keyboard.setScroll({ isDisabled: true });
+}
 
 // Componente responsável por tratar o botão físico de voltar
 const BackButtonHandler: React.FC = () => {
@@ -126,9 +134,14 @@ const BackButtonHandler: React.FC = () => {
 const App: React.FC = () => {
   useEffect(() => {
     const initializeStatusBar = async () => {
-      await StatusBar.show();
-      await StatusBar.setBackgroundColor({ color: "#dd2273" });
-      await StatusBar.setStyle({ style: Style.Dark });
+      try {
+        if (Capacitor.getPlatform() !== "web") {
+          await StatusBar.show();
+          await StatusBar.setBackgroundColor({ color: "#dd2273" });
+          await StatusBar.setStyle({ style: Style.Dark });
+        }
+      } catch (e) {
+      }
     };
     initializeStatusBar();
   }, []);

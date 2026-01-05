@@ -22,3 +22,12 @@
 .container a {
   text-decoration: none;
 }
+
+:root[data-theme="light"] {
+  --bg: #eaeaea;
+}
+
+[data-theme="light"] ion-app ion-content,
+[data-theme="light"] ion-page ion-content {
+  --background: var(--bg) !important;
+}

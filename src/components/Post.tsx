@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { IonIcon } from "@ionic/react";
-import { bookmark, bookmarkOutline } from "ionicons/icons";
+import React, { useState } from "react";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
-import CommentItem from "./CommentItem";
 import PostModal from "./PostModal";
 import Toast from "./Toast";
-import { isPostFavorited, addToFavorites, removeFromFavorites } from "../Services/FavoritesService";
-import api from "../Services/api";
 import "./Post.css";
 
 interface Comment {
@@ -22,7 +17,7 @@ interface PostProps {
   title: string;
   description: string;
   imageUrl: string | null;
-  comments: Comment[]; 
+  comments: Comment[];
   onFavoriteChange?: () => void;
 }
 
@@ -43,8 +38,6 @@ const Post: React.FC<PostProps> = ({
     )
   );
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const [toast, setToast] = useState({
     isOpen: false,
     message: "",
@@ -53,80 +46,7 @@ const Post: React.FC<PostProps> = ({
 
   const { user } = useAuth();
 
-  useEffect(() => {
-    const checkFavoriteStatus = async () => {
-      if (user?.id) {
-        try {
-          const favorite = await isPostFavorited(user.id, id);
-          setIsFavorite(!!favorite);
-          if (favorite) {
-            setFavoriteId(favorite.id);
-          } else {
-            setFavoriteId(null);
-          }
-        } catch (error) {
-          console.error("Erro ao verificar status de favorito:", error);
-        }
-      }
-    };
-    
-    checkFavoriteStatus();
-  }, [user, id]);
-
-  const toggleFavorite = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!user?.id) {
-      setToast({
-        isOpen: true,
-        message: "Você precisa estar logado para favoritar posts.",
-        type: "error"
-      });
-      return;
-    }
-
-    try {
-      if (isFavorite && favoriteId) {
-        const favorite = await isPostFavorited(user.id, id);
-        if (!favorite || !favorite.documentId) {
-          throw new Error('Não foi possível obter o documentId do favorito');
-        }
-        await api.delete(`/favoritos/${favorite.documentId}`);
-        setIsFavorite(false);
-        setFavoriteId(null);
-        
-        setToast({
-          isOpen: true,
-          message: "Post removido dos favoritos.",
-          type: "info"
-        });
-        if (onFavoriteChange) {
-          onFavoriteChange();
-        }
-      } else {
-        const response = await addToFavorites(user.id, id);
-        if (response?.data?.id) {
-          setIsFavorite(true);
-          setFavoriteId(response.data.id);
-          
-          setToast({
-            isOpen: true,
-            message: "Post adicionado aos favoritos!",
-            type: "success"
-          });
-          if (onFavoriteChange) {
-            onFavoriteChange();
-          }
-        }
-      }
-    } catch (error) {
-      console.error(`Erro ao atualizar favoritos para post ${id}:`, error);
-      setToast({
-        isOpen: true,
-        message: "Erro ao atualizar favoritos. Tente novamente.",
-        type: "error"
-      });
-    }
-  };
+  
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -176,46 +96,50 @@ const Post: React.FC<PostProps> = ({
 
   // Função para verificar se a URL é de um vídeo
   const isVideoUrl = (url: string) => {
-    return url.toLowerCase().endsWith('.mp4') || 
-           url.toLowerCase().endsWith('.webm') || 
-           url.toLowerCase().endsWith('.ogg') ||
-           url.includes('video');
+    return url.toLowerCase().endsWith('.mp4') ||
+      url.toLowerCase().endsWith('.webm') ||
+      url.toLowerCase().endsWith('.ogg') ||
+      url.includes('video');
   };
 
+  const titleMax = 51;
+  const displayTitle = title.length > titleMax ? `${title.slice(0, titleMax).trimEnd()}...` : title;
+  
+
   return (
-  <>
-    <div className="post-container" onClick={openModal}>
-      <div className="post-content">
-        {imageUrl && (
-          isVideoUrl(imageUrl) ? (
-            <video 
-              src={imageUrl} 
-              controls 
-              preload="metadata"
-              className="post-image"
-              onClick={(e) => e.stopPropagation()}
-              style={{ width: '100%', borderRadius: '8px' }}
-            />
-          ) : (
-            <img
-              src={imageUrl}
-              alt={title}
-              className="post-image"
-              onClick={(e) => e.stopPropagation()}
-            />
-          )
-        )}
-        <IonIcon
-          icon={isFavorite ? bookmark : bookmarkOutline}
-          className={`favorite-icon ${isFavorite ? "favorited" : ""}`}
-          onClick={toggleFavorite}
-        />
+    <>
+      <div className="post-container" onClick={openModal}>
+        <div className="post-row">
+          {imageUrl && (
+            isVideoUrl(imageUrl) ? (
+              <video
+                src={imageUrl}
+                controls
+                className="post-thumb"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <img
+                src={imageUrl}
+                alt={title}
+                className="post-thumb"
+                onClick={(e) => e.stopPropagation()}
+              />
+            )
+          )}
+          <div className="post-text-content">
+            <h2 className="post-title">{displayTitle}</h2>
+          </div>
+
+          
+        </div>
+
+        <p className="post-description">{description}</p>
       </div>
-      <h2 className="post-title">{title}</h2>
-    </div>
 
       {isModalOpen && (
         <PostModal
+          postId={id}
           title={title}
           imageUrl={imageUrl}
           description={description}
@@ -224,6 +148,7 @@ const Post: React.FC<PostProps> = ({
           setNewComment={setNewComment}
           handleAddComment={handleAddComment}
           onClose={closeModal}
+          onFavoriteChange={onFavoriteChange}
         />
       )}
 

@@ -67,6 +67,14 @@
   margin-bottom: 15px;
 }
 
+.modal-title-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .modal-header h2 {
   margin: 0;
   font-size: 1.2rem;

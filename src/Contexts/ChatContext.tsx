@@ -9,6 +9,7 @@ interface Message {
   Mensagem: string;
   Data_Envio: string;
   Leitura: boolean;
+  remetente?: { id: number };
 }
 
 interface Chat {
@@ -16,6 +17,9 @@ interface Chat {
   ProtocoloID: string;
   mensagens: Message[];
   usuario: { id: number };
+  Status_Finalizado?: boolean;
+  updatedAt?: string;
+  createdAt?: string;
 }
 
 interface ChatContextType {
@@ -36,10 +40,20 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const useChat = (): ChatContextType => {
   const context = useContext(ChatContext);
-  if (!context) {
-    throw new Error("useChat deve ser usado dentro de um ChatProvider");
-  }
-  return context;
+  if (context) return context;
+  return {
+    chats: [],
+    activeChat: null,
+    isTyping: false,
+    fetchChats: () => {},
+    startChat: async () => null,
+    sendMessage: async () => {},
+    selectChat: async () => {},
+    fetchMessages: async () => [],
+    generateRandomName: () => "Usuário",
+    updateMessageStatus: async () => {},
+    broadcastTyping: () => {},
+  };
 };
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -50,12 +64,16 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   let typingTimeout: any;
+  const recentlySentRef = React.useRef<Record<number, { text: string; ts: number }[]>>({});
 
   const fetchChats = async () => {
     if (!user) return;
 
     try {
-      const response = await ChatService.getChats(user.id);
+      const response = await ChatService.getChats(
+        user.tipo === "Assistente" ? undefined : user.id,
+        user.tipo === "Assistente"
+      );
       const userChats = response || [];
 
       setChats(userChats);
@@ -67,9 +85,16 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const startChat = async (message: string): Promise<Chat | null> => {
     if (!user) return null;
 
-    await fetchChats();
-
-    let chat = chats.find((c) => c.usuario.id === user.id) ?? null;
+    const existingChats = await ChatService.getChats(user.id, false);
+    const openChats = (existingChats || []).filter(
+      (c: any) => c.usuario?.id === user.id && c.Status_Finalizado === false
+    );
+    let chat = openChats.length
+      ? openChats.sort(
+          (a: any, b: any) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        )[0]
+      : null;
 
     if (chat) {
       await selectChat(chat.id);
@@ -94,9 +119,18 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const sendMessage = async (chatId: number, message: string) => {
     if (!user) return;
-    if (!activeChat) return;
-
-    const ProtocoloID = activeChat.ProtocoloID;
+    let targetChat = activeChat;
+    if (!targetChat) {
+      const found = chats.find((c) => c.id === chatId) || null;
+      if (!found) {
+        await selectChat(chatId);
+        targetChat = chats.find((c) => c.id === chatId) || null;
+      } else {
+        targetChat = found;
+      }
+      if (!targetChat) return;
+    }
+    const ProtocoloID = targetChat.ProtocoloID;
 
     socket.emit("send_message", { ProtocoloID, message });
 
@@ -106,15 +140,22 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       Mensagem: message,
       Data_Envio: new Date().toISOString(),
       Leitura: null, // A nova mensagem está inicialmente como não lida
+      remetente: { id: user.id },
     };
 
     updateChatMessages(chatId, newMessage); // Atualiza a lista de mensagens do chat ativo
+
+    const norm = message.trim().toLowerCase();
+    const list = recentlySentRef.current[chatId] || [];
+    const now = Date.now();
+    const pruned = list.filter((i) => now - i.ts < 15000).slice(-20);
+    recentlySentRef.current[chatId] = [...pruned, { text: norm, ts: now }];
   };
 
   const selectChat = async (chatId: number) => {
     try {
       const response = await api.get(
-        `/protocolos?filters[id][$eq]=${chatId}&populate[mensagens][fields]=Mensagem,Data_Envio&populate[usuario][fields][0]=id`
+        `/protocolos?filters[id][$eq]=${chatId}&populate[usuario][fields][0]=id&populate[mensagens][fields][0]=id&populate[mensagens][fields][1]=Mensagem&populate[mensagens][fields][2]=Data_Envio&populate[mensagens][fields][3]=Leitura&populate[mensagens][populate][remetente][fields][0]=id`
       );
 
       if (!response.data || response.data.data.length === 0) {
@@ -139,7 +180,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       selectedChat.mensagens.forEach(async (msg: Message) => {
-        if (msg.Leitura === false) {
+        const senderId =
+          typeof (msg as any).remetente === "number"
+            ? (msg as any).remetente
+            : (msg as any).remetente?.id;
+
+        if (msg.Leitura === false && user && senderId !== user.id) {
           await updateMessageStatus(msg.id, true);
         }
       });
@@ -150,22 +196,29 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
   function updateChatMessages(chatId: number, newMessage: any) {
     setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat.id === chatId
-          ? { ...chat, mensagens: [...chat.mensagens, newMessage] }
-          : chat
-      )
+      prevChats.map((chat) => {
+        if (chat.id !== chatId) return chat;
+        const existsById = chat.mensagens.some((m: any) => m.id === newMessage.id);
+        return existsById
+          ? chat
+          : { ...chat, mensagens: [...chat.mensagens, newMessage] };
+      })
     );
 
-    setActiveChat((prev) =>
-      prev?.id === chatId
-        ? { ...prev, mensagens: [...prev.mensagens, newMessage] }
-        : prev
-    );
+    setActiveChat((prev) => {
+      if (!prev || prev.id !== chatId) return prev;
+      const existsById = prev.mensagens.some((m: any) => m.id === newMessage.id);
+      return existsById
+        ? prev
+        : { ...prev, mensagens: [...prev.mensagens, newMessage] };
+    });
   }
 
   const updateMessageStatus = async (messageId: number, status: boolean) => {
     try {
+      if (typeof messageId !== "number" || !Number.isFinite(messageId) || messageId <= 0) {
+        return;
+      }
       const response = await api.put(`/mensagens/${messageId}`, {
         data: { Leitura: status },
       });
@@ -175,7 +228,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       } else {
         console.error("Erro ao atualizar o status da mensagem");
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.response?.status === 404) {
+        console.warn(`Mensagem ${messageId} não encontrada para atualização de leitura (404). Ignorando.`);
+        return;
+      }
       console.error("Erro ao atualizar o status da mensagem:", error);
     }
   };
@@ -201,15 +258,32 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
+    socket.off("authenticated");
     socket.off("receive_message");
+    socket.off("typing");
+    socket.off("stop_typing");
 
     socket.emit("authenticate", token);
 
-    socket.on("authenticated", (response: any) => {
+    socket.once("authenticated", (response: any) => {
       if (response.success) {
         socket.emit("join_chat", activeChat.ProtocoloID);
 
         socket.on("receive_message", (msg: Message) => {
+          const senderId =
+            typeof (msg as any)?.remetente === "number"
+              ? (msg as any).remetente
+              : (msg as any)?.remetente?.id;
+          if (senderId === user?.id) {
+            return;
+          }
+          const list = recentlySentRef.current[activeChat.id] || [];
+          const normIncoming = String((msg as any)?.Mensagem || "").trim().toLowerCase();
+          const now = Date.now();
+          const matchRecent = list.some((i) => i.text === normIncoming && now - i.ts < 5000);
+          if (matchRecent) {
+            return;
+          }
           updateChatMessages(activeChat.id, msg);
         });
         return;

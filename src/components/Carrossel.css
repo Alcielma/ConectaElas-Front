@@ -4,15 +4,15 @@
   margin: 0;
   padding: 0;
   position: relative;
-  border-bottom-left-radius: 22px;
-  border-bottom-right-radius: 22px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 
   overflow: hidden; 
 }
 .carrossel-container .swiper-slide,
 .carrossel-container img {
-  border-bottom-left-radius: 22px;
-  border-bottom-right-radius: 22px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   overflow: hidden;
 }
 

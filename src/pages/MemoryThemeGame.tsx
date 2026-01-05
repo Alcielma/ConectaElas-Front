@@ -87,8 +87,7 @@ const MemoryThemeGame: React.FC = () => {
     if (!theme || !Array.isArray(theme.cartas)) return [] as MemoryCard[];
     const byId: Record<string, { hasImage: boolean; hasText: boolean; image?: string; text?: string }> = {};
     theme.cartas.forEach((c) => {
-      const pid = String(c.identificacao ?? "");
-      if (!pid) return;
+      const pid = String(c.id);
       const link = sanitizeUrl(c.Link_imagem);
       const uploaded = c.Imagem?.url ? `${import.meta.env.VITE_API_URL}${c.Imagem.url}` : "";
       const img = link || uploaded;
@@ -104,21 +103,42 @@ const MemoryThemeGame: React.FC = () => {
       }
       byId[pid] = entry;
     });
-    const pairs: MemoryCard[] = [];
+
+    // 1. Collect valid pair data
+    const validPairs: { pid: string; image: string; text: string }[] = [];
     Object.keys(byId).forEach((pid) => {
       const e = byId[pid];
       if (e.hasImage && e.hasText && e.image && e.text) {
-        pairs.push({ key: `${pid}-img`, pairId: pid, type: "image", content: e.image, flipped: false, matched: false });
-        pairs.push({ key: `${pid}-txt`, pairId: pid, type: "text", content: e.text, flipped: false, matched: false });
+        validPairs.push({ pid, image: e.image, text: e.text });
       }
     });
-    for (let i = pairs.length - 1; i > 0; i--) {
+
+    // 2. Shuffle valid pairs to pick random ones if we have more than 12
+    for (let i = validPairs.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      const tmp = pairs[i];
-      pairs[i] = pairs[j];
-      pairs[j] = tmp;
+      const tmp = validPairs[i];
+      validPairs[i] = validPairs[j];
+      validPairs[j] = tmp;
     }
-    return pairs;
+
+    // 3. Select up to 12 pairs (24 cards total)
+    const selectedPairs = validPairs.slice(0, 12);
+
+    // 4. Generate card objects
+    const finalCards: MemoryCard[] = [];
+    selectedPairs.forEach((p) => {
+      finalCards.push({ key: `${p.pid}-img`, pairId: p.pid, type: "image", content: p.image, flipped: false, matched: false });
+      finalCards.push({ key: `${p.pid}-txt`, pairId: p.pid, type: "text", content: p.text, flipped: false, matched: false });
+    });
+
+    // 5. Shuffle the final set of cards
+    for (let i = finalCards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = finalCards[i];
+      finalCards[i] = finalCards[j];
+      finalCards[j] = tmp;
+    }
+    return finalCards;
   }, [theme]);
 
   useEffect(() => {
@@ -298,7 +318,7 @@ const MemoryThemeGame: React.FC = () => {
             <p>Para formar um par, é necessário:</p>
             <ul>
               <li>Uma carta com imagem e outra com frase</li>
-              <li>Ambas compartilharem o mesmo campo de identificação</li>
+              <li>Ambas estarem cadastradas no mesmo registro (ID)</li>
             </ul>
           </div>
         )}
