@@ -78,6 +78,10 @@ body.dark-theme .timestamp {
     /* Ajuste a altura conforme necessário */
 }
 
+.messages-container.keyboard-open {
+    padding-bottom: 20px;
+}
+
 .message-bubble {
     max-width: 80%;
     padding: 10px;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   IonHeader,
   IonToolbar,
@@ -19,6 +19,7 @@ const AssistantChatList: React.FC = () => {
   const { chats, selectChat, generateRandomName, fetchChats } = useChat();
   const router = useIonRouter();
   const [refreshing, setRefreshing] = useState(false);
+  const contentRef = useRef<HTMLIonContentElement>(null);
 
   // Função para carregar os chats
   const loadChats = async () => {
@@ -34,6 +35,12 @@ const AssistantChatList: React.FC = () => {
   useEffect(() => {
     loadChats();
   }, []);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollToTop(300);
+    }
+  }, [chats]);
 
   // Função para lidar com o refresh manual
   const handleRefresh = async (event: CustomEvent) => {
@@ -56,7 +63,7 @@ const AssistantChatList: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent>
+      <IonContent ref={contentRef}>
         {/* Componente de pull-to-refresh */}
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent

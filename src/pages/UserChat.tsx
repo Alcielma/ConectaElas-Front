@@ -15,6 +15,7 @@ import { useAuth } from "../Contexts/AuthContext";
 import "./UserChat.css";
 import { IonIcon } from "@ionic/react";
 import { send } from "ionicons/icons";
+import { Keyboard } from "@capacitor/keyboard";
 
 const UserChat: React.FC = () => {
   const {
@@ -22,55 +23,40 @@ const UserChat: React.FC = () => {
     startChat,
     sendMessage,
     selectChat,
-    fetchMessages,
     broadcastTyping,
     isTyping,
   } = useChat();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
-  const [messages, setMessages] = useState<[]>([]);
   const inputRef = useRef<HTMLIonInputElement>(null);
   const contentRef = useRef<HTMLIonContentElement>(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const isSentByCurrentUser = (msg: any) => {
+    const remetenteId =
+      typeof msg.remetente === "number" ? msg.remetente : msg.remetente?.id;
+    return user?.id === remetenteId;
+  };
 
   // Detectar quando o teclado abre/fecha
   useEffect(() => {
-    const handleKeyboardShow = () => {
+    const onKeyboardShow = () => {
       setIsKeyboardOpen(true);
-      // Scroll para baixo quando o teclado abrir
-      setTimeout(() => {
-        if (chatEndRef.current) {
-          chatEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-        }
-      }, 150);
-    };
-
-    const handleKeyboardHide = () => {
-      setIsKeyboardOpen(false);
-    };
-
-    // Listeners para detectar mudanças na viewport (teclado)
-    const handleResize = () => {
-      const viewport = window.visualViewport;
-      if (viewport) {
-        const isOpen = viewport.height < window.innerHeight * 0.8;
-        if (isOpen) {
-          handleKeyboardShow();
-        } else {
-          handleKeyboardHide();
-        }
+      if (contentRef.current) {
+        contentRef.current.scrollToBottom(300);
       }
     };
 
-    window.visualViewport?.addEventListener('resize', handleResize);
-    
-    // Fallback para dispositivos que não suportam visualViewport
-    window.addEventListener('resize', handleResize);
+    const onKeyboardHide = () => {
+      setIsKeyboardOpen(false);
+    };
+
+    // Listeners do Capacitor Keyboard
+    Keyboard.addListener('keyboardDidShow', onKeyboardShow);
+    Keyboard.addListener('keyboardWillHide', onKeyboardHide);
 
     return () => {
-      window.visualViewport?.removeEventListener('resize', handleResize);
-      window.removeEventListener('resize', handleResize);
+      Keyboard.removeAllListeners();
     };
   }, []);
 
@@ -94,27 +80,16 @@ const UserChat: React.FC = () => {
 
   useEffect(() => {
     if (!activeChat) return;
-
-    const fetchMessageActiveChat = async () => {
-      const messages = await fetchMessages(activeChat.id);
-      setMessages(messages);
-    };
-
-    fetchMessageActiveChat();
   }, [activeChat]);
 
   // Scroll automático quando mensagens mudam
   useEffect(() => {
-    if (chatEndRef.current) {
+    if (contentRef.current) {
       setTimeout(() => {
-        chatEndRef.current?.scrollIntoView({ 
-          behavior: "smooth", 
-          block: "end",
-          inline: "nearest"
-        });
+        contentRef.current?.scrollToBottom(300);
       }, 100);
     }
-  }, [messages]);
+  }, [activeChat?.mensagens?.length]);
 
   const handleSendMessage = async (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
@@ -142,11 +117,8 @@ const UserChat: React.FC = () => {
 
       // Scroll para o final após enviar
       setTimeout(() => {
-        if (chatEndRef.current) {
-          chatEndRef.current.scrollIntoView({ 
-            behavior: "smooth", 
-            block: "end"
-          });
+        if (contentRef.current) {
+          contentRef.current.scrollToBottom(300);
         }
       }, 200);
     } catch (error) {
@@ -167,11 +139,6 @@ const UserChat: React.FC = () => {
     broadcastTyping();
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    // Prevenir comportamentos indesejados no touch
-    e.stopPropagation();
-  };
-
   return (
     <IonPage className="Chat-root">
       <IonHeader className="Chat-header">
@@ -190,10 +157,11 @@ const UserChat: React.FC = () => {
         ref={contentRef}
         className="chat-content"
         scrollEvents={true}
-      >
+          >
         <div className={`messages-container ${isKeyboardOpen ? 'keyboard-open' : ''}`}>
-          {messages.length ? (
-            messages
+          {(activeChat?.mensagens?.length ?? 0) ? (
+            (activeChat?.mensagens ?? [])
+              .slice()
               .sort(
                 (a: any, b: any) =>
                   new Date(a.Data_Envio).getTime() -
@@ -203,7 +171,7 @@ const UserChat: React.FC = () => {
                 <div
                   key={msg.id}
                   className={`message-bubble ${
-                    user?.id === msg.remetente.id ? "sent" : "received"
+                    isSentByCurrentUser(msg) ? "sent" : "received"
                   }`}
                 >
                   <p>{msg.Mensagem}</p>
@@ -249,6 +217,11 @@ const UserChat: React.FC = () => {
               value={message}
               placeholder="Digite sua mensagem..."
               onIonInput={(e) => handleInputChange(e.detail.value!)}
+              onIonFocus={() => {
+                setTimeout(() => {
+                  contentRef.current?.scrollToBottom(300);
+                }, 50);
+              }}
               onKeyPress={handleKeyPress}
               style={{ flex: 1 }}
               enterkeyhint="send"
@@ -267,7 +240,7 @@ const UserChat: React.FC = () => {
                 transition: "color 0.3s ease"
               }}
               onClick={handleSendMessage}
-              onTouchStart={handleTouchStart}
+              onMouseDown={(e) => e.preventDefault()}
             />
           </div>
         </IonToolbar>
