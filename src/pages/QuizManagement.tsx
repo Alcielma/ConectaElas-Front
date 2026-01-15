@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   IonContent,
   IonHeader,
@@ -59,6 +60,7 @@ interface NovaResposta {
 }
 
 const QuizManagement: React.FC = () => {
+  const history = useHistory();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
@@ -152,6 +154,7 @@ const QuizManagement: React.FC = () => {
             data: {
               Resposta: resposta.texto,
               Correcao: resposta.correta,
+              correcao: resposta.correta, // Enviando em minúsculo também por garantia
               Explicacao: resposta.explicacao || "",
               pergunta: {
                 id: perguntaId
@@ -334,6 +337,7 @@ const handleUpdateQuiz = async () => {
           data: {
             Resposta: resposta.texto,
             Correcao: resposta.correta,
+            correcao: resposta.correta, // Enviando em minúsculo também por garantia
             Explicacao: resposta.explicacao || "",
             pergunta: {
               id: perguntaId
@@ -411,15 +415,39 @@ const handleUpdateQuiz = async () => {
   };
 
   const handleRespostaChange = (perguntaIndex: number, respostaIndex: number, value: string) => {
-    const perguntas = [...novoQuiz.perguntas];
-    perguntas[perguntaIndex].respostas[respostaIndex].texto = value;
-    setNovoQuiz(prev => ({ ...prev, perguntas }));
+    setNovoQuiz(prev => {
+      const novasPerguntas = [...prev.perguntas];
+      const novaPergunta = { ...novasPerguntas[perguntaIndex] };
+      const novasRespostas = [...novaPergunta.respostas];
+      
+      novasRespostas[respostaIndex] = {
+        ...novasRespostas[respostaIndex],
+        texto: value
+      };
+      
+      novaPergunta.respostas = novasRespostas;
+      novasPerguntas[perguntaIndex] = novaPergunta;
+      
+      return { ...prev, perguntas: novasPerguntas };
+    });
   };
 
   const handleCorrecaoChange = (perguntaIndex: number, respostaIndex: number, value: boolean) => {
-    const perguntas = [...novoQuiz.perguntas];
-    perguntas[perguntaIndex].respostas[respostaIndex].correta = value;
-    setNovoQuiz(prev => ({ ...prev, perguntas }));
+    setNovoQuiz(prev => {
+      const novasPerguntas = [...prev.perguntas];
+      const novaPergunta = { ...novasPerguntas[perguntaIndex] };
+      const novasRespostas = [...novaPergunta.respostas];
+      
+      novasRespostas[respostaIndex] = {
+        ...novasRespostas[respostaIndex],
+        correta: value
+      };
+      
+      novaPergunta.respostas = novasRespostas;
+      novasPerguntas[perguntaIndex] = novaPergunta;
+      
+      return { ...prev, perguntas: novasPerguntas };
+    });
   };
   
   const handleExplicacaoChange = (perguntaIndex: number, respostaIndex: number, value: string) => {
@@ -469,15 +497,39 @@ const handleUpdateQuiz = async () => {
   };
 
   const handleRespostaEditChange = (perguntaIndex: number, respostaIndex: number, value: string) => {
-    const perguntas = [...quizParaEditar.perguntas];
-    perguntas[perguntaIndex].respostas[respostaIndex].texto = value;
-    setQuizParaEditar(prev => ({ ...prev, perguntas }));
+    setQuizParaEditar(prev => {
+      const novasPerguntas = [...prev.perguntas];
+      const novaPergunta = { ...novasPerguntas[perguntaIndex] };
+      const novasRespostas = [...novaPergunta.respostas];
+      
+      novasRespostas[respostaIndex] = {
+        ...novasRespostas[respostaIndex],
+        texto: value
+      };
+      
+      novaPergunta.respostas = novasRespostas;
+      novasPerguntas[perguntaIndex] = novaPergunta;
+      
+      return { ...prev, perguntas: novasPerguntas };
+    });
   };
 
   const handleCorrecaoEditChange = (perguntaIndex: number, respostaIndex: number, value: boolean) => {
-    const perguntas = [...quizParaEditar.perguntas];
-    perguntas[perguntaIndex].respostas[respostaIndex].correta = value;
-    setQuizParaEditar(prev => ({ ...prev, perguntas }));
+    setQuizParaEditar(prev => {
+      const novasPerguntas = [...prev.perguntas];
+      const novaPergunta = { ...novasPerguntas[perguntaIndex] };
+      const novasRespostas = [...novaPergunta.respostas];
+      
+      novasRespostas[respostaIndex] = {
+        ...novasRespostas[respostaIndex],
+        correta: value
+      };
+      
+      novaPergunta.respostas = novasRespostas;
+      novasPerguntas[perguntaIndex] = novaPergunta;
+      
+      return { ...prev, perguntas: novasPerguntas };
+    });
   };
   
   const handleExplicacaoEditChange = (perguntaIndex: number, respostaIndex: number, value: string) => {
@@ -523,7 +575,7 @@ const handleUpdateQuiz = async () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/tab3" />
+            <IonBackButton defaultHref="/tabs/management" />
           </IonButtons>
           <IonTitle className="title-centered">Gerenciamento de Quiz</IonTitle>
         </IonToolbar>
@@ -534,6 +586,7 @@ const handleUpdateQuiz = async () => {
           <QuizList
             quizzes={quizzes}
             loading={loading}
+            onViewProgress={() => history.push('/tabs/quiz-progress')}
             onCreateClick={() => {
               setNovoQuiz({
                 titulo: "",

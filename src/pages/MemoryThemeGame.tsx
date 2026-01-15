@@ -12,11 +12,12 @@ import {
   IonButton,
   IonIcon,
   IonModal,
+  IonText,
 } from "@ionic/react";
 import { getMemoryThemeById, TemaMemoria } from "../Services/MemoryThemeService";
 import logoWhite from "../Assets/logoReverseRedondaWhite.png";
 import "./MemoryThemeGame.css";
-import { heart, heartDislike } from "ionicons/icons";
+import { heart, heartDislike, checkmarkCircle } from "ionicons/icons";
 
 interface RouteParams {
   id: string;
@@ -31,6 +32,7 @@ interface MemoryCard {
   content: string;
   flipped: boolean;
   matched: boolean;
+  identification?: string;
 }
 
 function sanitizeUrl(url: string | null): string {
@@ -49,6 +51,8 @@ const MemoryThemeGame: React.FC = () => {
   const [lives, setLives] = useState<number>(10);
   const audioCtxRef = useRef<any>(null);
   const [showEndModal, setShowEndModal] = useState<boolean>(false);
+  const [showRewardModal, setShowRewardModal] = useState<boolean>(false);
+  const [rewardText, setRewardText] = useState<string>("");
 
   useEffect(() => {
     try {
@@ -85,13 +89,15 @@ const MemoryThemeGame: React.FC = () => {
 
   const initialCards = useMemo(() => {
     if (!theme || !Array.isArray(theme.cartas)) return [] as MemoryCard[];
-    const byId: Record<string, { hasImage: boolean; hasText: boolean; image?: string; text?: string }> = {};
+    const byId: Record<string, { hasImage: boolean; hasText: boolean; image?: string; text?: string; identification?: string }> = {};
     theme.cartas.forEach((c) => {
       const pid = String(c.id);
       const link = sanitizeUrl(c.Link_imagem);
       const uploaded = c.Imagem?.url ? `${import.meta.env.VITE_API_URL}${c.Imagem.url}` : "";
       const img = link || uploaded;
       const txt = c.Frase ?? "";
+      const ident = c.identificacao ?? ""; // Captura a identificação
+      
       const entry = byId[pid] ?? { hasImage: false, hasText: false };
       if (img) {
         entry.hasImage = true;
@@ -101,15 +107,18 @@ const MemoryThemeGame: React.FC = () => {
         entry.hasText = true;
         entry.text = txt;
       }
+      if (ident) {
+        entry.identification = ident;
+      }
       byId[pid] = entry;
     });
 
     // 1. Collect valid pair data
-    const validPairs: { pid: string; image: string; text: string }[] = [];
+    const validPairs: { pid: string; image: string; text: string; identification?: string }[] = [];
     Object.keys(byId).forEach((pid) => {
       const e = byId[pid];
       if (e.hasImage && e.hasText && e.image && e.text) {
-        validPairs.push({ pid, image: e.image, text: e.text });
+        validPairs.push({ pid, image: e.image, text: e.text, identification: e.identification });
       }
     });
 
@@ -127,8 +136,8 @@ const MemoryThemeGame: React.FC = () => {
     // 4. Generate card objects
     const finalCards: MemoryCard[] = [];
     selectedPairs.forEach((p) => {
-      finalCards.push({ key: `${p.pid}-img`, pairId: p.pid, type: "image", content: p.image, flipped: false, matched: false });
-      finalCards.push({ key: `${p.pid}-txt`, pairId: p.pid, type: "text", content: p.text, flipped: false, matched: false });
+      finalCards.push({ key: `${p.pid}-img`, pairId: p.pid, type: "image", content: p.image, flipped: false, matched: false, identification: p.identification });
+      finalCards.push({ key: `${p.pid}-txt`, pairId: p.pid, type: "text", content: p.text, flipped: false, matched: false, identification: p.identification });
     });
 
     // 5. Shuffle the final set of cards
@@ -188,6 +197,11 @@ const MemoryThemeGame: React.FC = () => {
           setTimeout(() => {
             setCards((curr) => curr.map((c) => (c.key === k1 || c.key === k2 ? { ...c, matched: true } : c)));
             setOpenKeys([]);
+
+            if (c1 && c1.identification) {
+              setRewardText(c1.identification);
+              setShowRewardModal(true);
+            }
           }, 300);
         } else {
           playTone(260, 220, "sawtooth");
@@ -222,10 +236,11 @@ const MemoryThemeGame: React.FC = () => {
   };
 
   useEffect(() => {
-    if ((allMatched || gameOver) && cards.length > 0) {
+    // Only show end modal if reward modal is NOT showing
+    if ((allMatched || gameOver) && cards.length > 0 && !showRewardModal) {
       setShowEndModal(true);
     }
-  }, [allMatched, gameOver, cards.length]);
+  }, [allMatched, gameOver, cards.length, showRewardModal]);
 
   const goToThemes = () => {
     setShowEndModal(false);
@@ -292,6 +307,24 @@ const MemoryThemeGame: React.FC = () => {
           {allMatched && <span className="done">Concluído</span>}
           {gameOver && <span>Sem vidas</span>}
         </div>
+
+        <IonModal isOpen={showRewardModal} className="end-modal" backdropDismiss={false}>
+          <div className="modal-box">
+            <div className="modal-title">Você acertou!</div>
+            <div style={{ display: "flex", justifyContent: "center", margin: "10px 0" }}>
+              <IonIcon icon={checkmarkCircle} style={{ color: "#2dd36f", fontSize: "64px" }} />
+            </div>
+            <div className="modal-message" style={{ fontSize: "1.2rem", fontWeight: "500", padding: "0 10px" }}>
+              {rewardText}
+            </div>
+            <div className="modal-actions" style={{ marginTop: "20px" }}>
+              <IonButton expand="block" onClick={() => setShowRewardModal(false)}>
+                Continuar
+              </IonButton>
+            </div>
+          </div>
+        </IonModal>
+
         <IonModal isOpen={showEndModal} className="end-modal" backdropDismiss={false}>
           <div className="modal-box">
             <div className="modal-title">Jogo finalizado</div>

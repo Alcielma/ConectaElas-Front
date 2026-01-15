@@ -210,10 +210,10 @@ const Tab3: React.FC = () => {
             <div className="profile-footer">
               <button 
                 className="management-button" 
-                onClick={() => router.push("/tabs/quiz-management", "forward")}
+                onClick={() => router.push("/tabs/management", "forward")}
               >
                 <IonIcon icon={settingsSharp} />
-                Gerenciamento de Quiz
+                Gerenciamento
               </button>
             </div>
           )}

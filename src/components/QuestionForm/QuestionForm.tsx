@@ -11,7 +11,7 @@ import {
   IonInput,
   IonCheckbox,
 } from "@ionic/react";
-import { addCircle, removeCircle } from "ionicons/icons";
+import { addCircle, trash } from "ionicons/icons";
 import "./QuestionForm.css";
 
 interface NovaResposta {
@@ -55,14 +55,15 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       <div className="question-header">
         <div className="question-number">Pergunta {perguntaIndex + 1}</div>
         <IonButton
-          className="remove-button-inside"
+          className="remove-button-quiz"
           color="danger"
           fill="clear"
           size="small"
           onClick={() => onRemovePergunta(perguntaIndex)}
           disabled={totalPerguntas <= 1}
         >
-          <IonIcon icon={removeCircle} />
+          <IonIcon icon={trash} slot="start" />
+          Remover
         </IonButton>
       </div>
 
@@ -80,7 +81,20 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
       {pergunta.respostas.map((resposta, respostaIndex) => (
         <div key={respostaIndex} className="resposta-container">
           <div className="input-container">
-            <label className="input-label">Resposta {respostaIndex + 1}</label>
+            <div className="input-header">
+              <label className="input-label">Resposta {respostaIndex + 1}</label>
+              <IonButton
+                className="remove-button-quiz"
+                color="danger"
+                fill="clear"
+                size="small"
+                onClick={() => onRemoveResposta(perguntaIndex, respostaIndex)}
+                disabled={pergunta.respostas.length <= 2}
+              >
+                <IonIcon icon={trash} slot="start" />
+                Remover
+              </IonButton>
+            </div>
             <div className="input-container-with-toggle">
               <div
                 className={`toggle-switch ${resposta.correta ? 'toggle-checked' : ''}`}
@@ -98,16 +112,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({
                 }
                 placeholder="Digite a resposta"
               />
-              <IonButton
-                className="remove-button-inside remove-button-response"
-                color="danger"
-                fill="clear"
-                size="small"
-                onClick={() => onRemoveResposta(perguntaIndex, respostaIndex)}
-                disabled={pergunta.respostas.length <= 2}
-              >
-                <IonIcon icon={removeCircle} />
-              </IonButton>
             </div>
           </div>
           <div className="input-container">

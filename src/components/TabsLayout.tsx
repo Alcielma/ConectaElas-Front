@@ -32,6 +32,8 @@ import QuizManagement from "../pages/QuizManagement";
 import Games from "../pages/Games";
 import MemoryThemeList from "../pages/MemoryThemeList";
 import MemoryThemeGame from "../pages/MemoryThemeGame";
+import ManagementHub from "../pages/ManagementHub";
+import CardManagement from "../pages/CardManagement";
 
 const QuizResult = React.lazy(() => import("../pages/QuizResult"));
 
@@ -57,7 +59,11 @@ const TabsLayout: React.FC = () => {
     path.startsWith("/tabs/quiz-management")
   ) selectedTab = "games";
   else if (path.startsWith("/tabs/sobre")) selectedTab = "sobre";
-  else if (path.startsWith("/tabs/tab3")) selectedTab = "tab3";
+  else if (
+    path.startsWith("/tabs/tab3") ||
+    path.startsWith("/tabs/management") ||
+    path.startsWith("/tabs/card-management")
+  ) selectedTab = "tab3";
   
   return (
     <IonTabs>
@@ -78,6 +84,8 @@ const TabsLayout: React.FC = () => {
           path="/tabs/AngelContact"
           component={AngelContact}
         />
+        <PrivateRoute exact path="/tabs/management" component={ManagementHub} />
+        <PrivateRoute exact path="/tabs/card-management" component={CardManagement} />
         <PrivateRoute exact path="/tabs/quiz" component={QuizList} />
         <PrivateRoute exact path="/tabs/quiz-detail/:id" component={QuizDetail} />
         <PrivateRoute exact path="/tabs/quiz-progress" component={QuizProgress} />

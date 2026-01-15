@@ -82,6 +82,43 @@ ion-input, ion-textarea {
   margin-top: 8px;
 }
 
+.quiz-result-container .custom-input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  width: 100%;
+  --background: #fff !important;
+  --color: #333 !important;
+  --placeholder-color: #999 !important;
+}
+
+.quiz-result-container .custom-input:focus-within {
+  border-color: #dd2273;
+  background-color: #ffe6f0;
+  box-shadow: 0 0 6px rgba(221, 34, 115, 0.3);
+  --background: #ffe6f0 !important;
+}
+
+.quiz-result-container .custom-input input,
+.quiz-result-container .custom-input textarea {
+  caret-color: #dd2273 !important;
+}
+
+.quiz-result-container .remove-button-quiz {
+  --background: transparent !important;
+  --box-shadow: none !important;
+  --color: var(--ion-color-danger) !important;
+  color: var(--ion-color-danger) !important;
+  margin-left: 8px;
+}
+
+.quiz-result-container .remove-button-quiz ion-icon {
+  color: var(--ion-color-danger) !important;
+}
+
 .pergunta-container:hover {
   box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
               0 10px 10px rgba(0, 0, 0, 0.15);

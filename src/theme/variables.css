@@ -283,4 +283,32 @@ body.ionic-loaded {
   --ion-color-secondary: #720079 !important;
 }
 
+ion-input {
+  --placeholder-color: var(--muted-color);
+  --placeholder-opacity: var(--ion-placeholder-opacity, 0.6);
+  --padding-top: 0px;
+  --padding-end: 0px;
+  --padding-bottom: 0px;
+  --padding-start: 0px;
+  --background: transparent;
+  --color: var(--text-color);
+  --border-style: solid;
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-success, #2dd55b);
+  --highlight-color-invalid: var(--ion-color-danger, #c5000f);
+  --highlight-color: var(--highlight-color-focused);
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  color: var(--text-color);
+  font-family: var(--ion-font-family, inherit);
+  z-index: 2;
+}
+
+ion-input input {
+  caret-color: var(--ion-color-primary) !important;
+}
+
 
