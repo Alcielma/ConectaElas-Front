@@ -6,7 +6,7 @@ import {
   IonSpinner,
   IonCardContent,
 } from "@ionic/react";
-import { add } from "ionicons/icons";
+import { add, barChart } from "ionicons/icons";
 import QuizItem from "../QuizItem/QuizItem";
 import "./QuizList.css";
 
@@ -30,6 +30,7 @@ interface QuizListProps {
   onCreateClick: () => void;
   onEditQuiz: (quiz: Quiz) => void;
   onDeleteQuiz: (quiz: Quiz) => void;
+  onViewProgress?: () => void;
 }
 
 const QuizList: React.FC<QuizListProps> = ({
@@ -38,10 +39,18 @@ const QuizList: React.FC<QuizListProps> = ({
   onCreateClick,
   onEditQuiz,
   onDeleteQuiz,
+  onViewProgress,
 }) => {
   return (
     <div>
       <IonCardContent>
+        {onViewProgress && (
+          <IonButton expand="block" onClick={onViewProgress} className="ion-margin-bottom" color="secondary">
+            <IonIcon slot="start" icon={barChart} />
+            Progresso dos Quizzes
+          </IonButton>
+        )}
+
         <IonButton expand="block" onClick={onCreateClick}>
           <IonIcon slot="start" icon={add} />
           Criar Novo Quiz

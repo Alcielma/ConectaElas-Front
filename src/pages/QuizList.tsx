@@ -22,6 +22,7 @@ import {
 import { clipboardOutline, ribbonOutline, refreshOutline } from "ionicons/icons";
 import { getAllQuizzes } from "../Services/QuizService";
 import "./QuizList.css";
+import { useAuth } from "../Contexts/AuthContext";
 
 interface Quiz {
   id: number;
@@ -36,6 +37,8 @@ const QuizList: React.FC = () => {
   const [lastFetch, setLastFetch] = useState<number>(0);
   const history = useHistory();
   const location = useLocation();
+  const { user, isAssistant } = useAuth();
+  const isAdmin = user?.tipo === "Administrador";
 
   // Função para buscar quizzes (memoizada para evitar recriação)
   const fetchQuizzes = useCallback(async (showLoading = true) => {
@@ -170,15 +173,17 @@ const QuizList: React.FC = () => {
         <div className="quiz-list-container">
           <div className="quiz-header">
             <h2 className="quiz-list-title">Quizzes Disponíveis</h2>
-            <IonButton 
-              routerLink="/tabs/quiz-progress" 
-              fill="solid"  
-              className="progress-button"
-              size="small"
-            >
-              <IonIcon slot="start" icon={ribbonOutline} />
-              Progresso
-            </IonButton>
+            {!(isAssistant || isAdmin) && (
+              <IonButton 
+                routerLink="/tabs/quiz-progress" 
+                fill="solid"  
+                className="progress-button"
+                size="small"
+              >
+                <IonIcon slot="start" icon={ribbonOutline} />
+                Progresso
+              </IonButton>
+            )}
           </div>
           
           {loading ? (

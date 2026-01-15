@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useTransition } from 'react';
 import { useHistory } from 'react-router';
+import { useAuth } from '../Contexts/AuthContext';
 import {
   IonBackButton,
   IonButtons,
@@ -42,6 +43,7 @@ interface ResultadoQuiz {
 
 const QuizResult: React.FC = () => {
   const { id } = useParams<RouteParams>();
+  const { user } = useAuth();
   const [isPending, startTransition] = useTransition();
   const [resultado, setResultado] = useState<ResultadoQuiz | null>(null);
   const [pontuacao, setPontuacao] = useState<number>(0);
@@ -69,17 +71,21 @@ const QuizResult: React.FC = () => {
               setPontuacao(acertos);
               setPercentual(Math.round((acertos / resultadoParsed.totalPerguntas) * 100));
 
-              const quizHistoryKey = `quizHistory_${resultadoParsed.quizId}`;
-              const quizData = {
-                quizId: resultadoParsed.quizId,
-                quizTitle: resultadoParsed.quizTitle,
-                totalPerguntas: resultadoParsed.totalPerguntas,
-                acertos: acertos,
-                percentual: Math.round((acertos / resultadoParsed.totalPerguntas) * 100),
-                dataRealizacao: new Date().toLocaleDateString()
-              };
+              if (user) {
+                const quizHistoryKey = `quizHistory_${user.id}_${resultadoParsed.quizId}`;
+                const quizData = {
+                  userId: user.id,
+                  userName: user.name || user.nome || user.username || "Usuário",
+                  quizId: resultadoParsed.quizId,
+                  quizTitle: resultadoParsed.quizTitle,
+                  totalPerguntas: resultadoParsed.totalPerguntas,
+                  acertos: acertos,
+                  percentual: Math.round((acertos / resultadoParsed.totalPerguntas) * 100),
+                  dataRealizacao: new Date().toLocaleDateString()
+                };
 
-              localStorage.setItem(quizHistoryKey, JSON.stringify(quizData));
+                localStorage.setItem(quizHistoryKey, JSON.stringify(quizData));
+              }
             }
           } catch {
             setResultado(null);

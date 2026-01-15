@@ -1,0 +1,156 @@
+.management-card {
+  margin-bottom: 16px;
+  border-radius: 16px;
+  background-color: #ffe6f0;
+  color: #040404;
+  box-shadow: 0 10px 20px rgba(221, 34, 115, 0.3), 
+              0 6px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px) scale(1.01);
+  transition: all 0.3s ease-in-out;
+}
+
+.management-container {
+  padding: 16px;
+}
+
+.management-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(221, 34, 115, 0.4), 
+              0 10px 10px rgba(0, 0, 0, 0.15);
+}
+
+.management-info {
+  margin-bottom: 16px;
+  color: var(--ion-color-medium);
+}
+
+.management-card ion-button[color="danger"] {
+  --color: #ffffff !important;
+  --background: #dc3545 !important;
+  color: #ffffff !important;
+}
+
+.management-card ion-button[color="danger"]:hover {
+  --background: #c82333 !important;
+}
+
+.management-card ion-button[color="danger"] ion-icon {
+  color: #ffffff !important;
+}
+
+.management-card ion-button[color="danger"] .button-inner {
+  color: #ffffff !important;
+}
+.management-card ion-button[color="danger"] span {
+  color: #ffffff !important;
+}
+.management-card ion-button[color="danger"] * {
+  color: #ffffff !important;
+}
+
+.management-card .ion-color-danger {
+  --ion-color-base: #dc3545 !important;
+  --ion-color-contrast: #ffffff !important;
+}
+
+body.dark-theme .management-card {
+  background-color: var(--surface);
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+body.dark-theme .management-card ion-card-title,
+body.dark-theme .management-info {
+  color: #eaeaea;
+}
+
+/* Modal Form Styles */
+.custom-input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  width: 100%;
+  cursor: text !important;
+  --background: #fff !important;
+  --color: #333 !important;
+  --placeholder-color: #999 !important;
+}
+.custom-input:focus-within {
+  border-color: #dd2273;
+  background-color: #ffe6f0;
+  box-shadow: 0 0 6px rgba(221, 34, 115, 0.3);
+  --background: #ffe6f0 !important;
+}
+
+.custom-input input {
+  caret-color: #dd2273 !important;
+}
+
+ion-item {
+  --background: transparent !important;
+  --border-width: 0 !important;
+  --inner-border-width: 0 !important;
+  --padding-start: 0 !important;
+}
+
+ion-item ion-label {
+  color: var(--ion-color-primary) !important;
+  font-weight: 600 !important;
+  font-size: 20px !important;
+  margin-bottom: 8px !important;
+}
+
+.image-upload-text {
+  font-size: 16px !important;
+  margin-top: 8px !important;
+  font-weight: 600;
+  display: block;
+  text-align: center;
+}
+
+.card-row {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+body.dark-theme .card-row {
+  background-color: #2f2f2f;
+  border-color: #444;
+  color: #fff;
+}
+
+body.dark-theme .custom-input {
+  background-color: #383838;
+  border-color: #555;
+  color: #fff;
+  --background: #383838 !important;
+  --color: #fff !important;
+  --placeholder-color: #aaa !important;
+}
+
+body.dark-theme .custom-input:focus-within {
+  background-color: #424242;
+  --background: #424242 !important;
+  border-color: #dd2273;
+}
+
+.card-row:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-color: #dd2273;
+}
+
+.action-button {
+  margin-top: 15px;
+  --border-radius: 10px;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
