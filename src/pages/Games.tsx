@@ -10,11 +10,13 @@ import {
 } from "@ionic/react";
 import { flash, shapes, grid, create  } from "ionicons/icons";
 import { useHistory, useLocation } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
 import "./Games.css";
 
 const Games: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
+  const { isAssistant } = useAuth();
 
   const games = [
     { key: "quiz", label: "Quiz Relâmpago", icon: flash },
@@ -31,14 +33,14 @@ const Games: React.FC = () => {
     setTimeout(() => {
       switch (key) {
         case "quiz": {
+          // Abrir diretamente o QuizDetail (requere um ID)
           try {
-            const current = JSON.parse(
-              localStorage.getItem("currentQuiz") || "{}"
-            );
+            const current = JSON.parse(localStorage.getItem("currentQuiz") || "{}");
             const id = Number(current?.id);
             if (id && !isNaN(id)) {
               history.push(`/tabs/quiz-detail/${id}`);
             } else {
+              // fallback para lista de quizzes caso não haja um quiz atual
               history.push("/tabs/quiz");
             }
           } catch {
@@ -48,7 +50,11 @@ const Games: React.FC = () => {
         }
 
         case "memory":
-          history.push("/tabs/games/memory");
+          if (isAssistant) {
+            history.push("/tabs/card-management");
+          } else {
+            history.push("/tabs/games/memory");
+          }
           break;
 
         case "wordsearch":

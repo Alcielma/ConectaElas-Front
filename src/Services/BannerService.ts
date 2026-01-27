@@ -44,6 +44,21 @@ const BannerService = {
       return [];
     }
   },
+  async createBanner(data: { Link: string; Titulo: string; Link_imagem?: string; Upload?: number }) {
+    try {
+      const payload: any = {
+        Link: data.Link,
+        Titulo: data.Titulo,
+      };
+      if (data.Link_imagem) payload.Link_imagem = data.Link_imagem;
+      if (data.Upload) payload.Upload = data.Upload;
+      const response = await api.post("/banners", { data: payload });
+      return response.data?.data;
+    } catch (error) {
+      console.error("Erro ao criar banner:", error);
+      throw error;
+    }
+  }
 };
 
 export default BannerService;

@@ -38,7 +38,8 @@ import TestLocalStorage from "../pages/TestLocalStorage";
 import ManagementHub from "../pages/ManagementHub";
 import CardManagement from "../pages/CardManagement";
 import PalavrasCruzadas from "../pages/PalavrasCruzadas";
-
+import AddBanner from "../pages/AddBanner";
+import AddPost from "../pages/AddPost";
 
 const QuizResult = React.lazy(() => import("../pages/QuizResult"));
 
@@ -96,6 +97,10 @@ const TabsLayout: React.FC = () => {
           path="/tabs/AngelContact"
           component={AngelContact}
         />
+        <PrivateRoute exact path="/tabs/management" component={ManagementHub} />
+        <PrivateRoute exact path="/tabs/card-management" component={CardManagement} />
+                <PrivateRoute exact path="/tabs/add-banner" component={AddBanner} />
+        <PrivateRoute exact path="/tabs/add-post" component={AddPost} />
         <PrivateRoute exact path="/tabs/quiz" component={QuizList} />
         <PrivateRoute exact path="/tabs/quiz-detail/:id" component={QuizDetail} />
         <PrivateRoute exact path="/tabs/quiz-progress" component={QuizProgress} />

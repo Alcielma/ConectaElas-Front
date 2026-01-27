@@ -34,27 +34,12 @@
   margin-bottom: 15px;
 }
 
-.input-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-
-.input-header .input-label {
-  margin-bottom: 0;
-}
-
 .input-label {
   font-weight: 500;
   color: #333;
   margin-bottom: 8px;
   font-size: 16px;
   display: block;
-}
-
-.input-container-with-toggle {
-  margin-top: 6px;
 }
 
 .custom-input, .custom-textarea {
