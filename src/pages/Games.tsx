@@ -33,18 +33,22 @@ const Games: React.FC = () => {
     setTimeout(() => {
       switch (key) {
         case "quiz": {
-          // Abrir diretamente o QuizDetail (requere um ID)
-          try {
-            const current = JSON.parse(localStorage.getItem("currentQuiz") || "{}");
-            const id = Number(current?.id);
-            if (id && !isNaN(id)) {
-              history.push(`/tabs/quiz-detail/${id}`);
-            } else {
-              // fallback para lista de quizzes caso não haja um quiz atual
+          if (isAssistant) {
+            history.push("/tabs/quiz-management");
+          } else {
+            // Abrir diretamente o QuizDetail (requere um ID)
+            try {
+              const current = JSON.parse(localStorage.getItem("currentQuiz") || "{}");
+              const id = Number(current?.id);
+              if (id && !isNaN(id)) {
+                history.push(`/tabs/quiz-detail/${id}`);
+              } else {
+                // fallback para lista de quizzes caso não haja um quiz atual
+                history.push("/tabs/quiz");
+              }
+            } catch {
               history.push("/tabs/quiz");
             }
-          } catch {
-            history.push("/tabs/quiz");
           }
           break;
         }
