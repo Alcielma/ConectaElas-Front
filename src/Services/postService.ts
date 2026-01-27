@@ -75,3 +75,13 @@ export async function getPostById(id: number) {
     return null;
   }
 }
+
+export async function createPost(data: { Title: string; Description: string; Categoria: string; Link?: string; Uploadpost?: number }) {
+  try {
+    const response = await api.post("/posts", { data });
+    return response.data?.data;
+  } catch (error) {
+    console.error("Erro ao criar post:", error);
+    throw error;
+  }
+}

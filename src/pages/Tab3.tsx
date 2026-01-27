@@ -7,7 +7,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { IonIcon } from "@ionic/react";
-import { pencilSharp, settingsSharp } from "ionicons/icons";
+import { pencilSharp } from "ionicons/icons";
 import { useAuth } from "../Contexts/AuthContext"; // Importação correta da pasta Contexts
 import Modal from "../components/Modal";
 import { useHistory } from "react-router-dom";
@@ -205,18 +205,7 @@ const Tab3: React.FC = () => {
             </div>
           </div>
 
-          {/* BOTÃO DE GERENCIAMENTO - APENAS PARA ASSISTENTES */}
-          {isAssistant && (
-            <div className="profile-footer">
-              <button 
-                className="management-button" 
-                onClick={() => router.push("/tabs/management", "forward")}
-              >
-                <IonIcon icon={settingsSharp} />
-                Gerenciamento
-              </button>
-            </div>
-          )}
+          
 
           <div className="profile-footer">
             <button className="logout-button" onClick={handleLogout}>

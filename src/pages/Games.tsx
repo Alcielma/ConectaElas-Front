@@ -2,15 +2,17 @@ import React from "react";
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, useIonViewDidEnter } from "@ionic/react";
 import { flash, shapes, grid } from "ionicons/icons";
 import { useHistory, useLocation } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
 import "./Games.css";
 
 const Games: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
+  const { isAssistant } = useAuth();
 
   const games = [
-    { key: "quiz", label: "Quiz Relâmpago", icon: flash },
-    { key: "memory", label: "Jogo da Memória", icon: shapes },
+    { key: "quiz", label: isAssistant ? "Gerenciar Quiz" : "Quiz Relâmpago", icon: flash },
+    { key: "memory", label: isAssistant ? "Gerenciar Memória" : "Jogo da Memória", icon: shapes },
   ];
 
   const [leavingKey, setLeavingKey] = React.useState<string | null>(null);
@@ -22,23 +24,29 @@ const Games: React.FC = () => {
     setTimeout(() => {
       switch (key) {
         case "quiz": {
-          // Abrir diretamente o QuizDetail (requere um ID)
-          try {
-            const current = JSON.parse(localStorage.getItem("currentQuiz") || "{}");
-            const id = Number(current?.id);
-            if (id && !isNaN(id)) {
-              history.push(`/tabs/quiz-detail/${id}`);
-            } else {
-              // fallback para lista de quizzes caso não haja um quiz atual
+          if (isAssistant) {
+            history.push("/tabs/quiz-management");
+          } else {
+            try {
+              const current = JSON.parse(localStorage.getItem("currentQuiz") || "{}");
+              const id = Number(current?.id);
+              if (id && !isNaN(id)) {
+                history.push(`/tabs/quiz-detail/${id}`);
+              } else {
+                history.push("/tabs/quiz");
+              }
+            } catch {
               history.push("/tabs/quiz");
             }
-          } catch {
-            history.push("/tabs/quiz");
           }
           break;
         }
         case "memory":
-          history.push("/tabs/games/memory");
+          if (isAssistant) {
+            history.push("/tabs/card-management");
+          } else {
+            history.push("/tabs/games/memory");
+          }
           break;
         case "puzzle":
           history.push("/tabs/games/puzzle");

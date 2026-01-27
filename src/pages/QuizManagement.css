@@ -107,6 +107,18 @@ ion-input, ion-textarea {
   caret-color: #dd2273 !important;
 }
 
+.simple-select {
+  --background: transparent !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.simple-select .select-icon {
+  margin-right: 0 !important;
+}
+
 .quiz-result-container .remove-button-quiz {
   --background: transparent !important;
   --box-shadow: none !important;
@@ -443,4 +455,42 @@ ion-modal ion-content {
 .modal-body {
   flex: 1;
   overflow-y: auto;
+}
+
+/* Toggle Switch Styles */
+.toggle-container {
+  display: flex;
+  background-color: #f2f3f5; /* Fundo do não selecionado englobando tudo */
+  border-radius: 25px;
+  padding: 4px;
+  width: 100%;
+  margin-top: 8px;
+  position: relative;
+}
+
+.toggle-button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  border-radius: 20px;
+  color: #dd2273; /* Rosa escuro */
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  z-index: 2;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.toggle-button.active {
+  background-color: #dd2273;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-button:not(.active) {
+  background-color: transparent;
+  color: #dd2273;
 }

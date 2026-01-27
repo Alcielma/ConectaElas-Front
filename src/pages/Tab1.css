@@ -89,3 +89,51 @@ ion-toolbar {
 .categoria-cards::-webkit-scrollbar {
   display: none;
 }
+
+.feed-action-btn {
+  border-radius: 12px;
+  border: 1px solid var(--cor-secundaria);
+  background-color: transparent;
+  padding: 4px 8px;
+}
+
+.feed-action-icon {
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.feed-popover-list {
+  padding: 8px 0;
+}
+
+.feed-popover-item {
+  --background: rgba(114, 0, 121, 0.12);
+  border-radius: 12px;
+  margin: 6px 10px;
+}
+
+.feed-popover-item:hover {
+  --background: rgba(114, 0, 121, 0.2);
+}
+
+.feed-popover-item:active {
+  --background: #ffe6f0;
+}
+
+.feed-popover-item .item-native:active {
+  background: #ffe6f0 !important;
+}
+
+.feed-popover-label {
+  width: 100%;
+  text-align: center;
+  color: var(--cor-secundaria);
+  font-weight: 600;
+}
+
+.feed-popover-divider {
+  height: 1px;
+  background: rgba(114, 0, 121, 0.25);
+  margin: 4px 12px;
+  border-radius: 1px;
+}
