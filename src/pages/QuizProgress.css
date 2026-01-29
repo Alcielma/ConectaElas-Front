@@ -173,15 +173,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 70%;
+  width: auto;
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.6);
+  color: #720079;
   text-align: center;
-  padding: 2rem;
-  color: #666;
 }
 
 .no-progress h2 {
   margin-bottom: 1rem;
-  color: #333;
+  color: #720079;
 }
 
 /* Estilização para o swipe to delete */

@@ -77,3 +77,18 @@
   background-color: #800080 !important;
   opacity: 1;
 }
+
+.carrossel-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    max-width: 350px;
+    margin: 15px auto;
+    padding: 1px 1px;
+    border-radius: 12px;
+    background-color: rgb(255 255 255 / 30%);
+    color: #720079;
+    font-weight: 600;
+    text-align: center;
+}
