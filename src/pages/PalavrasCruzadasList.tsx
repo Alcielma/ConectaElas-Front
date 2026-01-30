@@ -19,36 +19,36 @@ import {
   IonButtons,
   IonBackButton,
 } from "@ionic/react";
-import { refreshOutline, albumsOutline } from "ionicons/icons";
-import { getAllMemoryThemes, TemaMemoria } from "../Services/MemoryThemeService";
+import { refreshOutline, createOutline } from "ionicons/icons";
 import "./QuizList.css";
 
-const MemoryThemeList: React.FC = () => {
-  const [themes, setThemes] = useState<TemaMemoria[]>([]);
+interface CruzadaItem {
+  id: number;
+  documentId?: string;
+  titulo: string;
+  palavras: string[];
+  dicas: string[];
+  grade: {
+    linhas: number;
+    colunas: number;
+    grade: (string | null)[][];
+  };
+}
+
+const PalavrasCruzadasList: React.FC = () => {
+  const [items, setItems] = useState<CruzadaItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [lastFetch, setLastFetch] = useState<number>(0);
   const location = useLocation();
   const history = useHistory();
 
-  const fetchThemes = useCallback(async (showLoading = true) => {
+  const fetchItems = useCallback(async (showLoading = true) => {
     try {
       if (showLoading) setLoading(true);
-      const response = await getAllMemoryThemes();
-      const data = Array.isArray((response as any).data) ? (response as any).data : [];
-      setThemes(
-        data.map((t: any) => ({
-          id: t.id,
-          documentId: t.documentId ?? "",
-          Nome_tema: t.Nome_tema ?? "",
-          createdAt: t.createdAt ?? "",
-          updatedAt: t.updatedAt ?? "",
-          publishedAt: t.publishedAt ?? "",
-          locale: t.locale ?? null,
-          cartas: t.cartas ?? [],
-          jogo_memoria: t.jogo_memoria ?? null,
-          localizations: t.localizations ?? [],
-        }))
-      );
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/palavras-cruzadas`);
+      const json = await res.json();
+      const arr = Array.isArray(json?.data) ? json.data : [];
+      setItems(arr as CruzadaItem[]);
       setLastFetch(Date.now());
     } finally {
       if (showLoading) setLoading(false);
@@ -56,18 +56,18 @@ const MemoryThemeList: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchThemes(true);
-  }, [fetchThemes, location.pathname]);
+    fetchItems(true);
+  }, [fetchItems, location.pathname]);
 
   useEffect(() => {
     const handleFocus = () => {
       const timeSinceLastFetch = Date.now() - lastFetch;
-      if (timeSinceLastFetch > 5000) fetchThemes(false);
+      if (timeSinceLastFetch > 5000) fetchItems(false);
     };
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         const timeSinceLastFetch = Date.now() - lastFetch;
-        if (timeSinceLastFetch > 5000) fetchThemes(false);
+        if (timeSinceLastFetch > 5000) fetchItems(false);
       }
     };
     window.addEventListener("focus", handleFocus);
@@ -76,15 +76,15 @@ const MemoryThemeList: React.FC = () => {
       window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [fetchThemes, lastFetch]);
+  }, [fetchItems, lastFetch]);
 
   const handleRefresh = async (event: CustomEvent) => {
-    await fetchThemes(false);
+    await fetchItems(false);
     event.detail.complete();
   };
 
   const handleManualRefresh = () => {
-    fetchThemes(true);
+    fetchItems(true);
   };
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const MemoryThemeList: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/games" />
           </IonButtons>
-          <IonTitle className="title-centered">Temas do Jogo da Memória</IonTitle>
+          <IonTitle className="title-centered">Temas de Palavras-Cruzadas</IonTitle>
           <IonButton slot="end" fill="clear" onClick={handleManualRefresh} disabled={loading}>
           </IonButton>
         </IonToolbar>
@@ -129,20 +129,24 @@ const MemoryThemeList: React.FC = () => {
               <IonSpinner name="crescent" />
               <p>Carregando temas...</p>
             </div>
-          ) : themes.length > 0 ? (
+          ) : items.length > 0 ? (
             <IonList>
-              {themes.map((tema) => (
-                <IonCard key={`${tema.id}-${lastFetch}`} className="quiz-card">
+              {items.map((item) => (
+                <IonCard key={`${item.id}-${lastFetch}`} className="quiz-card">
                   <IonCardHeader>
-                    <IonCardTitle>{tema.Nome_tema}</IonCardTitle>
+                    <IonCardTitle>{item.titulo}</IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
                     <p className="quiz-info">
-                      {Array.isArray(tema.cartas) && tema.cartas.length ? `${tema.cartas.length} carta(s)` : "Sem cartas"}
+                      {Array.isArray(item.palavras) && item.palavras.length ? `${item.palavras.length} palavra(s)` : "Sem palavras"}
                     </p>
-                    <IonButton expand="block" className="quiz-button" disabled={!tema.cartas || tema.cartas.length === 0} onClick={() => history.push(`/tabs/games/memory/${tema.id}`)}>
-                      <IonIcon slot="start" icon={albumsOutline} />
-                      Abrir Tema
+                    <IonButton
+                      expand="block"
+                      className="quiz-button"
+                      onClick={() => history.push(`/tabs/games/palavras-cruzadas/${item.id}`)}
+                    >
+                      <IonIcon slot="start" icon={createOutline} />
+                      Abrir Cruzadinha
                     </IonButton>
                   </IonCardContent>
                 </IonCard>
@@ -159,4 +163,4 @@ const MemoryThemeList: React.FC = () => {
   );
 };
 
-export default MemoryThemeList;
+export default PalavrasCruzadasList;
