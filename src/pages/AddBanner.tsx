@@ -16,7 +16,9 @@ import {
   IonSelect,
   IonSelectOption,
   IonText,
+  IonIcon,
 } from "@ionic/react";
+import { imageOutline } from "ionicons/icons";
 import BannerService from "../Services/BannerService";
 import { uploadFile } from "../Services/MemoryThemeService";
 import "./QuizManagement.css";
@@ -140,13 +142,13 @@ const AddBanner: React.FC = () => {
             <IonInput className="custom-input" value={imageLink} onIonChange={(e) => setImageLink(e.detail.value || "")} />
           </IonItem>
         ) : (
-          <div style={{ padding: "8px 0" }}>
+          <div style={{ padding: "16px 0", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div 
               style={{ 
-                width: '80px', 
-                height: '80px', 
-                background: '#f0f0f0', 
-                borderRadius: '8px', 
+                width: '100px', 
+                height: '100px', 
+                background: '#f5f5f5', 
+                borderRadius: '12px', 
                 display: 'flex', 
                 justifyContent: 'center', 
                 alignItems: 'center',
@@ -159,10 +161,19 @@ const AddBanner: React.FC = () => {
               {imagePreview ? (
                 <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
-                <IonText color="medium">Escolher</IonText>
+                <IonIcon icon={imageOutline} style={{ fontSize: '40px', color: '#999' }} />
               )}
             </div>
-            <IonText color="primary" className="image-upload-text" onClick={triggerFileInput}>
+            <IonText 
+              color="primary" 
+              style={{ 
+                marginTop: '8px', 
+                fontWeight: '600', 
+                cursor: 'pointer',
+                color: '#dd2273'
+              }} 
+              onClick={triggerFileInput}
+            >
               {imagePreview ? 'Alterar' : 'Escolher'}
             </IonText>
             <input 

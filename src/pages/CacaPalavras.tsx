@@ -10,8 +10,11 @@ import {
   IonSpinner,
 } from "@ionic/react";
 import "./CacaPalavras.css";
+import { useParams } from "react-router-dom";
 
 interface CacaPalavrasData {
+  id?: number;
+  documentId?: string;
   titulo: string;
   palavras: string[];
   grade: {
@@ -22,6 +25,7 @@ interface CacaPalavrasData {
 }
 
 const CacaPalavras: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<CacaPalavrasData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,22 +39,20 @@ const CacaPalavras: React.FC = () => {
     const load = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/caca-palavras`
+          `${import.meta.env.VITE_API_URL}/api/caca-palavras?filters[id][$eq]=${id}`
         );
-
         if (!res.ok) throw new Error("Erro ao buscar caça-palavras");
-
         const json = await res.json();
-        setData(json.data[0]);
+        const arr = Array.isArray(json?.data) ? json.data : [];
+        setData(arr[0] ?? null);
       } catch (err) {
         console.error("Erro ao carregar caça-palavras", err);
       } finally {
         setLoading(false);
       }
     };
-
     load();
-  }, []);
+  }, [id]);
 
   const selectCell = (row: number, col: number, letter: string) => {
     const key = `${row}-${col}`;
@@ -138,12 +140,11 @@ const CacaPalavras: React.FC = () => {
         <IonHeader>
           <IonToolbar className="header-gradient">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/tabs/games" />
+              <IonBackButton defaultHref="/tabs/games/caca-palavras" />
             </IonButtons>
             <IonTitle>Erro</IonTitle>
           </IonToolbar>
         </IonHeader>
-
         <IonContent fullscreen className="caca-content ion-padding">
           <p>Não foi possível carregar o jogo.</p>
         </IonContent>
@@ -156,7 +157,7 @@ const CacaPalavras: React.FC = () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/games" />
+            <IonBackButton defaultHref="/tabs/games/caca-palavras" />
           </IonButtons>
           <IonTitle>{data.titulo}</IonTitle>
         </IonToolbar>
@@ -209,14 +210,14 @@ const CacaPalavras: React.FC = () => {
           <div className="palavras">
             <h3>Palavras</h3>
             <ul>
-              {data.palavras.map((p) => (
+                {data.palavras.map((p) => (
                 <li
                   key={p}
                   className={foundWords.includes(p) ? "found" : ""}
                 >
                   {p}
                 </li>
-              ))}
+                ))}
             </ul>
           </div>
         </div>

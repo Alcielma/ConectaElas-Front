@@ -172,13 +172,12 @@ const QuizList: React.FC = () => {
 
         <div className="quiz-list-container">
           <div className="quiz-header">
-            <h2 className="quiz-list-title">Quizzes Disponíveis</h2>
             {!(isAssistant || isAdmin) && (
               <IonButton 
                 routerLink="/tabs/quiz-progress" 
-                fill="solid"  
-                className="progress-button"
-                size="small"
+                fill="solid"
+                expand="block"
+                className="quiz-button"
               >
                 <IonIcon slot="start" icon={ribbonOutline} />
                 Progresso

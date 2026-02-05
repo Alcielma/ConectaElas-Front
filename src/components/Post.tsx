@@ -102,10 +102,6 @@ const Post: React.FC<PostProps> = ({
       url.includes('video');
   };
 
-  const titleMax = 51;
-  const displayTitle = title.length > titleMax ? `${title.slice(0, titleMax).trimEnd()}...` : title;
-  
-
   return (
     <>
       <div className="post-container" onClick={openModal}>
@@ -128,7 +124,7 @@ const Post: React.FC<PostProps> = ({
             )
           )}
           <div className="post-text-content">
-            <h2 className="post-title">{displayTitle}</h2>
+            <h2 className="post-title">{title}</h2>
           </div>
 
           

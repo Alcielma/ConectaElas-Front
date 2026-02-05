@@ -10,6 +10,7 @@ import {
   IonSpinner,
 } from "@ionic/react";
 import "./PalavrasCruzadas.css";
+import { useParams } from "react-router-dom";
 
 interface CruzadaData {
   titulo: string;
@@ -32,6 +33,7 @@ interface Pista {
 }
 
 const PalavrasCruzadas: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<CruzadaData | null>(null);
   const [loading, setLoading] = useState(true);
   const [userGrid, setUserGrid] = useState<(string | null)[][]>([]);
@@ -46,10 +48,9 @@ const PalavrasCruzadas: React.FC = () => {
     const load = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/palavras-cruzadas`
+          `${import.meta.env.VITE_API_URL}/api/palavras-cruzadas?filters[id][$eq]=${id}`
         );
         const json = await res.json();
-        
         const cruzada = json.data && json.data[0] ? json.data[0] : null;
 
         if (cruzada) {
@@ -75,7 +76,7 @@ const PalavrasCruzadas: React.FC = () => {
     };
 
     load();
-  }, []);
+  }, [id]);
 
   const detectPistas = (
     grid: (string | null)[][],
@@ -234,7 +235,7 @@ const PalavrasCruzadas: React.FC = () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/games" />
+            <IonBackButton defaultHref="/tabs/games/palavras-cruzadas" />
           </IonButtons>
           <IonTitle>{data.titulo}</IonTitle>
         </IonToolbar>

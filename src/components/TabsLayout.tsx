@@ -33,11 +33,13 @@ import MemoryThemeList from "../pages/MemoryThemeList";
 import MemoryThemeGame from "../pages/MemoryThemeGame";
 import PrivateRoute from "./PrivateRoute";
 import CacaPalavras from "../pages/CacaPalavras";
+import CacaPalavrasList from "../pages/CacaPalavrasList";
 import TestLocalStorage from "../pages/TestLocalStorage";
 
 import ManagementHub from "../pages/ManagementHub";
 import CardManagement from "../pages/CardManagement";
 import PalavrasCruzadas from "../pages/PalavrasCruzadas";
+import PalavrasCruzadasList from "../pages/PalavrasCruzadasList";
 import AddBanner from "../pages/AddBanner";
 import AddPost from "../pages/AddPost";
 
@@ -109,8 +111,10 @@ const TabsLayout: React.FC = () => {
         <PrivateRoute exact path="/tabs/games" component={Games} />
         <PrivateRoute exact path="/tabs/games/memory" component={MemoryThemeList} />
         <PrivateRoute exact path="/tabs/games/memory/:id" component={MemoryThemeGame} />
-        <PrivateRoute exact path="/tabs/games/caca-palavras" component={CacaPalavras} />
-        <PrivateRoute exact path="/tabs/games/palavras-cruzadas"component={PalavrasCruzadas}/>
+        <PrivateRoute exact path="/tabs/games/caca-palavras" component={CacaPalavrasList} />
+        <PrivateRoute exact path="/tabs/games/caca-palavras/:id" component={CacaPalavras} />
+        <PrivateRoute exact path="/tabs/games/palavras-cruzadas" component={PalavrasCruzadasList}/>
+        <PrivateRoute exact path="/tabs/games/palavras-cruzadas/:id" component={PalavrasCruzadas}/>
 
         <PrivateRoute
           exact
