@@ -62,7 +62,11 @@ const Games: React.FC = () => {
           break;
 
         case "wordsearch":
-          history.push("/tabs/games/caca-palavras");
+          if (isAssistant) {
+            history.push("/tabs/caca-palavras-management");
+          } else {
+            history.push("/tabs/games/caca-palavras");
+          }
           break;
           
           case "crossword":

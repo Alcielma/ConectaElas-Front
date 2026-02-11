@@ -38,6 +38,7 @@ import TestLocalStorage from "../pages/TestLocalStorage";
 
 import ManagementHub from "../pages/ManagementHub";
 import CardManagement from "../pages/CardManagement";
+import CacaPalavrasManagement from "../pages/CacaPalavrasManagement";
 import PalavrasCruzadas from "../pages/PalavrasCruzadas";
 import PalavrasCruzadasList from "../pages/PalavrasCruzadasList";
 import AddBanner from "../pages/AddBanner";
@@ -71,7 +72,8 @@ const TabsLayout: React.FC = () => {
   else if (
     path.startsWith("/tabs/tab3") ||
     path.startsWith("/tabs/management") ||
-    path.startsWith("/tabs/card-management")
+    path.startsWith("/tabs/card-management") ||
+    path.startsWith("/tabs/caca-palavras-management")
   ) {
     selectedTab = "tab3";
   }
@@ -86,6 +88,7 @@ const TabsLayout: React.FC = () => {
         <PrivateRoute exact path="/tabs/chat" component={UserChat} />
         <PrivateRoute exact path="/tabs/management" component={ManagementHub} />
         <PrivateRoute exact path="/tabs/card-management" component={CardManagement} />
+        <PrivateRoute exact path="/tabs/caca-palavras-management" component={CacaPalavrasManagement} />
 
         <Route exact path="/tabs/sobre" component={Sobre} />
 

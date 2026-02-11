@@ -19,7 +19,8 @@ import {
 import { 
   schoolOutline, 
   albumsOutline,
-  chevronForwardOutline 
+  chevronForwardOutline,
+  gridOutline
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import './ManagementHub.css';
@@ -39,6 +40,12 @@ const ManagementHub: React.FC = () => {
       icon: albumsOutline,
       route: '/tabs/card-management',
       description: 'Gerenciar cartas e temas'
+    },
+    {
+      title: 'Gerenciamento de Caça-Palavras',
+      icon: gridOutline,
+      route: '/tabs/caca-palavras-management',
+      description: 'Gerenciar jogos de caça-palavras'
     }
   ];
 
