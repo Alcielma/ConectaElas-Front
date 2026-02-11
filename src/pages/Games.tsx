@@ -36,14 +36,14 @@ const Games: React.FC = () => {
           if (isAssistant) {
             history.push("/tabs/quiz-management");
           } else {
-            // Abrir diretamente o QuizDetail (requere um ID)
+            // Lógica para jogador comum
             try {
+              // Tenta pegar o último quiz ou vai para a lista
               const current = JSON.parse(localStorage.getItem("currentQuiz") || "{}");
               const id = Number(current?.id);
               if (id && !isNaN(id)) {
                 history.push(`/tabs/quiz-detail/${id}`);
               } else {
-                // fallback para lista de quizzes caso não haja um quiz atual
                 history.push("/tabs/quiz");
               }
             } catch {
@@ -62,15 +62,26 @@ const Games: React.FC = () => {
           break;
 
         case "wordsearch":
+
           if (isAssistant) {
             history.push("/tabs/caca-palavras-management");
           } else {
             history.push("/tabs/games/caca-palavras");
           }
+          // Se tiver gerenciamento de caça-palavras no futuro, adicione aqui
+          history.push("/tabs/games/caca-palavras");
+
           break;
           
-          case "crossword":
-          history.push("/tabs/games/palavras-cruzadas");
+        case "crossword":
+          // Lógica atualizada para Palavras Cruzadas
+          if (isAssistant) {
+            // Redireciona para o gerenciamento que criamos
+            history.push("/tabs/palavras-cruzadas-management");
+          } else {
+            // Redireciona para a lista de jogos para o usuário comum
+            history.push("/tabs/games/palavras-cruzadas");
+          }
           break;
 
         default:
