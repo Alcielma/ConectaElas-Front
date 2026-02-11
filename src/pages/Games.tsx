@@ -68,8 +68,6 @@ const Games: React.FC = () => {
           } else {
             history.push("/tabs/games/caca-palavras");
           }
-          // Se tiver gerenciamento de caça-palavras no futuro, adicione aqui
-          history.push("/tabs/games/caca-palavras");
 
           break;
           
