@@ -142,9 +142,10 @@ const CacaPalavrasList: React.FC = () => {
                     <IonButton
                       expand="block"
                       className="quiz-button"
-                      disabled={!item.grade || !item.grade.colunas}
+                      disabled={!item.palavras || item.palavras.length === 0}
                       onClick={() => history.push(`/tabs/games/caca-palavras/${item.id}`)}
                     >
+
                       <IonIcon slot="start" icon={clipboardOutline} />
                       Iniciar Caça-Palavras
                     </IonButton>

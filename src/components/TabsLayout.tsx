@@ -40,6 +40,9 @@ import ManagementHub from "../pages/ManagementHub";
 import CardManagement from "../pages/CardManagement";
 import PalavrasCruzadas from "../pages/PalavrasCruzadas";
 import PalavrasCruzadasList from "../pages/PalavrasCruzadasList";
+// IMPORT NOVO AQUI:
+import PalavrasCruzadasManagement from "../pages/PalavrasCruzadasManagement"; 
+
 import AddBanner from "../pages/AddBanner";
 import AddPost from "../pages/AddPost";
 
@@ -65,7 +68,9 @@ const TabsLayout: React.FC = () => {
     path.startsWith("/tabs/quiz-detail") ||
     path.startsWith("/tabs/quiz-result") ||
     path.startsWith("/tabs/quiz-progress") ||
-    path.startsWith("/tabs/quiz-management")
+    path.startsWith("/tabs/quiz-management") ||
+    // LÓGICA NOVA PARA MANTER O ÍCONE ATIVO:
+    path.startsWith("/tabs/palavras-cruzadas-management")
   ) selectedTab = "games";
   else if (path.startsWith("/tabs/sobre")) selectedTab = "sobre";
   else if (
@@ -75,7 +80,6 @@ const TabsLayout: React.FC = () => {
   ) {
     selectedTab = "tab3";
   }
-  
   
   return (
     <IonTabs>
@@ -99,9 +103,7 @@ const TabsLayout: React.FC = () => {
           path="/tabs/AngelContact"
           component={AngelContact}
         />
-        <PrivateRoute exact path="/tabs/management" component={ManagementHub} />
-        <PrivateRoute exact path="/tabs/card-management" component={CardManagement} />
-                <PrivateRoute exact path="/tabs/add-banner" component={AddBanner} />
+        <PrivateRoute exact path="/tabs/add-banner" component={AddBanner} />
         <PrivateRoute exact path="/tabs/add-post" component={AddPost} />
         <PrivateRoute exact path="/tabs/quiz" component={QuizList} />
         <PrivateRoute exact path="/tabs/quiz-detail/:id" component={QuizDetail} />
@@ -115,6 +117,9 @@ const TabsLayout: React.FC = () => {
         <PrivateRoute exact path="/tabs/games/caca-palavras/:id" component={CacaPalavras} />
         <PrivateRoute exact path="/tabs/games/palavras-cruzadas" component={PalavrasCruzadasList}/>
         <PrivateRoute exact path="/tabs/games/palavras-cruzadas/:id" component={PalavrasCruzadas}/>
+
+        {/* ROTA NOVA REGISTRADA AQUI: */}
+        <PrivateRoute exact path="/tabs/palavras-cruzadas-management" component={PalavrasCruzadasManagement} />
 
         <PrivateRoute
           exact

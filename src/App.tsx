@@ -51,11 +51,13 @@ const BackButtonHandler: React.FC = () => {
     const pathname = window.location.pathname;
 
     // Ordem dos tabs mostrados na barra inferior (da esquerda para a direita)
+    // Nota: Ajustei para considerar 'games' como o tab central se necessário,
+    // mas mantive sua estrutura original.
     const tabOrder = [
       "/tabs/tab1", // Início
       "/tabs/tab2", // Conexões
-      "/tabs/quiz", // Quiz
-      "/tabs/sobre", // Sobre (usar minúsculo para combinar com a rota)
+      "/tabs/games", // Alterei de 'quiz' para 'games' pois é o link da TabBar no TabsLayout
+      "/tabs/sobre", // Sobre
       "/tabs/tab3", // Perfil
     ];
 
@@ -64,10 +66,19 @@ const BackButtonHandler: React.FC = () => {
       "/tabs/chat": "/tabs/tab2",
       "/tabs/ReportChannels": "/tabs/tab2",
       "/tabs/AngelContact": "/tabs/tab2",
-      "/tabs/quiz-detail": "/tabs/quiz",
-      "/tabs/quiz-progress": "/tabs/quiz",
-      "/tabs/quiz-management": "/tabs/quiz",
-      "/tabs/quiz-result": "/tabs/quiz",
+      
+      // Grupo de Jogos / Quiz
+      "/tabs/quiz-detail": "/tabs/games",
+      "/tabs/quiz-progress": "/tabs/games",
+      "/tabs/quiz-management": "/tabs/games",
+      "/tabs/quiz-result": "/tabs/games",
+      "/tabs/quiz": "/tabs/games",
+      
+      // NOVAS ROTAS ADICIONADAS AQUI:
+      "/tabs/palavras-cruzadas-management": "/tabs/games",
+      "/tabs/games/palavras-cruzadas": "/tabs/games",
+      "/tabs/games/memory": "/tabs/games",
+      "/tabs/games/caca-palavras": "/tabs/games",
     };
 
     // Helper para checar prefixos
@@ -103,8 +114,11 @@ const BackButtonHandler: React.FC = () => {
 
     // Se já estiver em um tab raiz, mover para o tab anterior (ícone à esquerda)
     const currentTabIndex = tabOrder.indexOf(pathname);
-    if (currentTabIndex > 0) {
-      const previousTab = tabOrder[currentTabIndex - 1];
+    // Fallback se não achar exato (ex: /tabs/quiz vs /tabs/games)
+    const effectiveIndex = currentTabIndex === -1 && pathname === "/tabs/quiz" ? 2 : currentTabIndex;
+
+    if (effectiveIndex > 0) {
+      const previousTab = tabOrder[effectiveIndex - 1];
       event.preventDefault();
       history.replace(previousTab);
       return false;
@@ -166,8 +180,6 @@ const App: React.FC = () => {
       setIsAuthenticated(false);
     }
   }, []);
-
-  
 
   return (
     <ThemeProvider>

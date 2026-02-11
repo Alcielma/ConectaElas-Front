@@ -24,6 +24,81 @@ interface CacaPalavrasData {
   };
 }
 
+function gerarGrid(palavras: string[], N = 8) {
+  const grid: string[][] = Array.from({ length: N }, () =>
+    Array.from({ length: N }, () => "*")
+  );
+
+  function podeColocar(
+    palavra: string,
+    row: number,
+    col: number,
+    vertical: boolean
+  ) {
+    for (let i = 0; i < palavra.length; i++) {
+      const r = vertical ? row + i : row;
+      const c = vertical ? col : col + i;
+      if (grid[r][c] !== "*" && grid[r][c] !== palavra[i]) return false;
+
+    }
+    return true;
+  }
+
+  function colocar(
+    palavra: string,
+    row: number,
+    col: number,
+    vertical: boolean
+  ) {
+    for (let i = 0; i < palavra.length; i++) {
+      const r = vertical ? row + i : row;
+      const c = vertical ? col : col + i;
+      grid[r][c] = palavra[i];
+    }
+  }
+
+  for (const p of palavras) {
+    const palavra = p.toUpperCase();
+    let colocada = false;
+    let tentativas = 0;
+
+    while (!colocada && tentativas < 100) {
+      tentativas++;
+      const vertical = Math.random() < 0.5;
+
+      const row = vertical
+        ? Math.floor(Math.random() * (N - palavra.length + 1))
+        : Math.floor(Math.random() * N);
+
+      const col = vertical
+        ? Math.floor(Math.random() * N)
+        : Math.floor(Math.random() * (N - palavra.length + 1));
+
+      if (podeColocar(palavra, row, col, vertical)) {
+        colocar(palavra, row, col, vertical);
+        colocada = true;
+      }
+    }
+  }
+
+  // Preencher vazios
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < N; j++) {
+      if (grid[i][j] === "*") {
+        grid[i][j] = String.fromCharCode(
+          65 + Math.floor(Math.random() * 26)
+        );
+      }
+    }
+  }
+
+  return {
+    linhas: N,
+    colunas: N,
+    grade: grid,
+  };
+}
+
 const CacaPalavras: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<CacaPalavrasData | null>(null);
@@ -41,10 +116,15 @@ const CacaPalavras: React.FC = () => {
         const res = await fetch(
           `${import.meta.env.VITE_API_URL}/api/caca-palavras?filters[id][$eq]=${id}`
         );
-        if (!res.ok) throw new Error("Erro ao buscar caça-palavras");
         const json = await res.json();
-        const arr = Array.isArray(json?.data) ? json.data : [];
-        setData(arr[0] ?? null);
+        const base = json.data?.[0];
+
+        if (base) {
+          const novaGrade = gerarGrid(base.palavras);
+          setData({ ...base, grade: novaGrade });
+        } else {
+          setData(null);
+        }
       } catch (err) {
         console.error("Erro ao carregar caça-palavras", err);
       } finally {
@@ -56,9 +136,7 @@ const CacaPalavras: React.FC = () => {
 
   const selectCell = (row: number, col: number, letter: string) => {
     const key = `${row}-${col}`;
-
-    if (selectedCells.includes(key) || foundCells.includes(key)) return;
-
+    if (selectedCells.includes(key)) return;
     setSelectedCells((prev) => [...prev, key]);
     setCurrentWord((prev) => prev + letter);
   };
@@ -83,14 +161,11 @@ const CacaPalavras: React.FC = () => {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isSelecting) return;
-
     const el = document.elementFromPoint(e.clientX, e.clientY);
     if (!el || !el.classList.contains("caca-cell")) return;
-
     const row = el.getAttribute("data-row");
     const col = el.getAttribute("data-col");
     const letter = el.getAttribute("data-letter");
-
     if (row && col && letter) {
       selectCell(Number(row), Number(col), letter);
     }
@@ -98,15 +173,12 @@ const CacaPalavras: React.FC = () => {
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isSelecting) return;
-
     const touch = e.touches[0];
     const el = document.elementFromPoint(touch.clientX, touch.clientY);
     if (!el || !el.classList.contains("caca-cell")) return;
-
     const row = el.getAttribute("data-row");
     const col = el.getAttribute("data-col");
     const letter = el.getAttribute("data-letter");
-
     if (row && col && letter) {
       selectCell(Number(row), Number(col), letter);
     }
@@ -123,7 +195,6 @@ const CacaPalavras: React.FC = () => {
             <IonTitle>Carregando</IonTitle>
           </IonToolbar>
         </IonHeader>
-
         <IonContent fullscreen className="caca-content ion-padding">
           <div className="loading-container">
             <IonSpinner name="crescent" />
@@ -210,14 +281,14 @@ const CacaPalavras: React.FC = () => {
           <div className="palavras">
             <h3>Palavras</h3>
             <ul>
-                {data.palavras.map((p) => (
+              {data.palavras.map((p) => (
                 <li
                   key={p}
                   className={foundWords.includes(p) ? "found" : ""}
                 >
                   {p}
                 </li>
-                ))}
+              ))}
             </ul>
           </div>
         </div>
