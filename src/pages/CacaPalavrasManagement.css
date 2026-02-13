@@ -124,8 +124,31 @@
 .cacapalavras-card-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  flex-wrap: nowrap; /* Garante que fiquem na mesma linha */
+  gap: 8px;
   margin-top: 10px;
+}
+
+@media (max-width: 576px) {
+  .cacapalavras-card-buttons {
+    justify-content: space-between; /* Distribui o espaço */
+    width: 100%;
+  }
+
+  .cacapalavras-card-buttons ion-button {
+    font-size: 0.75rem; /* Fonte menor no mobile */
+    --padding-start: 6px;
+    --padding-end: 6px;
+    height: 36px; /* Altura reduzida */
+    margin: 0;
+    flex: 1; /* Botões ocupam espaço igual */
+    min-width: auto;
+  }
+
+  .cacapalavras-card-buttons ion-button ion-icon {
+    font-size: 1.1rem;
+    margin-right: 4px;
+  }
 }
 
 /* Botão de editar do card */

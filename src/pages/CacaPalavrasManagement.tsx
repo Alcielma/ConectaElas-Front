@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   IonPage,
   IonHeader,
@@ -28,7 +29,8 @@ import {
   create,
   closeOutline,
   checkmark,
-  addCircle
+  addCircle,
+  play
 } from 'ionicons/icons';
 import {
   getAllCacaPalavras,
@@ -41,6 +43,7 @@ import './CardManagement.css'; // Reusing styles
 import './CacaPalavrasManagement.css'; // Specific styles
 
 const CacaPalavrasManagement: React.FC = () => {
+  const history = useHistory();
   const [items, setItems] = useState<CacaPalavrasItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -180,6 +183,18 @@ const CacaPalavrasManagement: React.FC = () => {
                   <IonCardContent>
                     <p className="management-info cacapalavras-card-info">{item.palavras?.length || 0} palavras</p>
                     <div className="cacapalavras-card-buttons">
+                      <IonButton
+                        fill="solid"
+                        color="success"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          history.push(`/tabs/games/caca-palavras/${item.documentId || item.id}`);
+                        }}
+                        className="cacapalavras-play-button"
+                      >
+                        <IonIcon slot="start" icon={play} />
+                        Jogar
+                      </IonButton>
                       <IonButton
                         fill="solid"
                         color="primary"

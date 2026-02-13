@@ -154,8 +154,6 @@ const QuizManagement: React.FC = () => {
             data: {
               Resposta: resposta.texto,
               Correcao: resposta.correta,
-              correcao: resposta.correta, // Enviando em minúsculo também por garantia
-              Explicacao: resposta.explicacao || "",
               pergunta: {
                 id: perguntaId
               }
@@ -337,8 +335,6 @@ const handleUpdateQuiz = async () => {
           data: {
             Resposta: resposta.texto,
             Correcao: resposta.correta,
-            correcao: resposta.correta, // Enviando em minúsculo também por garantia
-            Explicacao: resposta.explicacao || "",
             pergunta: {
               id: perguntaId
             }

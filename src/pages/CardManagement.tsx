@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { 
   IonPage, 
   IonHeader, 
@@ -35,7 +36,8 @@ import {
   saveOutline,
   cloudUploadOutline,
   checkmark,
-  addCircle
+  addCircle,
+  play
 } from 'ionicons/icons';
 import { 
   getAllMemoryThemes, 
@@ -60,6 +62,7 @@ interface NewCard {
 }
 
 const CardManagement: React.FC = () => {
+  const history = useHistory();
   const [themes, setThemes] = useState<TemaMemoria[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -297,7 +300,18 @@ const CardManagement: React.FC = () => {
                   </IonCardHeader>
                   <IonCardContent>
                     <p className="management-info">{theme.cartas?.length || 0} cartas</p>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                    <div className="card-management-buttons">
+                      <IonButton 
+                        fill="solid" 
+                        color="success" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          history.push(`/tabs/games/memory/${theme.id}`);
+                        }}
+                      >
+                        <IonIcon slot="start" icon={play} />
+                        Jogar
+                      </IonButton>
                       <IonButton 
                         fill="solid" 
                         color="primary" 
