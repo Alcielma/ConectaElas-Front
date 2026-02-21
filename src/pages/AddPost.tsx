@@ -79,6 +79,15 @@ const AddPost: React.FC = () => {
         Uploadpost: uploadId,
       });
 
+      // Resetar campos após publicação bem-sucedida
+      setTitle("");
+      setDescription("");
+      setCategoria("Informativo");
+      setImageLink("");
+      setFile(null);
+      setImagePreview(null);
+      setImageMode("link");
+
       setToastMessage("Post publicado com sucesso");
       setShowToast(true);
       setTimeout(() => history.push("/tabs/tab1"), 800);
@@ -104,11 +113,19 @@ const AddPost: React.FC = () => {
         <div className="quiz-result-container">
         <IonItem lines="none">
           <IonLabel position="stacked">Título</IonLabel>
-          <IonInput className="custom-input" value={title} onIonChange={(e) => setTitle(e.detail.value || "")} />
+          <IonInput
+            className="custom-input"
+            value={title}
+            onIonInput={(e) => setTitle((e.detail as any).value ?? "")}
+          />
         </IonItem>
         <IonItem lines="none">
           <IonLabel position="stacked">Descrição</IonLabel>
-          <IonTextarea className="custom-input" value={description} onIonChange={(e) => setDescription(e.detail.value || "")} />
+          <IonTextarea
+            className="custom-input"
+            value={description}
+            onIonInput={(e) => setDescription((e.detail as any).value ?? "")}
+          />
         </IonItem>
         <IonItem lines="none">
           <IonLabel position="stacked">Categoria</IonLabel>
@@ -150,7 +167,11 @@ const AddPost: React.FC = () => {
           <>
             <IonItem lines="none">
               <IonLabel position="stacked">URL da imagem</IonLabel>
-              <IonInput className="custom-input" value={imageLink} onIonChange={(e) => setImageLink(e.detail.value || "")} />
+              <IonInput
+                className="custom-input"
+                value={imageLink}
+                onIonInput={(e) => setImageLink((e.detail as any).value ?? "")}
+              />
             </IonItem>
           </>
         ) : (
