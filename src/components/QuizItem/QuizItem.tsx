@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import {
   IonCard,
   IonCardHeader,
@@ -7,7 +8,7 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/react";
-import { create, trash } from "ionicons/icons";
+import { create, trash, play } from "ionicons/icons";
 import "./QuizItem.css";
 
 interface Quiz {
@@ -31,6 +32,7 @@ interface QuizItemProps {
 }
 
 const QuizItem: React.FC<QuizItemProps> = ({ quiz, onEdit, onDelete }) => {
+  const history = useHistory();
   return (
     <IonCard className="quiz-card">
       <IonCardHeader>
@@ -38,7 +40,18 @@ const QuizItem: React.FC<QuizItemProps> = ({ quiz, onEdit, onDelete }) => {
       </IonCardHeader>
       <IonCardContent>
         <p className="quiz-info">{quiz.perguntas?.length || 0} perguntas</p>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+        <div className="quiz-item-buttons">
+          <IonButton 
+            fill="solid" 
+            color="success" 
+            onClick={(e) => {
+              e.stopPropagation();
+              history.push(`/tabs/quiz-detail/${quiz.id}`);
+            }}
+          >
+            <IonIcon slot="start" icon={play} />
+            Jogar
+          </IonButton>
           <IonButton fill="solid" color="primary" onClick={() => onEdit(quiz)}>
             <IonIcon slot="start" icon={create} />
             Editar

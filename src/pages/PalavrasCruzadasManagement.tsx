@@ -25,7 +25,7 @@ import {
   IonBadge,
   IonNote
 } from "@ionic/react";
-import { close, add, trash, create, gameController } from "ionicons/icons";
+import { close, add, trash, create, gameController, moon, play } from "ionicons/icons";
 import api from "../Services/api"; 
 import "./PalavrasCruzadasManagement.css";
 
@@ -372,25 +372,28 @@ const PalavrasCruzadasManagement: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/tabs/management" />
           </IonButtons>
-          <IonTitle className="title-centered">Gerenciar Cruzadinhas</IonTitle>
+          <IonTitle className="title-centered">Gerenciamento de Cruzadinhas</IonTitle>
+          <IonButtons slot="end">
+            <IonButton>
+              <IonIcon slot="icon-only" icon={moon} style={{ color: 'white' }} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen className="palavras-cruzadas-content">
-        <div className="main-wrapper">
-          <div className="quiz-header">
-            <h2 className="quiz-list-title">Temas Disponíveis</h2>
-            <IonButton 
-              className="add-button" 
-              onClick={() => {
-                setNovaCruzada({ titulo: "", itens: [{ palavra: "", dica: "" }, { palavra: "", dica: "" }] });
-                setShowCreateModal(true);
-              }}
-            >
-              <IonIcon icon={add} slot="start" />
-              Nova Cruzada
-            </IonButton>
-          </div>
+      <IonContent fullscreen className="management-content">
+        <div className="management-container">
+          <IonButton 
+            expand="block"
+            className="ion-margin-bottom" 
+            onClick={() => {
+              setNovaCruzada({ titulo: "", itens: [{ palavra: "", dica: "" }, { palavra: "", dica: "" }] });
+              setShowCreateModal(true);
+            }}
+          >
+            <IonIcon slot="start" icon={add} />
+            Criar Novo Jogo
+          </IonButton>
 
           {loading ? (
             <div className="spinner-container">
@@ -405,32 +408,47 @@ const PalavrasCruzadasManagement: React.FC = () => {
               ) : (
                 listaCruzadas.map((cw) => (
                   <div key={cw.id} className="management-card">
-                    <div className="card-body">
-                      <div className="card-header-row">
-                        <h3 className="card-title">{cw.titulo || cw.Titulo}</h3>
-                        <span className="card-badge">{cw.palavras?.length || 0} palavras</span>
+                    <div className="card-body-custom">
+                      <div className="card-info-section">
+                        <h3 className="card-title-pink">{cw.titulo || cw.Titulo}</h3>
+                        <p className="card-subtitle-grey">{cw.palavras?.length || 0} palavras</p>
                       </div>
-                      <div className="card-info">ID: {cw.id}</div>
-                    </div>
 
-                    <div className="card-footer">
-                      <button 
-                        className="play-btn"
-                        onClick={() => history.push(`/tabs/games/palavras-cruzadas/${cw.id}`)}
-                      >
-                        <IonIcon icon={gameController} /> JOGAR / VISUALIZAR
-                      </button>
-
-                      <div className="action-row">
-                        <button className="edit-btn" onClick={() => onEditCruzada(cw.id)}>
-                          <IonIcon icon={create} /> EDITAR
-                        </button>
-                        <button className="delete-btn" onClick={() => {
-                          setCruzadaAtual(cw);
-                          setShowDeleteAlert(true);
-                        }}>
-                          <IonIcon icon={trash} /> EXCLUIR
-                        </button>
+                      <div className="action-buttons-container">
+                        <IonButton 
+                          fill="solid" 
+                          color="success" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            history.push(`/tabs/games/palavras-cruzadas/${cw.id}`);
+                          }}
+                        >
+                          <IonIcon slot="start" icon={play} />
+                          Jogar
+                        </IonButton>
+                        <IonButton 
+                          fill="solid" 
+                          color="primary" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEditCruzada(cw.id);
+                          }}
+                        >
+                          <IonIcon slot="start" icon={create} />
+                          EDITAR
+                        </IonButton>
+                        <IonButton 
+                          fill="solid" 
+                          color="danger" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCruzadaAtual(cw);
+                            setShowDeleteAlert(true);
+                          }}
+                        >
+                          <IonIcon slot="start" icon={trash} />
+                          EXCLUIR
+                        </IonButton>
                       </div>
                     </div>
                   </div>

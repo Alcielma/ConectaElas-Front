@@ -77,16 +77,6 @@ const MemoryThemeGame: React.FC = () => {
     load();
   }, [id]);
 
-  useEffect(() => {
-    const handler = (ev: any) => {
-      ev.detail.register(10, () => {
-        history.replace("/tabs/games/memory");
-      });
-    };
-    document.addEventListener("ionBackButton", handler as any);
-    return () => document.removeEventListener("ionBackButton", handler as any);
-  }, [history]);
-
   const initialCards = useMemo(() => {
     if (!theme || !Array.isArray(theme.cartas)) return [] as MemoryCard[];
     const byId: Record<string, { hasImage: boolean; hasText: boolean; image?: string; text?: string; identification?: string }> = {};

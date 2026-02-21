@@ -88,16 +88,6 @@ const QuizList: React.FC = () => {
     fetchQuizzes(true);
   }, [fetchQuizzes, location.pathname]);
 
-  useEffect(() => {
-    const handler = (ev: any) => {
-      ev.detail.register(10, () => {
-        history.replace("/tabs/games");
-      });
-    };
-    document.addEventListener("ionBackButton", handler as any);
-    return () => document.removeEventListener("ionBackButton", handler as any);
-  }, [history]);
-
   // Recarregar quando a página voltar a ser focada
   useEffect(() => {
     const handleFocus = () => {

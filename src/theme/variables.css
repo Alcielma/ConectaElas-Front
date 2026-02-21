@@ -20,6 +20,13 @@
   --ion-color-primary-shade: #c21e65;
   --ion-color-primary-tint: #e03881;
 
+  --ion-color-success: #2dd55b;
+  --ion-color-success-rgb: 45, 213, 91;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #28bb50;
+  --ion-color-success-tint: #42d96b;
+
   --ion-color-secondary: var(--cor-secundaria);
   --ion-color-secondary-rgb: 114, 0, 121;
   --ion-color-secondary-contrast: #ffffff;
@@ -142,6 +149,12 @@ ion-page ion-button,
   --color: #ffffff !important;
   color: #ffffff !important;
   transition: all 0.3s ease !important;
+}
+
+/* Força ícones dentro de botões a herdarem a cor do texto */
+ion-app ion-button ion-icon,
+ion-page ion-button ion-icon {
+  color: inherit !important;
 }
 
 ion-app ion-button:hover,

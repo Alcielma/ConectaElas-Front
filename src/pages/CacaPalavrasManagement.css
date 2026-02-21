@@ -1,0 +1,172 @@
+/* CacaPalavrasManagement Styles */
+
+/* Container principal */
+.cacapalavras-container {
+  padding: 16px;
+}
+
+/* Header do modal */
+.cacapalavras-modal-header {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+}
+
+/* Container do formulário */
+.cacapalavras-form-container {
+  padding: 16px;
+}
+
+/* Label de adicionar palavra */
+.cacapalavras-add-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: var(--ion-color-primary);
+}
+
+/* Container do input e botão */
+.cacapalavras-input-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Input de nova palavra */
+.cacapalavras-word-input {
+  flex: 1;
+}
+
+/* Botão de adicionar palavra */
+.cacapalavras-add-button {
+  height: 48px;
+  width: 50px;
+  margin: 0;
+  --border-radius: 12px;
+  transform: translateY(4px);
+}
+
+/* Estado desabilitado do botão */
+.cacapalavras-add-button[disabled] {
+  opacity: 0.4;
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-medium);
+}
+
+/* Estado habilitado do botão */
+.cacapalavras-add-button:not([disabled]) {
+  opacity: 1;
+  --background: var(--ion-color-primary-shade);
+  --color: white;
+}
+
+/* Ícone do botão adicionar */
+.cacapalavras-add-icon {
+  font-size: 24px;
+}
+
+/* Container de palavras adicionadas */
+.cacapalavras-words-list {
+  margin-top: 16px;
+}
+
+/* Item da lista de palavras */
+.cacapalavras-word-item {
+  --inner-border-width: 0 0 1px 0;
+}
+
+/* Botão de remover palavra */
+.cacapalavras-remove-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
+/* Container dos botões de ação */
+.cacapalavras-action-buttons {
+  margin-top: 20px;
+}
+
+/* Botão de salvar */
+.cacapalavras-save-button {
+  --border-radius: 8px;
+}
+
+/* Container de loading */
+.cacapalavras-loading {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Container vazio */
+.cacapalavras-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ion-color-medium);
+}
+
+/* Cards de jogos */
+.cacapalavras-game-card {
+  margin-bottom: 12px;
+  --border-radius: 12px;
+}
+
+/* Header do card */
+.cacapalavras-card-header {
+  padding-bottom: 8px;
+}
+
+/* Informações do card */
+.cacapalavras-card-info {
+  color: var(--ion-color-medium);
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+/* Container de botões do card */
+.cacapalavras-card-buttons {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: nowrap; /* Garante que fiquem na mesma linha */
+  gap: 8px;
+  margin-top: 10px;
+}
+
+@media (max-width: 576px) {
+  .cacapalavras-card-buttons {
+    justify-content: space-between; /* Distribui o espaço */
+    width: 100%;
+  }
+
+  .cacapalavras-card-buttons ion-button {
+    font-size: 0.75rem; /* Fonte menor no mobile */
+    --padding-start: 6px;
+    --padding-end: 6px;
+    height: 36px; /* Altura reduzida */
+    margin: 0;
+    flex: 1; /* Botões ocupam espaço igual */
+    min-width: auto;
+  }
+
+  .cacapalavras-card-buttons ion-button ion-icon {
+    font-size: 1.1rem;
+    margin-right: 4px;
+  }
+}
+
+/* Botão de editar do card */
+.cacapalavras-edit-button {
+  --border-radius: 8px;
+}
+
+/* Botão de excluir do card */
+.cacapalavras-delete-button {
+  --border-radius: 8px;
+}
+
+/* Modal de confirmação */
+.cacapalavras-confirm-modal {
+  --border-radius: 12px;
+}
+
+/* Toast de notificação */
+.cacapalavras-toast {
+  --border-radius: 8px;
+}

@@ -11,6 +11,7 @@ import {
 } from "@ionic/react";
 import "./CacaPalavras.css";
 import { useParams } from "react-router-dom";
+import api from "../Services/api";
 
 interface CacaPalavrasData {
   id?: number;
@@ -113,11 +114,17 @@ const CacaPalavras: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/caca-palavras?filters[id][$eq]=${id}`
-        );
-        const json = await res.json();
-        const base = json.data?.[0];
+        let endpoint = "/caca-palavras";
+        // Verifica se é um ID numérico (Strapi v4/v5 integer ID) ou documentId (string)
+        if (!isNaN(Number(id))) {
+          endpoint += `?filters[id][$eq]=${id}`;
+        } else {
+          endpoint += `?filters[documentId][$eq]=${id}`;
+        }
+
+        const res = await api.get(endpoint);
+        const json = res.data;
+        const base = Array.isArray(json?.data) ? json.data[0] : json?.data || json?.[0];
 
         if (base) {
           const novaGrade = gerarGrid(base.palavras);

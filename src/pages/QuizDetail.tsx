@@ -61,16 +61,6 @@ const QuizDetail: React.FC = () => {
   });
 
   useEffect(() => {
-    const handler = (ev: any) => {
-      ev.detail.register(10, () => {
-        history.replace("/tabs/quiz");
-      });
-    };
-    document.addEventListener("ionBackButton", handler as any);
-    return () => document.removeEventListener("ionBackButton", handler as any);
-  }, [history]);
-
-  useEffect(() => {
     const fetchQuiz = async () => {
       try {
         setLoading(true);
