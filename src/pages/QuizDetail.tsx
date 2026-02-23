@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useTransition } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useIonViewWillEnter } from "@ionic/react";
 import {
   IonContent,
@@ -47,12 +47,17 @@ interface Quiz {
 const QuizDetail: React.FC = () => {
   const { id } = useParams<RouteParams>();
   const history = useHistory();
+  const location = useLocation();
   const [isPending, startTransition] = useTransition();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [respostas, setRespostas] = useState<Record<number, string>>({});
   const [showAlert, setShowAlert] = useState<boolean>(false);
+
+  const searchParams = new URLSearchParams(location.search);
+  const fromManagement = searchParams.get("from") === "management";
+  const quizListHref = fromManagement ? "/tabs/quiz-management" : "/tabs/quiz";
 
   useIonViewWillEnter(() => {
     setCurrentQuestionIndex(0);
@@ -161,7 +166,8 @@ const QuizDetail: React.FC = () => {
       const resultadoString = JSON.stringify(resultado);
       localStorage.setItem("quizResult", resultadoString);
       startTransition(() => {
-        history.replace(`/tabs/quiz-result/${quiz.id}`);
+        const query = fromManagement ? "?from=management" : "";
+        history.replace(`/tabs/quiz-result/${quiz.id}${query}`);
       });
     } catch (error) {
       console.error("Erro ao salvar resultado no localStorage:", error);
@@ -175,7 +181,7 @@ const QuizDetail: React.FC = () => {
         <IonHeader>
           <IonToolbar className="header-gradient">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/tabs/quiz" />
+              <IonBackButton defaultHref={quizListHref} />
             </IonButtons>
             <IonTitle className="title-centered">Carregando Quiz</IonTitle>
           </IonToolbar>
@@ -196,7 +202,7 @@ const QuizDetail: React.FC = () => {
         <IonHeader>
           <IonToolbar className="header-gradient">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/tabs/quiz" />
+              <IonBackButton defaultHref={quizListHref} />
             </IonButtons>
             <IonTitle className="title-centered">Quiz não encontrado</IonTitle>
           </IonToolbar>
@@ -220,7 +226,7 @@ const QuizDetail: React.FC = () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/quiz" />
+            <IonBackButton defaultHref={quizListHref} />
           </IonButtons>
           <IonTitle className="title-centered">{quiz.Titulo}</IonTitle>
         </IonToolbar>

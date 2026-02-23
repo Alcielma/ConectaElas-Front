@@ -46,7 +46,7 @@ const QuizItem: React.FC<QuizItemProps> = ({ quiz, onEdit, onDelete }) => {
             color="success" 
             onClick={(e) => {
               e.stopPropagation();
-              history.push(`/tabs/quiz-detail/${quiz.id}`);
+              history.push(`/tabs/quiz-detail/${quiz.id}?from=management`);
             }}
           >
             <IonIcon slot="start" icon={play} />
