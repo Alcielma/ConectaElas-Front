@@ -86,6 +86,14 @@ const AddBanner: React.FC = () => {
         Upload: uploadId,
       });
 
+      // Resetar campos após publicação bem-sucedida
+      setTitulo("");
+      setLink("");
+      setImageLink("");
+      setFile(null);
+      setImagePreview(null);
+      setImageMode("link");
+
       setToastMessage("Banner publicado com sucesso");
       setShowToast(true);
       setTimeout(() => history.push("/tabs/tab1"), 800);
@@ -111,11 +119,19 @@ const AddBanner: React.FC = () => {
         <div className="quiz-result-container">
         <IonItem lines="none">
           <IonLabel position="stacked">Título</IonLabel>
-          <IonInput className="custom-input" value={titulo} onIonChange={(e) => setTitulo(e.detail.value || "")} />
+          <IonInput
+            className="custom-input"
+            value={titulo}
+            onIonInput={(e) => setTitulo((e.detail as any).value ?? "")}
+          />
         </IonItem>
         <IonItem lines="none">
           <IonLabel position="stacked">Link de destino</IonLabel>
-          <IonInput className="custom-input" value={link} onIonChange={(e) => setLink(e.detail.value || "")} />
+          <IonInput
+            className="custom-input"
+            value={link}
+            onIonInput={(e) => setLink((e.detail as any).value ?? "")}
+          />
         </IonItem>
 
         <IonItem lines="none">
@@ -139,7 +155,11 @@ const AddBanner: React.FC = () => {
         {imageMode === "link" ? (
           <IonItem lines="none">
             <IonLabel position="stacked">URL da imagem</IonLabel>
-            <IonInput className="custom-input" value={imageLink} onIonChange={(e) => setImageLink(e.detail.value || "")} />
+            <IonInput
+              className="custom-input"
+              value={imageLink}
+              onIonInput={(e) => setImageLink((e.detail as any).value ?? "")}
+            />
           </IonItem>
         ) : (
           <div style={{ padding: "16px 0", display: "flex", flexDirection: "column", alignItems: "center" }}>

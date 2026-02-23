@@ -6,7 +6,11 @@ import "swiper/css/pagination";
 import "./Carrossel.css";
 import BannerService, { Banner } from "../Services/BannerService";
 
-const Carrossel: React.FC = () => {
+interface CarrosselProps {
+  refreshKey?: number;
+}
+
+const Carrossel: React.FC<CarrosselProps> = ({ refreshKey }) => {
   const [banners, setBanners] = useState<Banner[]>([]);
 
   useEffect(() => {
@@ -16,7 +20,7 @@ const Carrossel: React.FC = () => {
     };
 
     loadBanners();
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div className="carrossel-container">

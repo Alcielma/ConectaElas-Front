@@ -17,7 +17,6 @@ import {
   IonItem,
   IonLabel,
 } from "@ionic/react";
-import { addCircleOutline } from "ionicons/icons";
 import "./Tab1.css";
 import Carrossel from "../components/Carrossel";
 import Feed from "../components/Feed";
@@ -99,7 +98,7 @@ const Tab1: React.FC = () => {
         <div className="body-feed">
           {/* Carrossel */}
           <div className="carrossel-wrapper">
-            <Carrossel />
+            <Carrossel refreshKey={refreshKey} />
           </div>
 
           {/* Seções por categoria */}
