@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import {
   IonContent,
   IonHeader,
@@ -43,6 +43,7 @@ function sanitizeUrl(url: string | null): string {
 const MemoryThemeGame: React.FC = () => {
   const { id } = useParams<RouteParams>();
   const history = useHistory();
+  const location = useLocation();
   const [theme, setTheme] = useState<TemaMemoria | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [cards, setCards] = useState<MemoryCard[]>([]);
@@ -232,10 +233,17 @@ const MemoryThemeGame: React.FC = () => {
     }
   }, [allMatched, gameOver, cards.length, showRewardModal]);
 
+  const searchParams = new URLSearchParams(location.search);
+  const fromManagement = searchParams.get("from") === "management";
+
   const goToThemes = () => {
     setShowEndModal(false);
     restartGame();
-    history.push("/tabs/games/memory");
+    if (fromManagement) {
+      history.replace("/tabs/card-management");
+    } else {
+      history.push("/tabs/games/memory");
+    }
   };
 
   if (loading) {

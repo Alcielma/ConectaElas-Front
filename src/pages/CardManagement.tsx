@@ -85,6 +85,16 @@ const CardManagement: React.FC = () => {
     loadThemes();
   }, []);
 
+  useEffect(() => {
+    const handler = (ev: any) => {
+      ev.detail.register(10, () => {
+        history.replace("/tabs/games");
+      });
+    };
+    document.addEventListener("ionBackButton", handler as any);
+    return () => document.removeEventListener("ionBackButton", handler as any);
+  }, [history]);
+
   const loadThemes = async () => {
     setLoading(true);
     try {
@@ -266,7 +276,7 @@ const CardManagement: React.FC = () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/management" />
+            <IonBackButton defaultHref="/tabs/games" />
           </IonButtons>
           <IonTitle className="title-centered">Gerenciamento de Cartas</IonTitle>
         </IonToolbar>
@@ -306,7 +316,7 @@ const CardManagement: React.FC = () => {
                         color="success" 
                         onClick={(e) => {
                           e.stopPropagation();
-                          history.push(`/tabs/games/memory/${theme.id}`);
+                          history.push(`/tabs/games/memory/${theme.id}?from=management`);
                         }}
                       >
                         <IonIcon slot="start" icon={play} />

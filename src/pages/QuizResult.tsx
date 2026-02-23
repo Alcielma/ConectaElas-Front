@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useTransition } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { useAuth } from '../Contexts/AuthContext';
 import {
   IonBackButton,
@@ -51,6 +51,11 @@ const QuizResult: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [expandedAnswers, setExpandedAnswers] = useState<{ [key: string]: boolean }>({});
   const history = useHistory();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const fromManagement = searchParams.get("from") === "management";
+  const quizListHref = fromManagement ? "/tabs/quiz-management" : "/tabs/quiz";
 
   useEffect(() => {
     setLoading(true);
@@ -100,12 +105,12 @@ const QuizResult: React.FC = () => {
   useEffect(() => {
     const handler = (ev: any) => {
       ev.detail.register(10, () => {
-        history.replace("/tabs/quiz");
+        history.replace(quizListHref);
       });
     };
     document.addEventListener("ionBackButton", handler as any);
     return () => document.removeEventListener("ionBackButton", handler as any);
-  }, [history]);
+  }, [history, quizListHref]);
 
   const toggleAnswer = (perguntaId: string) => {
     setExpandedAnswers(prev => ({
@@ -120,7 +125,7 @@ const QuizResult: React.FC = () => {
         <IonHeader>
           <IonToolbar className="header-gradient">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/tabs/quiz" />
+              <IonBackButton defaultHref={quizListHref} />
             </IonButtons>
             <IonTitle className="title-centered">Carregando Resultado</IonTitle>
           </IonToolbar>
@@ -141,7 +146,7 @@ const QuizResult: React.FC = () => {
         <IonHeader>
           <IonToolbar className="header-gradient">
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/tabs/quiz" />
+              <IonBackButton defaultHref={quizListHref} />
             </IonButtons>
             <IonTitle className="title-centered">Resultado não encontrado</IonTitle>
           </IonToolbar>
@@ -161,7 +166,7 @@ const QuizResult: React.FC = () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/quiz" />
+            <IonBackButton defaultHref={quizListHref} />
           </IonButtons>
           <IonTitle className="title-centered">Resultado do Quiz</IonTitle>
         </IonToolbar>
@@ -236,7 +241,7 @@ const QuizResult: React.FC = () => {
               localStorage.removeItem("quizResult");
               localStorage.removeItem(`quizProgress_${resultado?.quizId}`);
               localStorage.removeItem("currentQuiz");
-              history.replace("/tabs/quiz");
+              history.replace(quizListHref);
             }}
           >
             Voltar para Quizzes
