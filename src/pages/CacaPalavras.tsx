@@ -11,10 +11,13 @@ import {
   IonModal,
   IonButton,
   IonIcon,
+  IonToast,
 } from "@ionic/react";
 import "./CacaPalavras.css";
 import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
 import api from "../Services/api";
+import { criarPontuacao } from "../Services/PontuacaoService";
 import { checkmarkCircle } from "ionicons/icons";
 
 interface CacaPalavrasData {
@@ -31,20 +34,19 @@ interface CacaPalavrasData {
 
 function gerarGrid(palavras: string[], N = 8) {
   const grid: string[][] = Array.from({ length: N }, () =>
-    Array.from({ length: N }, () => "*")
+    Array.from({ length: N }, () => "*"),
   );
 
   function podeColocar(
     palavra: string,
     row: number,
     col: number,
-    vertical: boolean
+    vertical: boolean,
   ) {
     for (let i = 0; i < palavra.length; i++) {
       const r = vertical ? row + i : row;
       const c = vertical ? col : col + i;
       if (grid[r][c] !== "*" && grid[r][c] !== palavra[i]) return false;
-
     }
     return true;
   }
@@ -53,7 +55,7 @@ function gerarGrid(palavras: string[], N = 8) {
     palavra: string,
     row: number,
     col: number,
-    vertical: boolean
+    vertical: boolean,
   ) {
     for (let i = 0; i < palavra.length; i++) {
       const r = vertical ? row + i : row;
@@ -90,9 +92,7 @@ function gerarGrid(palavras: string[], N = 8) {
   for (let i = 0; i < N; i++) {
     for (let j = 0; j < N; j++) {
       if (grid[i][j] === "*") {
-        grid[i][j] = String.fromCharCode(
-          65 + Math.floor(Math.random() * 26)
-        );
+        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
       }
     }
   }
@@ -108,6 +108,7 @@ const CacaPalavras: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const location = useLocation();
+  const { user } = useAuth();
   const [data, setData] = useState<CacaPalavrasData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -117,6 +118,12 @@ const CacaPalavras: React.FC = () => {
   const [foundCells, setFoundCells] = useState<string[]>([]);
   const [isSelecting, setIsSelecting] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastColor, setToastColor] = useState<
+    "success" | "danger" | "warning"
+  >("success");
+  const [salvandoPontuacao, setSalvandoPontuacao] = useState<boolean>(false);
 
   const searchParams = new URLSearchParams(location.search);
   const fromManagement = searchParams.get("from") === "management";
@@ -134,7 +141,9 @@ const CacaPalavras: React.FC = () => {
 
         const res = await api.get(endpoint);
         const json = res.data;
-        const base = Array.isArray(json?.data) ? json.data[0] : json?.data || json?.[0];
+        const base = Array.isArray(json?.data)
+          ? json.data[0]
+          : json?.data || json?.[0];
 
         if (base) {
           const novaGrade = gerarGrid(base.palavras);
@@ -173,6 +182,7 @@ const CacaPalavras: React.FC = () => {
 
       if (updatedWords.length === data.palavras.length) {
         setShowEndModal(true);
+        salvarPontuacaoNoBackend();
       }
     }
 
@@ -191,6 +201,38 @@ const CacaPalavras: React.FC = () => {
     setFoundCells([]);
     setIsSelecting(false);
     setShowEndModal(false);
+  };
+
+  const salvarPontuacaoNoBackend = async () => {
+    if (!user?.id || !data) return;
+
+    setSalvandoPontuacao(true);
+    try {
+      const resultado = await criarPontuacao({
+        jogo: "cacapalavras" as const,
+        acertos: foundWords.length,
+        totalPerguntas: data.palavras.length,
+        users_permissions_user: user.id,
+        itemTitle: data.titulo,
+      });
+
+      if (resultado.sucesso) {
+        setToastMessage(
+          `✅ Pontuação salva: ${resultado.pontuacao?.total} pontos!`,
+        );
+        setToastColor("success");
+      } else {
+        setToastMessage(`⚠️ Erro ao salvar: ${resultado.erro}`);
+        setToastColor("warning");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar pontuação:", error);
+      setToastMessage("Erro ao salvar pontuação");
+      setToastColor("danger");
+    } finally {
+      setSalvandoPontuacao(false);
+      setShowToast(true);
+    }
   };
 
   const goToThemes = () => {
@@ -279,19 +321,30 @@ const CacaPalavras: React.FC = () => {
 
       <IonContent fullscreen className="caca-content">
         <div className="caca-container">
-          <IonModal isOpen={showEndModal} className="end-modal" backdropDismiss={false}>
+          <IonModal
+            isOpen={showEndModal}
+            className="end-modal"
+            backdropDismiss={false}
+          >
             <div className="modal-box">
               <div className="modal-title">Parabéns!</div>
-              <div style={{ display: "flex", justifyContent: "center", margin: "10px 0" }}>
-                <IonIcon icon={checkmarkCircle} style={{ color: "#2dd36f", fontSize: "64px" }} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "10px 0",
+                }}
+              >
+                <IonIcon
+                  icon={checkmarkCircle}
+                  style={{ color: "#2dd36f", fontSize: "64px" }}
+                />
               </div>
               <div className="modal-message">
                 Você encontrou todas as palavras do caça-palavras!
               </div>
               <div className="modal-actions">
-                <IonButton onClick={restartGame}>
-                  Reiniciar jogo
-                </IonButton>
+                <IonButton onClick={restartGame}>Reiniciar jogo</IonButton>
                 <IonButton fill="outline" onClick={goToThemes}>
                   Voltar para temas
                 </IonButton>
@@ -319,9 +372,9 @@ const CacaPalavras: React.FC = () => {
                 return (
                   <div
                     key={key}
-                    className={`caca-cell ${
-                      isSelected ? "selected" : ""
-                    } ${isFound ? "found" : ""}`}
+                    className={`caca-cell ${isSelected ? "selected" : ""} ${
+                      isFound ? "found" : ""
+                    }`}
                     data-row={i}
                     data-col={j}
                     data-letter={letra}
@@ -337,7 +390,7 @@ const CacaPalavras: React.FC = () => {
                     {letra}
                   </div>
                 );
-              })
+              }),
             )}
           </div>
 
@@ -345,16 +398,22 @@ const CacaPalavras: React.FC = () => {
             <h3>Palavras</h3>
             <ul>
               {data.palavras.map((p) => (
-                <li
-                  key={p}
-                  className={foundWords.includes(p) ? "found" : ""}
-                >
+                <li key={p} className={foundWords.includes(p) ? "found" : ""}>
                   {p}
                 </li>
               ))}
             </ul>
           </div>
         </div>
+
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMessage}
+          duration={3000}
+          color={toastColor}
+          position="bottom"
+        />
       </IonContent>
     </IonPage>
   );

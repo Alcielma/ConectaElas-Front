@@ -6,9 +6,10 @@ import {
   IonTitle,
   IonContent,
   IonIcon,
-  useIonViewDidEnter
+  IonButton,
+  useIonViewDidEnter,
 } from "@ionic/react";
-import { flash, shapes, grid, create  } from "ionicons/icons";
+import { flash, shapes, grid, create, statsChart } from "ionicons/icons";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContext";
 import "./Games.css";
@@ -22,7 +23,7 @@ const Games: React.FC = () => {
     { key: "quiz", label: "Quiz Relâmpago", icon: flash },
     { key: "memory", label: "Jogo da Memória", icon: shapes },
     { key: "wordsearch", label: "Caça-Palavras", icon: grid },
-    { key: "crossword", label: "Palavras-Cruzadas", icon: create }
+    { key: "crossword", label: "Palavras-Cruzadas", icon: create },
   ];
 
   const [leavingKey, setLeavingKey] = React.useState<string | null>(null);
@@ -39,7 +40,9 @@ const Games: React.FC = () => {
             // Lógica para jogador comum
             try {
               // Tenta pegar o último quiz ou vai para a lista
-              const current = JSON.parse(localStorage.getItem("currentQuiz") || "{}");
+              const current = JSON.parse(
+                localStorage.getItem("currentQuiz") || "{}",
+              );
               const id = Number(current?.id);
               if (id && !isNaN(id)) {
                 history.push(`/tabs/quiz-detail/${id}`);
@@ -62,7 +65,6 @@ const Games: React.FC = () => {
           break;
 
         case "wordsearch":
-
           if (isAssistant) {
             history.push("/tabs/caca-palavras-management");
           } else {
@@ -70,7 +72,7 @@ const Games: React.FC = () => {
           }
 
           break;
-          
+
         case "crossword":
           // Lógica atualizada para Palavras Cruzadas
           if (isAssistant) {
@@ -107,13 +109,23 @@ const Games: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen>
+        <div style={{ padding: "16px" }}>
+          <IonButton
+            expand="block"
+            color="primary"
+            routerLink="/tabs/minigames-progress"
+            style={{ marginBottom: "20px" }}
+          >
+            <IonIcon slot="start" icon={statsChart} />
+            Meu Progresso nos Minijogos
+          </IonButton>
+        </div>
+
         <div className="games-grid">
           {games.map((g) => (
             <button
               key={g.key}
-              className={`game-card ${
-                leavingKey === g.key ? "leaving" : ""
-              }`}
+              className={`game-card ${leavingKey === g.key ? "leaving" : ""}`}
               onClick={() => handleSelect(g.key)}
             >
               <IonIcon className="icon" icon={g.icon} />
