@@ -8,7 +8,12 @@ import {
   IonLabel,
   IonSpinner,
 } from "@ionic/react";
-import { Redirect, Route, RouteComponentProps, useLocation } from "react-router-dom";
+import {
+  Redirect,
+  Route,
+  RouteComponentProps,
+  useLocation,
+} from "react-router-dom";
 import {
   homeSharp,
   informationCircleSharp,
@@ -41,8 +46,8 @@ import CardManagement from "../pages/CardManagement";
 import CacaPalavrasManagement from "../pages/CacaPalavrasManagement";
 import PalavrasCruzadas from "../pages/PalavrasCruzadas";
 import PalavrasCruzadasList from "../pages/PalavrasCruzadasList";
-// IMPORT NOVO AQUI:
-import PalavrasCruzadasManagement from "../pages/PalavrasCruzadasManagement"; 
+import PalavrasCruzadasManagement from "../pages/PalavrasCruzadasManagement";
+import MinigamesProgress from "../pages/MinigamesProgress";
 
 import AddBanner from "../pages/AddBanner";
 import AddPost from "../pages/AddPost";
@@ -62,7 +67,8 @@ const TabsLayout: React.FC = () => {
     path.startsWith("/tabs/chat") ||
     path.startsWith("/tabs/ReportChannels") ||
     path.startsWith("/tabs/AngelContact")
-  ) selectedTab = "tab2";
+  )
+    selectedTab = "tab2";
   else if (
     path.startsWith("/tabs/games") ||
     path.startsWith("/tabs/quiz") ||
@@ -70,9 +76,10 @@ const TabsLayout: React.FC = () => {
     path.startsWith("/tabs/quiz-result") ||
     path.startsWith("/tabs/quiz-progress") ||
     path.startsWith("/tabs/quiz-management") ||
-    // LÓGICA NOVA PARA MANTER O ÍCONE ATIVO:
+    path.startsWith("/tabs/minigames-progress") ||
     path.startsWith("/tabs/palavras-cruzadas-management")
-  ) selectedTab = "games";
+  )
+    selectedTab = "games";
   else if (path.startsWith("/tabs/sobre")) selectedTab = "sobre";
   else if (
     path.startsWith("/tabs/tab3") ||
@@ -82,7 +89,7 @@ const TabsLayout: React.FC = () => {
   ) {
     selectedTab = "tab3";
   }
-  
+
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -91,8 +98,16 @@ const TabsLayout: React.FC = () => {
         <PrivateRoute exact path="/tabs/tab3" component={Tab3} />
         <PrivateRoute exact path="/tabs/chat" component={UserChat} />
         <PrivateRoute exact path="/tabs/management" component={ManagementHub} />
-        <PrivateRoute exact path="/tabs/card-management" component={CardManagement} />
-        <PrivateRoute exact path="/tabs/caca-palavras-management" component={CacaPalavrasManagement} />
+        <PrivateRoute
+          exact
+          path="/tabs/card-management"
+          component={CardManagement}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/caca-palavras-management"
+          component={CacaPalavrasManagement}
+        />
 
         <Route exact path="/tabs/sobre" component={Sobre} />
 
@@ -109,20 +124,65 @@ const TabsLayout: React.FC = () => {
         <PrivateRoute exact path="/tabs/add-banner" component={AddBanner} />
         <PrivateRoute exact path="/tabs/add-post" component={AddPost} />
         <PrivateRoute exact path="/tabs/quiz" component={QuizList} />
-        <PrivateRoute exact path="/tabs/quiz-detail/:id" component={QuizDetail} />
-        <PrivateRoute exact path="/tabs/quiz-progress" component={QuizProgress} />
-        <PrivateRoute exact path="/tabs/quiz-management" component={QuizManagement} />
+        <PrivateRoute
+          exact
+          path="/tabs/quiz-detail/:id"
+          component={QuizDetail}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/quiz-progress"
+          component={QuizProgress}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/quiz-management"
+          component={QuizManagement}
+        />
 
         <PrivateRoute exact path="/tabs/games" component={Games} />
-        <PrivateRoute exact path="/tabs/games/memory" component={MemoryThemeList} />
-        <PrivateRoute exact path="/tabs/games/memory/:id" component={MemoryThemeGame} />
-        <PrivateRoute exact path="/tabs/games/caca-palavras" component={CacaPalavrasList} />
-        <PrivateRoute exact path="/tabs/games/caca-palavras/:id" component={CacaPalavras} />
-        <PrivateRoute exact path="/tabs/games/palavras-cruzadas" component={PalavrasCruzadasList}/>
-        <PrivateRoute exact path="/tabs/games/palavras-cruzadas/:id" component={PalavrasCruzadas}/>
+        <PrivateRoute
+          exact
+          path="/tabs/games/memory"
+          component={MemoryThemeList}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/games/memory/:id"
+          component={MemoryThemeGame}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/games/caca-palavras"
+          component={CacaPalavrasList}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/games/caca-palavras/:id"
+          component={CacaPalavras}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/games/palavras-cruzadas"
+          component={PalavrasCruzadasList}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/games/palavras-cruzadas/:id"
+          component={PalavrasCruzadas}
+        />
+        <PrivateRoute
+          exact
+          path="/tabs/minigames-progress"
+          component={MinigamesProgress}
+        />
 
         {/* ROTA NOVA REGISTRADA AQUI: */}
-        <PrivateRoute exact path="/tabs/palavras-cruzadas-management" component={PalavrasCruzadasManagement} />
+        <PrivateRoute
+          exact
+          path="/tabs/palavras-cruzadas-management"
+          component={PalavrasCruzadasManagement}
+        />
 
         <PrivateRoute
           exact
@@ -149,7 +209,11 @@ const TabsLayout: React.FC = () => {
           )}
         />
 
-        <Route exact path="/tabs/test-localstorage" component={TestLocalStorage} />
+        <Route
+          exact
+          path="/tabs/test-localstorage"
+          component={TestLocalStorage}
+        />
         <Redirect exact from="/tabs" to="/tabs/tab1" />
       </IonRouterOutlet>
 

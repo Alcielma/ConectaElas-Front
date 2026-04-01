@@ -8,9 +8,12 @@ import {
   IonButtons,
   IonBackButton,
   IonSpinner,
+  IonToast,
 } from "@ionic/react";
 import "./PalavrasCruzadas.css";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../Contexts/AuthContext";
+import { criarPontuacao } from "../Services/PontuacaoService";
 
 interface CruzadaData {
   titulo: string;
@@ -34,6 +37,7 @@ interface Pista {
 
 const PalavrasCruzadas: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [data, setData] = useState<CruzadaData | null>(null);
   const [loading, setLoading] = useState(true);
   const [userGrid, setUserGrid] = useState<(string | null)[][]>([]);
@@ -41,6 +45,13 @@ const PalavrasCruzadas: React.FC = () => {
   const [active, setActive] = useState<Pista | null>(null);
   const [status, setStatus] = useState<Record<number, "ok" | "err">>({});
   const [solvedCells, setSolvedCells] = useState<Set<string>>(new Set());
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastColor, setToastColor] = useState<
+    "success" | "danger" | "warning"
+  >("success");
+  const [salvandoPontuacao, setSalvandoPontuacao] = useState<boolean>(false);
+  const [pontuacaoSalva, setPontuacaoSalva] = useState<boolean>(false);
 
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
@@ -48,7 +59,9 @@ const PalavrasCruzadas: React.FC = () => {
     const load = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/palavras-cruzadas?filters[id][$eq]=${id}`
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/palavras-cruzadas?filters[id][$eq]=${id}`,
         );
         const json = await res.json();
         const cruzada = json.data && json.data[0] ? json.data[0] : null;
@@ -57,14 +70,14 @@ const PalavrasCruzadas: React.FC = () => {
           setData(cruzada);
 
           const newGrid = cruzada.grade.grade.map((row: (string | null)[]) =>
-            row.map((cell: string | null) => (cell ? "" : null))
+            row.map((cell: string | null) => (cell ? "" : null)),
           );
           setUserGrid(newGrid);
 
           const pistasDetectadas = detectPistas(
             cruzada.grade.grade,
             cruzada.palavras,
-            cruzada.dicas
+            cruzada.dicas,
           );
           setPistas(pistasDetectadas);
         }
@@ -78,10 +91,64 @@ const PalavrasCruzadas: React.FC = () => {
     load();
   }, [id]);
 
+  const salvarPontuacaoNoBackend = async () => {
+    if (
+      !user?.id ||
+      !pistas ||
+      !data ||
+      pistas.length === 0 ||
+      salvandoPontuacao ||
+      pontuacaoSalva
+    )
+      return;
+
+    setSalvandoPontuacao(true);
+    try {
+      const pistasResolvidas = pistas.filter(
+        (p) => status[p.number] === "ok",
+      ).length;
+
+      const resultado = await criarPontuacao({
+        jogo: "palavracruzada" as const,
+        acertos: pistasResolvidas,
+        totalPerguntas: pistas.length,
+        users_permissions_user: user.id,
+        itemTitle: data.titulo,
+      });
+
+      if (resultado.sucesso) {
+        setToastMessage(
+          `✅ Pontuação salva: ${resultado.pontuacao?.total} pontos!`,
+        );
+        setToastColor("success");
+        setPontuacaoSalva(true);
+      } else {
+        setToastMessage(`⚠️ Erro ao salvar: ${resultado.erro}`);
+        setToastColor("warning");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar pontuação:", error);
+      setToastMessage("Erro ao salvar pontuação");
+      setToastColor("danger");
+    } finally {
+      setSalvandoPontuacao(false);
+      setShowToast(true);
+    }
+  };
+
+  useEffect(() => {
+    if (pistas.length === 0) return;
+
+    const todasResolvidas = pistas.every((p) => status[p.number] === "ok");
+    if (todasResolvidas && !pontuacaoSalva) {
+      salvarPontuacaoNoBackend();
+    }
+  }, [status, pistas]);
+
   const detectPistas = (
     grid: (string | null)[][],
     words: string[],
-    dicas: string[]
+    dicas: string[],
   ): Pista[] => {
     let tempPistas: Omit<Pista, "number">[] = [];
     const R = grid.length;
@@ -101,10 +168,11 @@ const PalavrasCruzadas: React.FC = () => {
           }
           if (match) {
             const prevChar = c > 0 ? grid[r][c - 1] : null;
-            const nextChar = c + word.length < C ? grid[r][c + word.length] : null;
-            
+            const nextChar =
+              c + word.length < C ? grid[r][c + word.length] : null;
+
             if (!prevChar && !nextChar) {
-               tempPistas.push({
+              tempPistas.push({
                 direction: "H",
                 row: r,
                 col: c,
@@ -126,10 +194,11 @@ const PalavrasCruzadas: React.FC = () => {
             }
           }
           if (match) {
-             const prevChar = r > 0 ? grid[r - 1][c] : null;
-             const nextChar = r + word.length < R ? grid[r + word.length][c] : null;
+            const prevChar = r > 0 ? grid[r - 1][c] : null;
+            const nextChar =
+              r + word.length < R ? grid[r + word.length][c] : null;
 
-             if (!prevChar && !nextChar) {
+            if (!prevChar && !nextChar) {
               tempPistas.push({
                 direction: "V",
                 row: r,
@@ -158,7 +227,7 @@ const PalavrasCruzadas: React.FC = () => {
     if (!active) return;
 
     const newVal = val.toUpperCase().slice(-1);
-    
+
     const copy = userGrid.map((row) => [...row]);
     copy[r][c] = newVal;
     setUserGrid(copy);
@@ -166,9 +235,11 @@ const PalavrasCruzadas: React.FC = () => {
     pistas.forEach((p) => {
       let intersects = false;
       if (p.direction === "H") {
-        if (p.row === r && c >= p.col && c < p.col + p.answer.length) intersects = true;
+        if (p.row === r && c >= p.col && c < p.col + p.answer.length)
+          intersects = true;
       } else {
-        if (p.col === c && r >= p.row && r < p.row + p.answer.length) intersects = true;
+        if (p.col === c && r >= p.row && r < p.row + p.answer.length)
+          intersects = true;
       }
 
       if (intersects) {
@@ -204,7 +275,7 @@ const PalavrasCruzadas: React.FC = () => {
       setStatus((s) => ({ ...s, [word.number]: "ok" }));
     } else {
       if (formed.length === word.answer.length) {
-         setStatus((s) => ({ ...s, [word.number]: "err" }));
+        setStatus((s) => ({ ...s, [word.number]: "err" }));
       }
     }
   };
@@ -251,11 +322,14 @@ const PalavrasCruzadas: React.FC = () => {
           >
             {data.grade.grade.map((row, r) =>
               row.map((cell, c) => {
-                if (!cell) return <div key={`${r}-${c}`} className="cruzada-empty" />;
+                if (!cell)
+                  return <div key={`${r}-${c}`} className="cruzada-empty" />;
 
                 const isSolved = solvedCells.has(`${r}-${c}`);
-              
-                const startsHere = pistas.filter(p => p.row === r && p.col === c);
+
+                const startsHere = pistas.filter(
+                  (p) => p.row === r && p.col === c,
+                );
 
                 return (
                   <div key={`${r}-${c}`} className="cell-wrapper">
@@ -278,29 +352,44 @@ const PalavrasCruzadas: React.FC = () => {
                       value={userGrid[r][c] || ""}
                       onFocus={() => {
                         const pistasAqui = pistas.filter((p) => {
-                            if (p.direction === "H") {
-                                return r === p.row && c >= p.col && c < p.col + p.answer.length;
-                            } else {
-                                return c === p.col && r >= p.row && r < p.row + p.answer.length;
-                            }
+                          if (p.direction === "H") {
+                            return (
+                              r === p.row &&
+                              c >= p.col &&
+                              c < p.col + p.answer.length
+                            );
+                          } else {
+                            return (
+                              c === p.col &&
+                              r >= p.row &&
+                              r < p.row + p.answer.length
+                            );
+                          }
                         });
                         if (pistasAqui.length > 0) {
-                            if (!active || !pistasAqui.find(p => p.number === active.number)) {
-                                setActive(pistasAqui[0]);
-                            }
+                          if (
+                            !active ||
+                            !pistasAqui.find((p) => p.number === active.number)
+                          ) {
+                            setActive(pistasAqui[0]);
+                          }
                         }
                       }}
                       onChange={(e) => handleType(r, c, e.target.value)}
                       onKeyDown={(e) => {
-                         const isLetter = /^[a-zA-Z]$/.test(e.key);
-                         if (!isLetter && e.key !== "Backspace" && e.key !== "Tab") {
-                             e.preventDefault();
-                         }
+                        const isLetter = /^[a-zA-Z]$/.test(e.key);
+                        if (
+                          !isLetter &&
+                          e.key !== "Backspace" &&
+                          e.key !== "Tab"
+                        ) {
+                          e.preventDefault();
+                        }
                       }}
                     />
                   </div>
                 );
-              })
+              }),
             )}
           </div>
 
@@ -311,14 +400,19 @@ const PalavrasCruzadas: React.FC = () => {
                 <li
                   key={pista.number}
                   className={status[pista.number] === "ok" ? "found" : ""}
-                  style={{ 
-                      cursor: "pointer", 
-                      fontWeight: active?.number === pista.number ? "bold" : "normal",
-                      color: active?.number === pista.number ? "var(--ion-color-primary)" : "inherit"
+                  style={{
+                    cursor: "pointer",
+                    fontWeight:
+                      active?.number === pista.number ? "bold" : "normal",
+                    color:
+                      active?.number === pista.number
+                        ? "var(--ion-color-primary)"
+                        : "inherit",
                   }}
                   onClick={() => {
                     setActive(pista);
-                    const input = inputRefs.current[`cell-${pista.row}-${pista.col}`];
+                    const input =
+                      inputRefs.current[`cell-${pista.row}-${pista.col}`];
                     input?.focus();
                   }}
                 >
@@ -328,6 +422,15 @@ const PalavrasCruzadas: React.FC = () => {
             </ul>
           </div>
         </div>
+
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMessage}
+          duration={3000}
+          color={toastColor}
+          position="bottom"
+        />
       </IonContent>
     </IonPage>
   );

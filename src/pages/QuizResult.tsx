@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useTransition } from 'react';
-import { useHistory, useLocation } from 'react-router';
-import { useAuth } from '../Contexts/AuthContext';
+import React, { useEffect, useState, useTransition } from "react";
+import { useHistory, useLocation } from "react-router";
+import { useAuth } from "../Contexts/AuthContext";
 import {
   IonBackButton,
   IonButtons,
@@ -16,10 +16,18 @@ import {
   IonButton,
   IonIcon,
   IonSpinner,
-} from '@ionic/react';
-import { useParams } from 'react-router';
-import { checkmarkCircleOutline, closeCircleOutline, arrowForwardOutline, chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
-import './QuizResult.css';
+  IonToast,
+} from "@ionic/react";
+import { useParams } from "react-router";
+import {
+  checkmarkCircleOutline,
+  closeCircleOutline,
+  arrowForwardOutline,
+  chevronDownOutline,
+  chevronUpOutline,
+} from "ionicons/icons";
+import { criarPontuacao } from "../Services/PontuacaoService";
+import "./QuizResult.css";
 
 interface RouteParams {
   id: string;
@@ -49,7 +57,15 @@ const QuizResult: React.FC = () => {
   const [pontuacao, setPontuacao] = useState<number>(0);
   const [percentual, setPercentual] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [expandedAnswers, setExpandedAnswers] = useState<{ [key: string]: boolean }>({});
+  const [expandedAnswers, setExpandedAnswers] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>("");
+  const [toastColor, setToastColor] = useState<
+    "success" | "danger" | "warning"
+  >("success");
+  const [salvandoPontuacao, setSalvandoPontuacao] = useState<boolean>(false);
   const history = useHistory();
   const location = useLocation();
 
@@ -57,12 +73,49 @@ const QuizResult: React.FC = () => {
   const fromManagement = searchParams.get("from") === "management";
   const quizListHref = fromManagement ? "/tabs/quiz-management" : "/tabs/quiz";
 
+  const salvarPontuacaoNoBackend = async (
+    acertos: number,
+    totalPerguntas: number,
+  ) => {
+    if (!user?.id || !resultado) return;
+
+    setSalvandoPontuacao(true);
+    try {
+      const resultadoPontuacao = await criarPontuacao({
+        jogo: "quiz" as const,
+        acertos,
+        totalPerguntas,
+        users_permissions_user: user.id,
+        itemTitle: resultado.quizTitle,
+      });
+
+      if (resultadoPontuacao.sucesso) {
+        setToastMessage(
+          `✅ Pontuação salva: ${resultadoPontuacao.pontuacao?.total} pontos!`,
+        );
+        setToastColor("success");
+      } else {
+        setToastMessage(
+          `⚠️ Erro ao salvar no banco: ${resultadoPontuacao.erro}`,
+        );
+        setToastColor("warning");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar pontuação:", error);
+      setToastMessage("Erro ao salvar pontuação");
+      setToastColor("danger");
+    } finally {
+      setSalvandoPontuacao(false);
+      setShowToast(true);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
 
     startTransition(() => {
       try {
-        const resultadoSalvo = localStorage.getItem('quizResult');
+        const resultadoSalvo = localStorage.getItem("quizResult");
 
         if (resultadoSalvo) {
           try {
@@ -72,24 +125,36 @@ const QuizResult: React.FC = () => {
             if (quizIdString === id) {
               setResultado(resultadoParsed);
 
-              const acertos = resultadoParsed.respostas.filter(r => r.correta).length;
+              const acertos = resultadoParsed.respostas.filter(
+                (r) => r.correta,
+              ).length;
               setPontuacao(acertos);
-              setPercentual(Math.round((acertos / resultadoParsed.totalPerguntas) * 100));
+              setPercentual(
+                Math.round((acertos / resultadoParsed.totalPerguntas) * 100),
+              );
 
               if (user) {
                 const quizHistoryKey = `quizHistory_${user.id}_${resultadoParsed.quizId}`;
                 const quizData = {
                   userId: user.id,
-                  userName: user.name || user.nome || user.username || "Usuário",
+                  userName:
+                    user.name || user.nome || user.username || "Usuário",
                   quizId: resultadoParsed.quizId,
                   quizTitle: resultadoParsed.quizTitle,
                   totalPerguntas: resultadoParsed.totalPerguntas,
                   acertos: acertos,
-                  percentual: Math.round((acertos / resultadoParsed.totalPerguntas) * 100),
-                  dataRealizacao: new Date().toLocaleDateString()
+                  percentual: Math.round(
+                    (acertos / resultadoParsed.totalPerguntas) * 100,
+                  ),
+                  dataRealizacao: new Date().toLocaleDateString(),
                 };
 
                 localStorage.setItem(quizHistoryKey, JSON.stringify(quizData));
+
+                salvarPontuacaoNoBackend(
+                  acertos,
+                  resultadoParsed.totalPerguntas,
+                );
               }
             }
           } catch {
@@ -100,7 +165,7 @@ const QuizResult: React.FC = () => {
         setLoading(false);
       }
     });
-  }, [id]);
+  }, [id, user]);
 
   useEffect(() => {
     const handler = (ev: any) => {
@@ -113,7 +178,7 @@ const QuizResult: React.FC = () => {
   }, [history, quizListHref]);
 
   const toggleAnswer = (perguntaId: string) => {
-    setExpandedAnswers(prev => ({
+    setExpandedAnswers((prev) => ({
       ...prev,
       [perguntaId]: !prev[perguntaId],
     }));
@@ -148,7 +213,9 @@ const QuizResult: React.FC = () => {
             <IonButtons slot="start">
               <IonBackButton defaultHref={quizListHref} />
             </IonButtons>
-            <IonTitle className="title-centered">Resultado não encontrado</IonTitle>
+            <IonTitle className="title-centered">
+              Resultado não encontrado
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding quiz-result-container">
@@ -174,7 +241,9 @@ const QuizResult: React.FC = () => {
       <IonContent className="ion-padding quiz-result-container">
         <IonCard className="result-summary-card">
           <IonCardHeader>
-            <IonCardTitle className="result-title">{resultado.quizTitle}</IonCardTitle>
+            <IonCardTitle className="result-title">
+              {resultado.quizTitle}
+            </IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
             <div className="score-container">
@@ -185,7 +254,11 @@ const QuizResult: React.FC = () => {
               <div className="score-percentage">
                 <span>{percentual}%</span>
                 <span className="score-label">
-                  {percentual >= 70 ? 'Muito bom!' : percentual >= 50 ? 'Bom trabalho!' : 'Continue tentando!'}
+                  {percentual >= 70
+                    ? "Muito bom!"
+                    : percentual >= 50
+                    ? "Bom trabalho!"
+                    : "Continue tentando!"}
                 </span>
               </div>
             </div>
@@ -203,15 +276,29 @@ const QuizResult: React.FC = () => {
                 </div>
                 <h3 className="question-title">{resposta.pergunta}</h3>
                 <div className="answer-row">
-                  <div className={`answer-detail ${resposta.correta ? 'correct' : 'wrong'}`}>
+                  <div
+                    className={`answer-detail ${
+                      resposta.correta ? "correct" : "wrong"
+                    }`}
+                  >
                     <IonIcon
-                      icon={resposta.correta ? checkmarkCircleOutline : closeCircleOutline}
-                      color={resposta.correta ? 'success' : 'danger'}
+                      icon={
+                        resposta.correta
+                          ? checkmarkCircleOutline
+                          : closeCircleOutline
+                      }
+                      color={resposta.correta ? "success" : "danger"}
                       className="answer-icon"
                     />
-                    <span className="answer-text">Sua resposta: <strong>{resposta.resposta}</strong></span>
+                    <span className="answer-text">
+                      Sua resposta: <strong>{resposta.resposta}</strong>
+                    </span>
                     <IonIcon
-                      icon={expandedAnswers[resposta.perguntaId] ? chevronUpOutline : chevronDownOutline}
+                      icon={
+                        expandedAnswers[resposta.perguntaId]
+                          ? chevronUpOutline
+                          : chevronDownOutline
+                      }
                       className="toggle-icon"
                       onClick={() => toggleAnswer(resposta.perguntaId)}
                     />
@@ -219,15 +306,26 @@ const QuizResult: React.FC = () => {
                   {expandedAnswers[resposta.perguntaId] && (
                     <>
                       <div className="correct-answer">
-                        <span className="correct-answer-text">Resposta correta: <strong>{resposta.corretaResposta}</strong></span>
+                        <span className="correct-answer-text">
+                          Resposta correta:{" "}
+                          <strong>{resposta.corretaResposta}</strong>
+                        </span>
                       </div>
-                      <div className={`explanation ${resposta.correta ? 'correct' : 'wrong'}`}>
-                        <span className="explanation-text">Explicação da sua resposta: {resposta.explicacao}</span>
+                      <div
+                        className={`explanation ${
+                          resposta.correta ? "correct" : "wrong"
+                        }`}
+                      >
+                        <span className="explanation-text">
+                          Explicação da sua resposta: {resposta.explicacao}
+                        </span>
                       </div>
                     </>
                   )}
                 </div>
-                {index < resultado.respostas.length - 1 && <hr className="answer-divider" />}
+                {index < resultado.respostas.length - 1 && (
+                  <hr className="answer-divider" />
+                )}
               </div>
             ))}
           </IonCardContent>
@@ -248,6 +346,15 @@ const QuizResult: React.FC = () => {
             <IonIcon slot="end" icon={arrowForwardOutline} />
           </IonButton>
         </div>
+
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMessage}
+          duration={3000}
+          color={toastColor}
+          position="bottom"
+        />
       </IonContent>
     </IonPage>
   );
