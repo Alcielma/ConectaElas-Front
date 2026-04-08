@@ -19,9 +19,11 @@ export interface PontuacaoResponse {
   documentId?: string;
   jogo: TipoJogo;
   total: number;
-  users_permissions_user: number;
+  users_permissions_user: any; // Pode vir como ID (number) ou objeto populado
   createdAt: string;
   updatedAt: string;
+  itemTitle?: string;
+  item_title?: string;
 }
 
 // Interface para informações do jogo
@@ -323,11 +325,27 @@ export function validarLimitePontuacao(
   return pontuacao >= config.limiteMinimo && pontuacao <= config.limiteMaximo;
 }
 
+/**
+ * Busca todas as pontuações (para assistentes)
+ */
+export async function getAllPontuacoes(): Promise<PontuacaoResponse[]> {
+  try {
+    const response = await api.get<{ data: PontuacaoResponse[] }>(
+      "/pontuacoes?populate=users_permissions_user&sort=createdAt:desc",
+    );
+    return response.data?.data || [];
+  } catch (error) {
+    console.error("Erro ao buscar todas as pontuações:", error);
+    return [];
+  }
+}
+
 export default {
   getInfoJogo,
   criarPontuacao,
   atualizarPontuacao,
   getPontuacoesUsuario,
+  getAllPontuacoes,
   getPontuacaoById,
   deletarPontuacao,
   getEstatisticasUsuario,
