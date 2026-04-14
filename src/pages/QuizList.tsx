@@ -161,20 +161,6 @@ const QuizList: React.FC = () => {
         </IonRefresher>
 
         <div className="quiz-list-container">
-          <div className="quiz-header">
-            {!(isAssistant || isAdmin) && (
-              <IonButton 
-                routerLink="/tabs/quiz-progress" 
-                fill="solid"
-                expand="block"
-                className="quiz-button"
-              >
-                <IonIcon slot="start" icon={ribbonOutline} />
-                Progresso
-              </IonButton>
-            )}
-          </div>
-          
           {loading ? (
             <div className="loading-container">
               <IonSpinner name="crescent" />

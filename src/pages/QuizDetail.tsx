@@ -21,9 +21,12 @@ import {
   IonBackButton,
   IonButtons,
   IonAlert,
+  IonToast,
 } from "@ionic/react";
-import { arrowBackOutline, checkmarkCircleOutline } from "ionicons/icons";
+import { arrowBackOutline, checkmarkCircleOutline, checkmarkCircle } from "ionicons/icons";
 import { getQuizById, QuizResult } from "../Services/QuizService";
+import { useAuth } from "../Contexts/AuthContext";
+import { criarPontuacao } from "../Services/PontuacaoService";
 import "./QuizDetail.css";
 
 interface RouteParams {
@@ -48,6 +51,7 @@ const QuizDetail: React.FC = () => {
   const { id } = useParams<RouteParams>();
   const history = useHistory();
   const location = useLocation();
+  const { user } = useAuth();
   const [isPending, startTransition] = useTransition();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [loading, setLoading] = useState<boolean>(true);

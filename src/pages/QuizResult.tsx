@@ -66,49 +66,13 @@ const QuizResult: React.FC = () => {
     "success" | "danger" | "warning"
   >("success");
   const [salvandoPontuacao, setSalvandoPontuacao] = useState<boolean>(false);
+  const [pontuacaoSalva, setPontuacaoSalva] = useState<boolean>(false);
   const history = useHistory();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
   const fromManagement = searchParams.get("from") === "management";
   const quizListHref = fromManagement ? "/tabs/quiz-management" : "/tabs/quiz";
-
-  const salvarPontuacaoNoBackend = async (
-    acertos: number,
-    totalPerguntas: number,
-  ) => {
-    if (!user?.id || !resultado) return;
-
-    setSalvandoPontuacao(true);
-    try {
-      const resultadoPontuacao = await criarPontuacao({
-        jogo: "quiz" as const,
-        acertos,
-        totalPerguntas,
-        users_permissions_user: user.id,
-        itemTitle: resultado.quizTitle,
-      });
-
-      if (resultadoPontuacao.sucesso) {
-        setToastMessage(
-          `✅ Pontuação salva: ${resultadoPontuacao.pontuacao?.total} pontos!`,
-        );
-        setToastColor("success");
-      } else {
-        setToastMessage(
-          `⚠️ Erro ao salvar no banco: ${resultadoPontuacao.erro}`,
-        );
-        setToastColor("warning");
-      }
-    } catch (error) {
-      console.error("Erro ao salvar pontuação:", error);
-      setToastMessage("Erro ao salvar pontuação");
-      setToastColor("danger");
-    } finally {
-      setSalvandoPontuacao(false);
-      setShowToast(true);
-    }
-  };
 
   useEffect(() => {
     setLoading(true);
@@ -132,30 +96,6 @@ const QuizResult: React.FC = () => {
               setPercentual(
                 Math.round((acertos / resultadoParsed.totalPerguntas) * 100),
               );
-
-              if (user) {
-                const quizHistoryKey = `quizHistory_${user.id}_${resultadoParsed.quizId}`;
-                const quizData = {
-                  userId: user.id,
-                  userName:
-                    user.name || user.nome || user.username || "Usuário",
-                  quizId: resultadoParsed.quizId,
-                  quizTitle: resultadoParsed.quizTitle,
-                  totalPerguntas: resultadoParsed.totalPerguntas,
-                  acertos: acertos,
-                  percentual: Math.round(
-                    (acertos / resultadoParsed.totalPerguntas) * 100,
-                  ),
-                  dataRealizacao: new Date().toLocaleDateString(),
-                };
-
-                localStorage.setItem(quizHistoryKey, JSON.stringify(quizData));
-
-                salvarPontuacaoNoBackend(
-                  acertos,
-                  resultadoParsed.totalPerguntas,
-                );
-              }
             }
           } catch {
             setResultado(null);
@@ -183,6 +123,50 @@ const QuizResult: React.FC = () => {
       [perguntaId]: !prev[perguntaId],
     }));
   };
+
+  const salvarPontuacaoNoBackend = async (
+    acertos: number,
+    total: number,
+    titulo: string
+  ) => {
+    if (!user?.id || salvandoPontuacao || pontuacaoSalva) return;
+
+    setSalvandoPontuacao(true);
+    try {
+      const resultadoSalvar = await criarPontuacao({
+        jogo: "quiz" as const,
+        acertos: acertos,
+        totalPerguntas: total,
+        users_permissions_user: user.id,
+        itemTitle: titulo,
+      });
+
+      if (resultadoSalvar.sucesso) {
+        setToastMessage(
+          `✅ Pontuação salva: ${resultadoSalvar.pontuacao?.total} pontos!`
+        );
+        setToastColor("success");
+        setPontuacaoSalva(true);
+      } else {
+        setToastMessage(`⚠️ Erro ao salvar: ${resultadoSalvar.erro}`);
+        setToastColor("warning");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar pontuação:", error);
+      setToastMessage("Erro ao salvar pontuação");
+      setToastColor("danger");
+    } finally {
+      setSalvandoPontuacao(false);
+      setShowToast(true);
+    }
+  };
+
+  useEffect(() => {
+    if (resultado && !pontuacaoSalva && !salvandoPontuacao) {
+      const acertos = resultado.respostas.filter((r) => r.correta).length;
+      salvarPontuacaoNoBackend(acertos, resultado.totalPerguntas, resultado.quizTitle);
+    }
+  }, [resultado, user]);
 
   if (loading) {
     return (
