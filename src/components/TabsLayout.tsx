@@ -30,7 +30,6 @@ import Sobre from "../pages/Sobre";
 
 import QuizList from "../pages/QuizList";
 import QuizDetail from "../pages/QuizDetail";
-import QuizProgress from "../pages/QuizProgress";
 import QuizManagement from "../pages/QuizManagement";
 import Games from "../pages/Games";
 
@@ -74,7 +73,6 @@ const TabsLayout: React.FC = () => {
     path.startsWith("/tabs/quiz") ||
     path.startsWith("/tabs/quiz-detail") ||
     path.startsWith("/tabs/quiz-result") ||
-    path.startsWith("/tabs/quiz-progress") ||
     path.startsWith("/tabs/quiz-management") ||
     path.startsWith("/tabs/minigames-progress") ||
     path.startsWith("/tabs/palavras-cruzadas-management")
@@ -128,11 +126,6 @@ const TabsLayout: React.FC = () => {
           exact
           path="/tabs/quiz-detail/:id"
           component={QuizDetail}
-        />
-        <PrivateRoute
-          exact
-          path="/tabs/quiz-progress"
-          component={QuizProgress}
         />
         <PrivateRoute
           exact

@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import ReactDOM from "react-dom";
 import { IonIcon } from "@ionic/react";
 import { arrowBack, bookmark, bookmarkOutline } from "ionicons/icons";
-import CommentItem from "./CommentItem";
+import CommentItem from "./CommentItem/CommentItem";
 import { isVideoUrl } from "../Services/FavoritesService";
 import { useAuth } from "../Contexts/AuthContext";
 import { isPostFavorited, addToFavorites } from "../Services/FavoritesService";
