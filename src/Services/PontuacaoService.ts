@@ -1,13 +1,14 @@
 import api from "./api";
 
 // Tipos de jogos suportados - DEVE coincidir com o backend!
-export type TipoJogo = "quiz" | "memoria" | "cacapalavras" | "palavracruzada";
+export type TipoJogo = "memoria" | "cacapalavras" | "palavracruzada" | "quiz";
 
 // Interface para criação/atualização de pontuação
 export interface CriarPontuacaoDTO {
   jogo: TipoJogo;
   acertos: number;
   totalPerguntas: number;
+  total?: number; // Pontuação total opcional (será calculada se não fornecida)
   users_permissions_user?: number;
   itemId?: number;
   itemTitle?: string;
@@ -37,13 +38,6 @@ export interface InfoJogo {
 
 // Configuração dos multiplicadores e limites por jogo
 const CONFIG_JOGOS: Record<TipoJogo, InfoJogo> = {
-  quiz: {
-    jogo: "quiz",
-    multiplicador: 1,
-    limiteMinimo: 0,
-    limiteMaximo: 1000,
-    descricao: "Quiz",
-  },
   memoria: {
     jogo: "memoria",
     multiplicador: 1.5,
@@ -65,6 +59,13 @@ const CONFIG_JOGOS: Record<TipoJogo, InfoJogo> = {
     limiteMaximo: 2000,
     descricao: "Palavras Cruzadas",
   },
+  quiz: {
+    jogo: "quiz",
+    multiplicador: 1.2,
+    limiteMinimo: 0,
+    limiteMaximo: 1200,
+    descricao: "Quiz",
+  },
 };
 
 /**
@@ -77,7 +78,7 @@ function validarTipoJogo(jogo: string): jogo is TipoJogo {
 /**
  * Calcula a pontuação com multiplicador
  */
-function calcularPontuacao(
+export function calcularPontuacaoLocal(
   acertos: number,
   totalPerguntas: number,
   multiplicador: number,
@@ -151,6 +152,10 @@ export async function criarPontuacao(
       return { sucesso: false, erro: validacao.erro };
     }
 
+    // Calcular total se não fornecido
+    const config = CONFIG_JOGOS[data.jogo];
+    const total = data.total ?? calcularPontuacaoLocal(data.acertos, data.totalPerguntas, config.multiplicador);
+
     const response = await api.post<{ data: PontuacaoResponse }>(
       "/pontuacoes",
       {
@@ -158,7 +163,11 @@ export async function criarPontuacao(
           jogo: data.jogo,
           acertos: data.acertos,
           totalPerguntas: data.totalPerguntas,
+          total: total, // Enviar o campo 'total' exigido pelo Strapi
           users_permissions_user: data.users_permissions_user,
+          itemTitle: data.itemTitle,
+          item_title: data.itemTitle,
+          itemId: data.itemId,
         },
       },
     );
@@ -191,6 +200,13 @@ export async function atualizarPontuacao(
       return { sucesso: false, erro: `Tipo de jogo inválido: ${data.jogo}` };
     }
 
+    // Calcular total se dados suficientes forem fornecidos
+    let total = data.total;
+    if (total === undefined && data.acertos !== undefined && data.totalPerguntas !== undefined && data.jogo) {
+      const config = CONFIG_JOGOS[data.jogo];
+      total = calcularPontuacaoLocal(data.acertos, data.totalPerguntas, config.multiplicador);
+    }
+
     const response = await api.put<{ data: PontuacaoResponse }>(
       `/pontuacoes/${id}`,
       {
@@ -198,7 +214,11 @@ export async function atualizarPontuacao(
           jogo: data.jogo,
           acertos: data.acertos,
           totalPerguntas: data.totalPerguntas,
+          total: total, // Enviar o campo 'total' atualizado
           users_permissions_user: data.users_permissions_user,
+          itemTitle: data.itemTitle,
+          item_title: data.itemTitle,
+          itemId: data.itemId,
         },
       },
     );
