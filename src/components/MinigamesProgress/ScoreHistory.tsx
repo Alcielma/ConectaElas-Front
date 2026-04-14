@@ -24,7 +24,7 @@ const ScoreHistory: React.FC<ScoreHistoryProps> = ({ scores, onDelete }) => {
           <IonItemSliding key={score.id}>
             <IonItem>
               <div className="score-item-content">
-                <span className="score-number">#{idx + 1}</span>
+                <span className="score-item-number">#{idx + 1}</span>
                 <div className="score-name-wrapper">
                   {score.itemTitle && (
                     <span className="score-name">{score.itemTitle}</span>

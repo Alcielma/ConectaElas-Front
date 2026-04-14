@@ -37,6 +37,7 @@ const UserList: React.FC<UserListProps> = ({ users, onSelect, searchText }) => {
           button
           onClick={() => onSelect(userSummary)}
           className="user-item"
+          lines="none"
         >
           <IonAvatar slot="start">
             <div className="user-avatar-placeholder">
@@ -51,8 +52,8 @@ const UserList: React.FC<UserListProps> = ({ users, onSelect, searchText }) => {
           </IonLabel>
           <div className="user-stats" slot="end">
             <div className="stat-badge">
+              <span className="stat-text">Jogos :</span>
               <span className="stat-number">{userSummary.totalGames}</span>
-              <span className="stat-text">Jogos</span>
             </div>
             <div className="stat-badge score success">
               <span className="stat-number">{userSummary.totalPoints}</span>

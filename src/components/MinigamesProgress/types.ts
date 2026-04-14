@@ -37,3 +37,17 @@ export interface GameTypeStats {
   melhorPontuacao: number;
   mediaPerJogo: number;
 }
+
+export const NOMES_JOGOS: Record<TipoJogo, string> = {
+  memoria: "Jogo da Memória",
+  cacapalavras: "Caça-Palavras",
+  palavracruzada: "Palavras Cruzadas",
+  quiz: "Quiz",
+};
+
+export const CORES_JOGOS: Record<TipoJogo, string> = {
+  memoria: "secondary",
+  cacapalavras: "tertiary",
+  palavracruzada: "warning",
+  quiz: "primary",
+};
