@@ -26,22 +26,8 @@ import { useMinigamesProgress } from "../hooks/useMinigamesProgress";
 import UserList from "../components/MinigamesProgress/UserList";
 import GameStatCard from "../components/MinigamesProgress/GameStatCard";
 import UserGameCard from "../components/MinigamesProgress/UserGameCard";
-import { PontuacaoItem } from "../components/MinigamesProgress/types";
+import { PontuacaoItem, NOMES_JOGOS, CORES_JOGOS } from "../components/MinigamesProgress/types";
 import "./MinigamesProgress.css";
-
-const NOMES_JOGOS: Record<TipoJogo, string> = {
-  quiz: "Quiz",
-  memoria: "Jogo da Memória",
-  cacapalavras: "Caça-Palavras",
-  palavracruzada: "Palavras Cruzadas",
-};
-
-const CORES_JOGOS: Record<TipoJogo, string> = {
-  quiz: "primary",
-  memoria: "secondary",
-  cacapalavras: "tertiary",
-  palavracruzada: "warning",
-};
 
 const MinigamesProgress: React.FC = () => {
   const { user, isAssistant } = useAuth();

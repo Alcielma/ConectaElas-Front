@@ -4,7 +4,7 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./Carrossel.css";
-import BannerService, { Banner } from "../Services/BannerService";
+import BannerService, { Banner } from "../../Services/BannerService";
 
 interface CarrosselProps {
   refreshKey?: number;

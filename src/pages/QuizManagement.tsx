@@ -594,7 +594,6 @@ const handleUpdateQuiz = async () => {
           <QuizList
             quizzes={quizzes}
             loading={loading}
-            onViewProgress={() => history.push('/tabs/quiz-progress')}
             onCreateClick={() => {
               setNovoQuiz({
                 titulo: "",

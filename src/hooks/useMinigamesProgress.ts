@@ -8,7 +8,8 @@ import {
   PontuacaoItem, 
   UserSummary, 
   UserGameStats, 
-  GameTypeStats 
+  GameTypeStats,
+  NOMES_JOGOS
 } from "../components/MinigamesProgress/types";
 import { calculateGameTypeStats, calculateUserGameStats } from "../utils/gameStats";
 
@@ -84,37 +85,9 @@ export const useMinigamesProgress = (user: any, isAssistant: boolean, assistantV
         total: p.total,
         createdAt: p.createdAt,
         users_permissions_user: p.users_permissions_user,
-        itemTitle: p.itemTitle || p.item_title || "",
+        // Se não tiver itemTitle (como em alguns jogos antigos), usa o nome genérico do jogo
+        itemTitle: p.itemTitle || p.item_title || NOMES_JOGOS[p.jogo] || "",
       }));
-
-      // Carregar históricos de quiz do localStorage
-      if (targetUserId === user.id) {
-        try {
-          for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith(`quizHistory_${user.id}_`)) {
-              const quizDataRaw = localStorage.getItem(key);
-              if (quizDataRaw) {
-                const quizData = JSON.parse(quizDataRaw);
-                const jaExiste = scores.find(s => s.jogo === 'quiz' && s.itemTitle === quizData.quizTitle && s.total === quizData.acertos);
-                
-                if (!jaExiste) {
-                  scores.push({
-                    id: Math.random(),
-                    jogo: "quiz",
-                    total: quizData.acertos,
-                    createdAt: quizData.dataRealizacao.split('/').reverse().join('-'),
-                    users_permissions_user: user.id,
-                    itemTitle: quizData.quizTitle
-                  });
-                }
-              }
-            }
-          }
-        } catch (e) {
-          console.error("Erro ao carregar quiz do localStorage:", e);
-        }
-      }
 
       setProgressData(scores);
       setGameTypeStats(calculateGameTypeStats(scores));

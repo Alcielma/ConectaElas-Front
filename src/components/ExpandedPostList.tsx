@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { IonIcon } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { chatbubble, bookmark, bookmarkOutline } from "ionicons/icons";
-import CommentItem from "./CommentItem";
+import CommentItem from "./CommentItem/CommentItem";
 import { addComment } from "../Services/CommentService";
 import { useAuth } from "../Contexts/AuthContext";
 import { isPostFavorited, addToFavorites, removeFromFavorites, isVideoUrl } from "../Services/FavoritesService";

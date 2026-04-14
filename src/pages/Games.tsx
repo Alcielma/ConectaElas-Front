@@ -109,15 +109,14 @@ const Games: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen>
-        <div style={{ padding: "16px" }}>
+        <div style={{ padding: "24px 16px 8px 16px" }}>
           <IonButton
             expand="block"
             color="primary"
             routerLink="/tabs/minigames-progress"
-            style={{ marginBottom: "20px" }}
           >
             <IonIcon slot="start" icon={statsChart} />
-            Meu Progresso nos Minijogos
+            Progresso geral (mine jogos)
           </IonButton>
         </div>
 

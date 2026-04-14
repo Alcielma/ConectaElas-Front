@@ -1,5 +1,5 @@
 import { TipoJogo } from "../Services/PontuacaoService";
-import { GameTypeStats, UserGameStats, PontuacaoItem } from "../components/MinigamesProgress/types";
+import { GameTypeStats, UserGameStats, PontuacaoItem, NOMES_JOGOS } from "../components/MinigamesProgress/types";
 
 export const createEmptyGameStat = (userId: number, userName: string, jogo: TipoJogo): UserGameStats => ({
   userId,
@@ -16,7 +16,7 @@ export const calculateGameTypeStats = (scores: PontuacaoItem[]): GameTypeStats[]
   const gameStats: Record<TipoJogo, GameTypeStats> = {
     quiz: {
       jogo: "quiz",
-      descricao: "Quiz",
+      descricao: NOMES_JOGOS.quiz,
       totalPontos: 0,
       totalJogos: 0,
       melhorPontuacao: 0,
@@ -24,7 +24,7 @@ export const calculateGameTypeStats = (scores: PontuacaoItem[]): GameTypeStats[]
     },
     memoria: {
       jogo: "memoria",
-      descricao: "Jogo da Memória",
+      descricao: NOMES_JOGOS.memoria,
       totalPontos: 0,
       totalJogos: 0,
       melhorPontuacao: 0,
@@ -32,7 +32,7 @@ export const calculateGameTypeStats = (scores: PontuacaoItem[]): GameTypeStats[]
     },
     cacapalavras: {
       jogo: "cacapalavras",
-      descricao: "Caça-Palavras",
+      descricao: NOMES_JOGOS.cacapalavras,
       totalPontos: 0,
       totalJogos: 0,
       melhorPontuacao: 0,
@@ -40,7 +40,7 @@ export const calculateGameTypeStats = (scores: PontuacaoItem[]): GameTypeStats[]
     },
     palavracruzada: {
       jogo: "palavracruzada",
-      descricao: "Palavras Cruzadas",
+      descricao: NOMES_JOGOS.palavracruzada,
       totalPontos: 0,
       totalJogos: 0,
       melhorPontuacao: 0,

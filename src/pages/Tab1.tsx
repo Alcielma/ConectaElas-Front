@@ -18,7 +18,7 @@ import {
   IonLabel,
 } from "@ionic/react";
 import "./Tab1.css";
-import Carrossel from "../components/Carrossel";
+import Carrossel from "../components/Carrossel/Carrossel";
 import Feed from "../components/Feed";
 import { useAuth } from "../Contexts/AuthContext";
 
