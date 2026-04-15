@@ -126,6 +126,9 @@ const CacaPalavras: React.FC = () => {
   >("success");
   const [salvandoPontuacao, setSalvandoPontuacao] = useState<boolean>(false);
   const [pontuacaoSalva, setPontuacaoSalva] = useState<boolean>(false);
+  const [startCell, setStartCell] = useState<{ row: number; col: number } | null>(
+    null,
+  );
 
   const searchParams = new URLSearchParams(location.search);
   const fromManagement = searchParams.get("from") === "management";
@@ -168,16 +171,62 @@ const CacaPalavras: React.FC = () => {
     }
   });
 
-  const selectCell = (row: number, col: number, letter: string) => {
-    const key = `${row}-${col}`;
-    if (selectedCells.includes(key)) return;
-    setSelectedCells((prev) => [...prev, key]);
-    setCurrentWord((prev) => prev + letter);
+  const selectCell = (row: number, col: number) => {
+    if (!data) return;
+    if (!startCell) {
+      setStartCell({ row, col });
+      const key = `${row}-${col}`;
+      setSelectedCells([key]);
+      setCurrentWord(data.grade.grade[row][col]);
+    } else {
+      // Verifica se está na mesma linha ou mesma coluna
+      if (row === startCell.row || col === startCell.col) {
+        const newSelectedCells: string[] = [];
+        let newCurrentWord = "";
+
+        const startR = Math.min(startCell.row, row);
+        const endR = Math.max(startCell.row, row);
+        const startC = Math.min(startCell.col, col);
+        const endC = Math.max(startCell.col, col);
+
+        if (row === startCell.row) {
+          // Horizontal
+          for (let c = startC; c <= endC; c++) {
+            newSelectedCells.push(`${row}-${c}`);
+            newCurrentWord += data.grade.grade[row][c];
+          }
+        } else {
+          // Vertical
+          for (let r = startR; r <= endR; r++) {
+            newSelectedCells.push(`${r}-${col}`);
+            newCurrentWord += data.grade.grade[r][col];
+          }
+        }
+
+        // Ajusta a palavra se estiver selecionando de trás para frente
+        if (row < startCell.row || col < startCell.col) {
+          newCurrentWord = "";
+          if (row === startCell.row) {
+            for (let c = startCell.col; c >= col; c--) {
+              newCurrentWord += data.grade.grade[row][c];
+            }
+          } else {
+            for (let r = startCell.row; r >= row; r--) {
+              newCurrentWord += data.grade.grade[r][col];
+            }
+          }
+        }
+
+        setSelectedCells(newSelectedCells);
+        setCurrentWord(newCurrentWord);
+      }
+    }
   };
 
   const finalizeSelection = () => {
     if (!data || selectedCells.length === 0) {
       setIsSelecting(false);
+      setStartCell(null);
       return;
     }
 
@@ -197,6 +246,7 @@ const CacaPalavras: React.FC = () => {
     setSelectedCells([]);
     setCurrentWord("");
     setIsSelecting(false);
+    setStartCell(null);
   };
 
   const restartGame = () => {
@@ -259,9 +309,8 @@ const CacaPalavras: React.FC = () => {
     if (!el || !el.classList.contains("caca-cell")) return;
     const row = el.getAttribute("data-row");
     const col = el.getAttribute("data-col");
-    const letter = el.getAttribute("data-letter");
-    if (row && col && letter) {
-      selectCell(Number(row), Number(col), letter);
+    if (row && col) {
+      selectCell(Number(row), Number(col));
     }
   };
 
@@ -272,9 +321,8 @@ const CacaPalavras: React.FC = () => {
     if (!el || !el.classList.contains("caca-cell")) return;
     const row = el.getAttribute("data-row");
     const col = el.getAttribute("data-col");
-    const letter = el.getAttribute("data-letter");
-    if (row && col && letter) {
-      selectCell(Number(row), Number(col), letter);
+    if (row && col) {
+      selectCell(Number(row), Number(col));
     }
   };
 
@@ -389,11 +437,11 @@ const CacaPalavras: React.FC = () => {
                     data-letter={letra}
                     onMouseDown={() => {
                       setIsSelecting(true);
-                      selectCell(i, j, letra);
+                      selectCell(i, j);
                     }}
                     onTouchStart={() => {
                       setIsSelecting(true);
-                      selectCell(i, j, letra);
+                      selectCell(i, j);
                     }}
                   >
                     {letra}
