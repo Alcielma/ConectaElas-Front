@@ -9,6 +9,7 @@ import {
   IonBackButton,
   IonSpinner,
   IonToast,
+  useIonViewDidLeave,
 } from "@ionic/react";
 import "./PalavrasCruzadas.css";
 import { useParams } from "react-router-dom";
@@ -90,6 +91,15 @@ const PalavrasCruzadas: React.FC = () => {
 
     load();
   }, [id]);
+
+  useIonViewDidLeave(() => {
+    const pistasResolvidas = pistas.filter(
+      (p) => status[p.number] === "ok",
+    ).length;
+    if (user?.id && pistas && pistas.length > 0 && pistasResolvidas > 0 && !pontuacaoSalva) {
+      salvarPontuacaoNoBackend();
+    }
+  });
 
   const salvarPontuacaoNoBackend = async () => {
     if (

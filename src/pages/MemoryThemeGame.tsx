@@ -332,12 +332,9 @@ const MemoryThemeGame: React.FC = () => {
   };
 
   useEffect(() => {
-    // Only show end modal if reward modal is NOT showing
     if ((allMatched || gameOver) && cards.length > 0 && !showRewardModal) {
       setShowEndModal(true);
-      if (allMatched) {
-        salvarPontuacaoNoBackend();
-      }
+      salvarPontuacaoNoBackend();
     }
   }, [allMatched, gameOver, cards.length, showRewardModal]);
 

@@ -12,6 +12,7 @@ import {
   IonButton,
   IonIcon,
   IonToast,
+  useIonViewDidLeave,
 } from "@ionic/react";
 import "./CacaPalavras.css";
 import { useParams, useHistory, useLocation } from "react-router-dom";
@@ -124,6 +125,7 @@ const CacaPalavras: React.FC = () => {
     "success" | "danger" | "warning"
   >("success");
   const [salvandoPontuacao, setSalvandoPontuacao] = useState<boolean>(false);
+  const [pontuacaoSalva, setPontuacaoSalva] = useState<boolean>(false);
 
   const searchParams = new URLSearchParams(location.search);
   const fromManagement = searchParams.get("from") === "management";
@@ -159,6 +161,12 @@ const CacaPalavras: React.FC = () => {
     };
     load();
   }, [id]);
+
+  useIonViewDidLeave(() => {
+    if (user?.id && data && foundWords.length > 0 && !pontuacaoSalva) {
+      salvarPontuacaoNoBackend();
+    }
+  });
 
   const selectCell = (row: number, col: number, letter: string) => {
     const key = `${row}-${col}`;
@@ -204,7 +212,7 @@ const CacaPalavras: React.FC = () => {
   };
 
   const salvarPontuacaoNoBackend = async () => {
-    if (!user?.id || !data) return;
+    if (!user?.id || !data || salvandoPontuacao || pontuacaoSalva) return;
 
     setSalvandoPontuacao(true);
     try {
@@ -221,6 +229,7 @@ const CacaPalavras: React.FC = () => {
           `✅ Pontuação salva: ${resultado.pontuacao?.total} pontos!`,
         );
         setToastColor("success");
+        setPontuacaoSalva(true);
       } else {
         setToastMessage(`⚠️ Erro ao salvar: ${resultado.erro}`);
         setToastColor("warning");
