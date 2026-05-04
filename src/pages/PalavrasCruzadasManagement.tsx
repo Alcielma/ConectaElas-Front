@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import {
   IonContent,
@@ -273,6 +273,7 @@ const PalavrasCruzadasManagement: React.FC = () => {
     isEdit: boolean,
     onSave: () => void
   ) => {
+    const contentRef = useRef<HTMLIonContentElement>(null);
     
     const handleItemChange = (index: number, field: 'palavra' | 'dica', value: string) => {
       const novosItens = [...data.itens];
@@ -282,6 +283,9 @@ const PalavrasCruzadasManagement: React.FC = () => {
 
     const addItem = () => {
       setData({ ...data, itens: [...data.itens, { palavra: "", dica: "" }] });
+      setTimeout(() => {
+        contentRef.current?.scrollToBottom(300);
+      }, 100);
     };
 
     const removeItem = (index: number) => {
@@ -292,7 +296,7 @@ const PalavrasCruzadasManagement: React.FC = () => {
     };
 
     return (
-      <IonContent className="quiz-form-content">
+      <IonContent ref={contentRef} className="quiz-form-content">
         <div className="quiz-result-container ion-padding">
           <IonCardContent>
             <IonItem>
