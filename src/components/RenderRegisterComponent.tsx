@@ -68,6 +68,7 @@ const RenderRegisterComponent: React.FC<RenderRegisterComponentProps> = ({
 
     let { username, email, password } = data;
     username = unMaskNumbers(username);
+    email = email.toLowerCase();
     const response = await register(username, email, password);
 
     if (!response.success) {

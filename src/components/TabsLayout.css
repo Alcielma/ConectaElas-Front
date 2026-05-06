@@ -1,0 +1,69 @@
+/* Estilos específicos para o TabsLayout */
+
+/* Tab Bar */
+ion-app ion-tab-bar {
+  --background: var(--surface) !important;
+  --color: var(--cor-principal);
+  --color-selected: var(--cor-secundaria);
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  height: 70px !important;
+  min-height: 70px !important;
+  border: var(--border-color) !important;
+  box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25) !important;
+}
+
+ion-app ion-tab-button {
+  --color: var(--cor-principal);
+  --color-selected: var(--cor-secundaria);
+  --ripple-color: rgba(114, 0, 121, 0.1) !important;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  color: var(--cor-principal);
+  transition: color 0.2s ease !important;
+  height: 100% !important;
+}
+
+ion-app ion-tab-button ion-icon {
+  font-size: 30px !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+ion-app ion-tab-button ion-label {
+  font-size: 12px !important;
+  margin-top: 4px !important;
+}
+
+ion-app ion-tab-button.tab-selected {
+  --color: var(--cor-secundaria);
+  color: var(--cor-secundaria);
+}
+
+ion-app ion-tab-button:hover {
+  color: var(--cor-secundaria);
+}
+
+ion-app ion-tab-button.tab-selected ion-icon {
+  color: var(--cor-secundaria);
+}
+
+ion-app ion-tab-button.tab-selected ion-label {
+  color: var(--cor-secundaria);
+}
+
+/* Ícones customizados (Conexões e Perfil) */
+.custom-tab-icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  background-color: currentColor;
+}

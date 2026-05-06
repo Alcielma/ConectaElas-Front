@@ -89,6 +89,7 @@ const Login: React.FC = () => {
     const onlyNumbers = identifierValue.replace(/\D/g, "");
     const isCPF = onlyNumbers.length === 11 && isValidCPF(onlyNumbers);
     if (isCPF) identifier = unMaskNumbers(identifier);
+    else identifier = identifier.toLowerCase();
 
     const response = await login(identifier, password);
 
