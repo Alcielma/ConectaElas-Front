@@ -182,7 +182,7 @@ const CacaPalavras: React.FC = () => {
 
       if (updatedWords.length === data.palavras.length) {
         setShowEndModal(true);
-        salvarPontuacaoNoBackend();
+        salvarPontuacaoNoBackend(updatedWords.length);
       }
     }
 
@@ -203,14 +203,14 @@ const CacaPalavras: React.FC = () => {
     setShowEndModal(false);
   };
 
-  const salvarPontuacaoNoBackend = async () => {
+  const salvarPontuacaoNoBackend = async (acertosCount?: number) => {
     if (!user?.id || !data) return;
 
     setSalvandoPontuacao(true);
     try {
       const resultado = await criarPontuacao({
         jogo: "cacapalavras" as const,
-        acertos: foundWords.length,
+        acertos: acertosCount ?? foundWords.length,
         totalPerguntas: data.palavras.length,
         users_permissions_user: user.id,
         itemTitle: data.titulo,
