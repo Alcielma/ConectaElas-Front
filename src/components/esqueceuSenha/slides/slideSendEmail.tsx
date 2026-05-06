@@ -46,11 +46,12 @@ export default function SlideSendEmail({
       return;
     }
 
+    const emailLowerCase = email.toLowerCase();
     setLoading(true);
-    const response = await AuthService.enviarCodigoSenha(email);
+    const response = await AuthService.enviarCodigoSenha(emailLowerCase);
 
     if (response.success) {
-      handleChange(email);
+      handleChange(emailLowerCase);
       handleToastMessage({
         message: "Código de verificação enviado para seu e-mail",
         color: "success",
