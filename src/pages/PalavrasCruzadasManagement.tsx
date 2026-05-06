@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import {
   IonContent,
@@ -33,10 +33,10 @@ import "./PalavrasCruzadasManagement.css";
 interface PalavrasCruzadasItem {
   id: number;
   documentId?: string;
-  Titulo: string;
-  titulo?: string;
+  titulo: string;
   palavras: string[];
   dicas: string[];
+  Titulo?: string; // Mantendo por compatibilidade se o back ainda retornar
 }
 
 interface NovaCruzada {
@@ -125,11 +125,9 @@ const PalavrasCruzadasManagement: React.FC = () => {
 
       const payload = {
         data: {
-          titulo: novaCruzada.titulo, 
-          Titulo: novaCruzada.titulo,
+          titulo: novaCruzada.titulo,
           palavras: palavrasArray,
-          dicas: dicasArray,
-          grade: { grade: [], linhas: 0, colunas: 0 } 
+          dicas: dicasArray
         }
       };
 
@@ -223,11 +221,9 @@ const PalavrasCruzadasManagement: React.FC = () => {
 
       await api.put(`/palavras-cruzadas/${docId}`, {
         data: {
-          Titulo: cruzadaParaEditar.titulo,
           titulo: cruzadaParaEditar.titulo,
           palavras: palavrasArray,
-          dicas: dicasArray,
-          grade: { grade: [], linhas: 0, colunas: 0 } 
+          dicas: dicasArray
         }
       });
 
@@ -277,6 +273,7 @@ const PalavrasCruzadasManagement: React.FC = () => {
     isEdit: boolean,
     onSave: () => void
   ) => {
+    const contentRef = useRef<HTMLIonContentElement>(null);
     
     const handleItemChange = (index: number, field: 'palavra' | 'dica', value: string) => {
       const novosItens = [...data.itens];
@@ -286,6 +283,9 @@ const PalavrasCruzadasManagement: React.FC = () => {
 
     const addItem = () => {
       setData({ ...data, itens: [...data.itens, { palavra: "", dica: "" }] });
+      setTimeout(() => {
+        contentRef.current?.scrollToBottom(300);
+      }, 100);
     };
 
     const removeItem = (index: number) => {
@@ -296,7 +296,7 @@ const PalavrasCruzadasManagement: React.FC = () => {
     };
 
     return (
-      <IonContent className="quiz-form-content">
+      <IonContent ref={contentRef} className="quiz-form-content">
         <div className="quiz-result-container ion-padding">
           <IonCardContent>
             <IonItem>
@@ -384,7 +384,7 @@ const PalavrasCruzadasManagement: React.FC = () => {
       <IonHeader>
         <IonToolbar className="header-gradient">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/tabs/management" />
+            <IonBackButton defaultHref="/tabs/games" />
           </IonButtons>
           <IonTitle className="title-centered">Gerenciamento de Cruzadinhas</IonTitle>
           <IonButtons slot="end">

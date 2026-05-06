@@ -119,7 +119,6 @@ const Post: React.FC<PostProps> = ({
                 src={imageUrl}
                 alt={title}
                 className="post-thumb"
-                onClick={(e) => e.stopPropagation()}
               />
             )
           )}
