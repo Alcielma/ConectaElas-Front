@@ -29,7 +29,10 @@ const ConfirmacaoCodigo: React.FC = () => {
   const [toastMsg, setToastMsg] = useState("");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const identifierFromURL = queryParams.get("identifier") || "";
+  let identifierFromURL = queryParams.get("identifier") || "";
+  const onlyNumbers = identifierFromURL.replace(/\D/g, "");
+  const isCPF = onlyNumbers.length === 11;
+  if (!isCPF) identifierFromURL = identifierFromURL.toLowerCase();
   const router = useIonRouter();
   if (!identifierFromURL) {
     history.goBack();
