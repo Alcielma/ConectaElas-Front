@@ -13,12 +13,14 @@ import {
   Route,
   RouteComponentProps,
   useLocation,
+  useHistory,
 } from "react-router-dom";
 import {
   homeSharp,
   informationCircleSharp,
   gameControllerSharp,
 } from "ionicons/icons";
+import "./TabsLayout.css";
 
 import Tab1 from "../pages/Tab1";
 import Tab2 from "../pages/Tab2";
@@ -56,6 +58,7 @@ const QuizResult = React.lazy(() => import("../pages/QuizResult"));
 const TabsLayout: React.FC = () => {
   const [isPending, startTransition] = useTransition();
   const location = useLocation();
+  const history = useHistory();
 
   const path = location.pathname;
   let selectedTab: string = "";
@@ -198,58 +201,40 @@ const TabsLayout: React.FC = () => {
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom" selectedTab={selectedTab}>
-        <IonTabButton tab="tab1" href="/tabs/tab1" style={getTabStyle("tab1")}>
+        <IonTabButton tab="tab1" onClick={() => history.push("/tabs/tab1")} style={getTabStyle("tab1")}>
           <IonIcon icon={homeSharp} />
           <IonLabel>Início</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="tab2" href="/tabs/tab2" style={getTabStyle("tab2")}>
+        <IonTabButton tab="tab2" onClick={() => history.push("/tabs/tab2")} style={getTabStyle("tab2")}>
           <span
+            className="custom-tab-icon"
             style={{
-              display: "inline-block",
-              width: 24,
-              height: 24,
               WebkitMaskImage:
                 "url(/social-network-icon-set-community-connection-vector-symbol-global-connect-sign-globle-networking-ico.svg)",
               maskImage:
                 "url(/social-network-icon-set-community-connection-vector-symbol-global-connect-sign-globle-networking-ico.svg)",
-              WebkitMaskRepeat: "no-repeat",
-              maskRepeat: "no-repeat",
-              WebkitMaskSize: "contain",
-              maskSize: "contain",
-              WebkitMaskPosition: "center",
-              maskPosition: "center",
-              backgroundColor: "currentColor",
             }}
           />
           <IonLabel>Conexões</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="games" href="/tabs/games" style={getTabStyle("games")}>
+        <IonTabButton tab="games" onClick={() => history.push("/tabs/games")} style={getTabStyle("games")}>
           <IonIcon icon={gameControllerSharp} />
           <IonLabel>Jogos</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="sobre" href="/tabs/sobre" style={getTabStyle("sobre")}>
+        <IonTabButton tab="sobre" onClick={() => history.push("/tabs/sobre")} style={getTabStyle("sobre")}>
           <IonIcon icon={informationCircleSharp} />
           <IonLabel>Sobre</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="tab3" href="/tabs/tab3" style={getTabStyle("tab3")}>
+        <IonTabButton tab="tab3" onClick={() => history.push("/tabs/tab3")} style={getTabStyle("tab3")}>
           <span
+            className="custom-tab-icon"
             style={{
-              display: "inline-block",
-              width: 24,
-              height: 24,
               WebkitMaskImage: "url(/perfilMulher.svg)",
               maskImage: "url(/perfilMulher.svg)",
-              WebkitMaskRepeat: "no-repeat",
-              maskRepeat: "no-repeat",
-              WebkitMaskSize: "contain",
-              maskSize: "contain",
-              WebkitMaskPosition: "center",
-              maskPosition: "center",
-              backgroundColor: "currentColor",
             }}
           />
           <IonLabel>Perfil</IonLabel>
