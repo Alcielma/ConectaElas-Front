@@ -201,12 +201,12 @@ const TabsLayout: React.FC = () => {
       </IonRouterOutlet>
 
       <IonTabBar slot="bottom" selectedTab={selectedTab}>
-        <IonTabButton tab="tab1" onClick={() => history.push("/tabs/tab1")} style={getTabStyle("tab1")}>
+        <IonTabButton tab="tab1" onClick={() => history.replace("/tabs/tab1")} style={getTabStyle("tab1")}>
           <IonIcon icon={homeSharp} />
           <IonLabel>Início</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="tab2" onClick={() => history.push("/tabs/tab2")} style={getTabStyle("tab2")}>
+        <IonTabButton tab="tab2" onClick={() => history.replace("/tabs/tab2")} style={getTabStyle("tab2")}>
           <span
             className="custom-tab-icon"
             style={{
@@ -219,17 +219,17 @@ const TabsLayout: React.FC = () => {
           <IonLabel>Conexões</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="games" onClick={() => history.push("/tabs/games")} style={getTabStyle("games")}>
+        <IonTabButton tab="games" onClick={() => history.replace("/tabs/games")} style={getTabStyle("games")}>
           <IonIcon icon={gameControllerSharp} />
           <IonLabel>Jogos</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="sobre" onClick={() => history.push("/tabs/sobre")} style={getTabStyle("sobre")}>
+        <IonTabButton tab="sobre" onClick={() => history.replace("/tabs/sobre")} style={getTabStyle("sobre")}>
           <IonIcon icon={informationCircleSharp} />
           <IonLabel>Sobre</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="tab3" onClick={() => history.push("/tabs/tab3")} style={getTabStyle("tab3")}>
+        <IonTabButton tab="tab3" onClick={() => history.replace("/tabs/tab3")} style={getTabStyle("tab3")}>
           <span
             className="custom-tab-icon"
             style={{

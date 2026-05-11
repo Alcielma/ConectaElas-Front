@@ -53,18 +53,24 @@ const BackButtonHandler: React.FC = () => {
   const router = useIonRouter();
 
   useEffect(() => {
-    const listener = CapacitorApp.addListener("backButton", (event: any) => {
-      event.detail.register(10, () => {
-        const pathname = window.location.pathname;
+    const listener = CapacitorApp.addListener("backButton", () => {
+      const pathname = window.location.pathname;
 
-        // Se NÃO está na home → manda direto pra home
-        if (pathname !== "/tabs/tab1") {
-          router.push("/tabs/tab1", "root", "replace");
-        } else {
-          // Se já está na home → sai do app
-          CapacitorApp.exitApp();
-        }
-      });
+      // Se estiver em qualquer tab diferente da home
+      if (
+        pathname === "/tabs/tab2" ||
+        pathname === "/tabs/games" ||
+        pathname === "/tabs/sobre" ||
+        pathname === "/tabs/tab3"
+      ) {
+        router.push("/tabs/tab1", "root", "replace");
+        return;
+      }
+
+      // Se já estiver na home
+      if (pathname === "/tabs/tab1") {
+        CapacitorApp.exitApp();
+      }
     });
 
     return () => {
