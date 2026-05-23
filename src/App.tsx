@@ -48,6 +48,28 @@ if (Capacitor.isNativePlatform()) {
   Keyboard.setScroll({ isDisabled: true });
 }
 
+// Estado global para controlar se o modal de banners está aberto
+let isBannerModalOpen = false;
+let closeBannerModalCallback: (() => void) | null = null;
+
+export const setBannerModalOpen = (open: boolean, closeCallback?: () => void) => {
+  isBannerModalOpen = open;
+  if (closeCallback) {
+    closeBannerModalCallback = closeCallback;
+  }
+};
+
+// Estado global para controlar se o modal de posts está aberto
+let isPostModalOpen = false;
+let closePostModalCallback: (() => void) | null = null;
+
+export const setPostModalOpen = (open: boolean, closeCallback?: () => void) => {
+  isPostModalOpen = open;
+  if (closeCallback) {
+    closePostModalCallback = closeCallback;
+  }
+};
+
 // 🔥 BACK BUTTON CORRETO COM PRIORIDADE
 const BackButtonHandler: React.FC = () => {
   const router = useIonRouter();
@@ -55,6 +77,18 @@ const BackButtonHandler: React.FC = () => {
   useEffect(() => {
     const listener = CapacitorApp.addListener("backButton", () => {
       const pathname = window.location.pathname;
+
+      // Se o modal de posts estiver aberto, fecha ele
+      if (isPostModalOpen && closePostModalCallback) {
+        closePostModalCallback();
+        return;
+      }
+
+      // Se o modal de banners estiver aberto, fecha ele
+      if (isBannerModalOpen && closeBannerModalCallback) {
+        closeBannerModalCallback();
+        return;
+      }
 
       // Se estiver em qualquer tab diferente da home
       if (
