@@ -92,3 +92,86 @@
     font-weight: 600;
     text-align: center;
 }
+
+.add-banner-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  background-image: url('/Logotipo Marketing Digital Moderno Azul e Amarelo (4).svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  padding: 32px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 300px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.add-banner-slide:hover {
+  background-color: #ffe6f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(221, 34, 115, 0.2);
+}
+
+.add-banner-slide .add-banner-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 8px 10px;
+  background: linear-gradient(
+    to top,
+    rgba(114, 0, 121, 1),
+    rgba(114, 0, 121, 0.9),
+    rgba(114, 0, 121, 0.7),
+    transparent
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1;
+}
+
+.add-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  z-index: 2;
+}
+
+.add-banner-text {
+  color: #720079;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  width: 90%;
+  margin: 0;
+  z-index: 2;
+}
+
+.add-banner-overlay .add-banner-text {
+  color: white;
+}
+
+body.dark-theme .add-banner-slide {
+  background-color: var(--surface);
+}
+
+body.dark-theme .add-banner-slide:hover {
+  background-color: rgba(221, 34, 115, 0.1);
+}
+
+
+
+body.dark-theme .add-banner-text {
+  color: #ffffff;
+}

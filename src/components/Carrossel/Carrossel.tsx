@@ -5,13 +5,16 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "./Carrossel.css";
 import BannerService, { Banner } from "../../Services/BannerService";
+import { useAuth } from "../../Contexts/AuthContext";
 
 interface CarrosselProps {
   refreshKey?: number;
+  onAddBanner?: () => void;
 }
 
-const Carrossel: React.FC<CarrosselProps> = ({ refreshKey }) => {
+const Carrossel: React.FC<CarrosselProps> = ({ refreshKey, onAddBanner }) => {
   const [banners, setBanners] = useState<Banner[]>([]);
+  const { isAssistant } = useAuth();
 
   useEffect(() => {
     const loadBanners = async () => {
@@ -24,7 +27,7 @@ const Carrossel: React.FC<CarrosselProps> = ({ refreshKey }) => {
 
   return (
     <div className="carrossel-container">
-      {banners.length === 0 ? (
+      {banners.length === 0 && !isAssistant ? (
         <div className="carrossel-fallback">
           <p>Nenhum banner disponível no momento.</p>
         </div>
@@ -37,6 +40,21 @@ const Carrossel: React.FC<CarrosselProps> = ({ refreshKey }) => {
           autoplay={{ delay: 3000 }}
           loop={banners.length > 1}
         >
+          {isAssistant && (
+            <SwiperSlide key="add-banner">
+              <div 
+                className="add-banner-slide" 
+                onClick={onAddBanner}
+              >
+                <div className="add-banner-icon">
+                  <img src="/adicionar.svg" alt="Adicionar banner" style={{ width: '80px', height: '80px' }} />
+                </div>
+                <div className="add-banner-overlay">
+                  <p className="add-banner-text">Adicionar novo banner</p>
+                </div>
+              </div>
+            </SwiperSlide>
+          )}
           {banners.map((banner) => (
             <SwiperSlide key={banner.id}>
               <a
@@ -46,7 +64,7 @@ const Carrossel: React.FC<CarrosselProps> = ({ refreshKey }) => {
                 className="carrossel-slide"
               >
                 <img
-                  src={banner.imageUrl || "/default-image.jpg"} // Fallback para imageUrl
+                  src={banner.imageUrl || "/default-image.jpg"}
                   alt={banner.Titulo}
                   className="carrossel-image"
                 />
