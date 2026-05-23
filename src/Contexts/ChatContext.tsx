@@ -14,6 +14,7 @@ interface Message {
 
 interface Chat {
   id: number;
+  documentId?: string;
   ProtocoloID: string;
   mensagens: Message[];
   usuario: { id: number };
@@ -26,6 +27,7 @@ interface ChatContextType {
   chats: Chat[];
   activeChat: Chat | null;
   isTyping: boolean;
+  isSending: boolean;
   fetchChats: () => void;
   startChat: (message: string) => Promise<Chat | null>;
   sendMessage: (chatId: number, message: string) => Promise<void>;
@@ -34,6 +36,7 @@ interface ChatContextType {
   generateRandomName: (userId: number) => string;
   updateMessageStatus: (messageId: number, status: boolean) => Promise<void>;
   broadcastTyping: () => void;
+  endProtocol: (chatId: number) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -45,6 +48,7 @@ export const useChat = (): ChatContextType => {
     chats: [],
     activeChat: null,
     isTyping: false,
+    isSending: false,
     fetchChats: () => {},
     startChat: async () => null,
     sendMessage: async () => {},
@@ -53,6 +57,7 @@ export const useChat = (): ChatContextType => {
     generateRandomName: () => "Usuário",
     updateMessageStatus: async () => {},
     broadcastTyping: () => {},
+    endProtocol: async () => {},
   };
 };
 
@@ -62,22 +67,60 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const { user } = useAuth();
   const [chats, setChats] = useState<Chat[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [isSending, setIsSending] = useState<boolean>(false);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
+  const [shouldResort, setShouldResort] = useState(true);
   let typingTimeout: any;
   const recentlySentRef = React.useRef<Record<number, { text: string; ts: number }[]>>({});
+
+  const deduplicateChats = (chatsArray: Chat[]): Chat[] => {
+    const seen = new Set<number>();
+    return chatsArray.filter(chat => {
+      if (seen.has(chat.id)) {
+        return false;
+      }
+      seen.add(chat.id);
+      return true;
+    });
+  };
 
   const fetchChats = async () => {
     if (!user) return;
 
     try {
+      console.log(" Buscando chats do servidor...");
       const response = await ChatService.getChats(
         user.tipo === "Assistente" ? undefined : user.id,
         user.tipo === "Assistente"
       );
-      const userChats = response || [];
+      let userChats = response || [];
 
-      setChats(userChats);
+      console.log("Chats recebidos do servidor:", userChats.length);
+
+      // Sempre reordenar e atualizar todos os chats para garantir dados frescos
+      userChats = userChats.sort((a: any, b: any) => {
+        const getLastMessageDate = (chat: any) => {
+          if (chat.mensagens && chat.mensagens.length > 0) {
+            return new Date(chat.mensagens[chat.mensagens.length - 1].Data_Envio).getTime();
+          }
+          return new Date(chat.updatedAt || chat.createdAt).getTime();
+        };
+        return getLastMessageDate(b) - getLastMessageDate(a);
+      });
+
+      const uniqueChats = deduplicateChats(userChats);
+      setChats(uniqueChats);
+      
+      if (activeChat) {
+        const currentActiveChat = uniqueChats.find(c => c.id === activeChat.id);
+        if (!currentActiveChat || currentActiveChat.Status_Finalizado === true) {
+          setActiveChat(null);
+        }
+      }
+      
+      console.log("Chats atualizados no estado!");
     } catch (error) {
+      console.error("Erro ao buscar chats:", error);
       setChats([]);
     }
   };
@@ -96,66 +139,93 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         )[0]
       : null;
 
-    if (chat) {
+    if (chat && chat.Status_Finalizado === false) {
       await selectChat(chat.id);
+      if (message.trim()) {
+        await sendMessage(chat.id, message);
+      }
       return chat;
     }
 
     const newChat = await ChatService.createChat(user.id);
     if (!newChat) return null;
 
-    if (message != "")
-      await ChatService.sendMessage(newChat.id, message, user.id);
-
     chat = { ...newChat, mensagens: [] };
-
+    
     if (chat) {
-      setChats((prev) => [...prev, chat]);
       setActiveChat((prev) => ({ ...newChat, mensagens: [] }));
+      fetchChats();
+    }
+
+    if (message.trim()) {
+      await sendMessage(newChat.id, message);
     }
 
     return chat;
   };
 
   const sendMessage = async (chatId: number, message: string) => {
-    if (!user) return;
-    let targetChat = activeChat;
-    if (!targetChat) {
-      const found = chats.find((c) => c.id === chatId) || null;
-      if (!found) {
-        await selectChat(chatId);
-        targetChat = chats.find((c) => c.id === chatId) || null;
-      } else {
-        targetChat = found;
+    if (!user || isSending) return;
+    
+    const tempId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    setIsSending(true);
+    
+    try {
+      let targetChat = activeChat;
+      if (!targetChat) {
+        const found = chats.find((c) => c.id === chatId) || null;
+        if (!found) {
+          await selectChat(chatId);
+          targetChat = chats.find((c) => c.id === chatId) || null;
+        } else {
+          targetChat = found;
+        }
+        if (!targetChat) return;
       }
-      if (!targetChat) return;
+      const ProtocoloID = targetChat.ProtocoloID;
+
+      // Salvar a mensagem no banco de dados primeiro
+      const savedMessage = await ChatService.sendMessage(chatId, message, user.id, tempId);
+
+      // Emitir a mensagem via socket para o outro usuário (incluindo tempId)
+      socket.emit("send_message", { ProtocoloID, message, tempId, remetente: user.id });
+
+      // Garantir que a mensagem tenha o remetente populado
+      if (savedMessage) {
+        // Se a API não retornou o remetente, adicionamos manualmente
+        if (!savedMessage.remetente) {
+          savedMessage.remetente = { id: user.id };
+        } else if (typeof savedMessage.remetente === 'number') {
+          savedMessage.remetente = { id: savedMessage.remetente };
+        }
+        updateChatMessages(chatId, savedMessage);
+      } else {
+        // Fallback: usar mensagem temporária se o salvamento falhar
+        const newMessage = {
+          id: Date.now(),
+          tempId,
+          Mensagem: message,
+          Data_Envio: new Date().toISOString(),
+          Leitura: false,
+          remetente: { id: user.id },
+        };
+        updateChatMessages(chatId, newMessage);
+      }
+
+      const norm = message.trim().toLowerCase();
+      const list = recentlySentRef.current[chatId] || [];
+      const now = Date.now();
+      const pruned = list.filter((i) => now - i.ts < 15000).slice(-20);
+      recentlySentRef.current[chatId] = [...pruned, { text: norm, ts: now }];
+    } finally {
+      setIsSending(false);
     }
-    const ProtocoloID = targetChat.ProtocoloID;
-
-    socket.emit("send_message", { ProtocoloID, message });
-
-    // Depois de emitir a mensagem, adicione-a ao estado local para que apareça imediatamente
-    const newMessage = {
-      id: Date.now(), // Gerar um ID temporário para a nova mensagem
-      Mensagem: message,
-      Data_Envio: new Date().toISOString(),
-      Leitura: null, // A nova mensagem está inicialmente como não lida
-      remetente: { id: user.id },
-    };
-
-    updateChatMessages(chatId, newMessage); // Atualiza a lista de mensagens do chat ativo
-
-    const norm = message.trim().toLowerCase();
-    const list = recentlySentRef.current[chatId] || [];
-    const now = Date.now();
-    const pruned = list.filter((i) => now - i.ts < 15000).slice(-20);
-    recentlySentRef.current[chatId] = [...pruned, { text: norm, ts: now }];
   };
 
   const selectChat = async (chatId: number) => {
     try {
       const response = await api.get(
-        `/protocolos?filters[id][$eq]=${chatId}&populate[usuario][fields][0]=id&populate[mensagens][fields][0]=id&populate[mensagens][fields][1]=Mensagem&populate[mensagens][fields][2]=Data_Envio&populate[mensagens][fields][3]=Leitura&populate[mensagens][populate][remetente][fields][0]=id`
+        `/protocolos?filters[id][$eq]=${chatId}&fields[0]=Status_Finalizado&fields[1]=ProtocoloID&populate[usuario][fields][0]=id&populate[mensagens][fields][0]=id&populate[mensagens][fields][1]=Mensagem&populate[mensagens][fields][2]=Data_Envio&populate[mensagens][fields][3]=Leitura&populate[mensagens][populate][remetente][fields]=id,Tipo`
       );
 
       if (!response.data || response.data.data.length === 0) {
@@ -169,14 +239,15 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         ProtocoloID: selectedChat.ProtocoloID,
         mensagens: selectedChat.mensagens || [],
         usuario: selectedChat.usuario,
+        Status_Finalizado: selectedChat.Status_Finalizado,
       }));
 
       setChats((prevChats) =>
-        prevChats.map((chat) =>
+        deduplicateChats(prevChats.map((chat) =>
           chat.id === chatId
-            ? { ...chat, mensagens: selectedChat.mensagens }
+            ? { ...chat, mensagens: selectedChat.mensagens, Status_Finalizado: selectedChat.Status_Finalizado, ProtocoloID: selectedChat.ProtocoloID }
             : chat
-        )
+        ))
       );
 
       selectedChat.mensagens.forEach(async (msg: Message) => {
@@ -195,20 +266,35 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   function updateChatMessages(chatId: number, newMessage: any) {
-    setChats((prevChats) =>
-      prevChats.map((chat) => {
+    setShouldResort(true);
+    setChats((prevChats) => {
+      let updatedChats = prevChats.map((chat) => {
         if (chat.id !== chatId) return chat;
         const existsById = chat.mensagens.some((m: any) => m.id === newMessage.id);
-        return existsById
+        const existsByTempId = newMessage.tempId && chat.mensagens.some((m: any) => m.tempId === newMessage.tempId);
+        return existsById || existsByTempId
           ? chat
           : { ...chat, mensagens: [...chat.mensagens, newMessage] };
-      })
-    );
+      });
+
+      updatedChats = updatedChats.sort((a: any, b: any) => {
+        const getLastMessageDate = (chat: any) => {
+          if (chat.mensagens && chat.mensagens.length > 0) {
+            return new Date(chat.mensagens[chat.mensagens.length - 1].Data_Envio).getTime();
+          }
+          return new Date(chat.updatedAt || chat.createdAt).getTime();
+        };
+        return getLastMessageDate(b) - getLastMessageDate(a);
+      });
+
+      return deduplicateChats(updatedChats);
+    });
 
     setActiveChat((prev) => {
       if (!prev || prev.id !== chatId) return prev;
       const existsById = prev.mensagens.some((m: any) => m.id === newMessage.id);
-      return existsById
+      const existsByTempId = newMessage.tempId && prev.mensagens.some((m: any) => m.tempId === newMessage.tempId);
+      return existsById || existsByTempId
         ? prev
         : { ...prev, mensagens: [...prev.mensagens, newMessage] };
     });
@@ -259,7 +345,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     socket.off("authenticated");
-    socket.off("receive_message");
     socket.off("typing");
     socket.off("stop_typing");
 
@@ -268,24 +353,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.once("authenticated", (response: any) => {
       if (response.success) {
         socket.emit("join_chat", activeChat.ProtocoloID);
-
-        socket.on("receive_message", (msg: Message) => {
-          const senderId =
-            typeof (msg as any)?.remetente === "number"
-              ? (msg as any).remetente
-              : (msg as any)?.remetente?.id;
-          if (senderId === user?.id) {
-            return;
-          }
-          const list = recentlySentRef.current[activeChat.id] || [];
-          const normIncoming = String((msg as any)?.Mensagem || "").trim().toLowerCase();
-          const now = Date.now();
-          const matchRecent = list.some((i) => i.text === normIncoming && now - i.ts < 5000);
-          if (matchRecent) {
-            return;
-          }
-          updateChatMessages(activeChat.id, msg);
-        });
         return;
       }
 
@@ -322,6 +389,23 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const generateRandomName = (userId: number) => {
+    const storageKey = "userNames";
+    
+    let userNames: Record<number, string> = {};
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        userNames = JSON.parse(stored);
+      }
+    } catch (e) {
+      console.error("Erro ao ler nomes do localStorage:", e);
+    }
+
+    if (userNames[userId]) {
+      const existingName = userNames[userId];
+      return existingName.split('#')[0];
+    }
+
     const colors = [
       "Vermelho",
       "Azul",
@@ -360,9 +444,17 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
-    const numeroAleatorio = Math.floor(Math.random() * 1000);
 
-    return `${randomAnimal} ${randomColor}#${numeroAleatorio}`;
+    const newName = `${randomAnimal} ${randomColor}`;
+    
+    userNames[userId] = newName;
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(userNames));
+    } catch (e) {
+      console.error("Erro ao salvar nomes no localStorage:", e);
+    }
+
+    return newName;
   };
 
   const fetchMessages = async (chatId: number) => {
@@ -370,6 +462,21 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     const messages = await ChatService.fetchMessages(chatId);
     if (messages.length === 0) return [];
     return messages;
+  };
+
+  const endProtocol = async (chatId: number) => {
+    if (!user) return;
+    console.log("🔴 Tentando excluir chat com ID:", chatId);
+    // Encontra o chat para pegar o documentId
+    const chatToDelete = chats.find((chat) => chat.id === chatId);
+    console.log("🔴 Chat encontrado para exclusão:", chatToDelete);
+    const idToUse = chatToDelete?.documentId || chatToDelete?.ProtocoloID || chatId;
+    console.log("🔴 ID que será usado para DELETE:", idToUse);
+    // Remove o chat localmente primeiro
+    setChats((prev) => prev.filter((chat) => chat.id !== chatId));
+    const result = await ChatService.endProtocol(idToUse);
+    console.log("🔴 Resultado da exclusão:", result);
+    await fetchChats();
   };
 
   useEffect(() => {
@@ -384,12 +491,95 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [activeChat]);
 
+  // Listener global para receber mensagens em qualquer chat
+  useEffect(() => {
+    if (!user) return;
+
+    console.log("🔌 Configurando listener global do socket...");
+    console.log("🔌 Socket conectado:", socket.connected);
+
+    const handleGlobalMessage = (msg: any) => {
+      console.log("📩 ===== MENSAGEM RECEBIDA VIA SOCKET =====");
+      console.log("📩 Dados completos da mensagem:", msg);
+      console.log("📩 activeChat atual:", activeChat);
+      
+      // Verificar se a mensagem é do chat ativo
+      if (activeChat) {
+        console.log("📩 Verificando se é o chat ativo...");
+        const isSameChat = 
+          (msg.protocolo && msg.protocolo.id === activeChat.id) || 
+          msg.ProtocoloID === activeChat.ProtocoloID;
+          
+        console.log("📩 É o mesmo chat?", isSameChat);
+          
+        if (isSameChat) {
+          console.log("📩 Processando mensagem para o chat ativo...");
+          
+          const senderId =
+            typeof (msg as any)?.remetente === "number"
+              ? (msg as any).remetente
+              : (msg as any)?.remetente?.id;
+          
+          console.log("📩 ID do remetente:", senderId);
+          console.log("📩 ID do usuário atual:", user?.id);
+          
+          // Não adicionar a mensagem se for do próprio usuário
+          if (senderId !== user?.id) {
+            console.log("📩 Mensagem é de outro usuário, adicionando ao chat...");
+            const list = recentlySentRef.current[activeChat.id] || [];
+            const normIncoming = String((msg as any)?.Mensagem || "").trim().toLowerCase();
+            const now = Date.now();
+            const matchRecent = list.some((i) => i.text === normIncoming && now - i.ts < 5000);
+            
+            console.log("📩 É mensagem duplicada?", matchRecent);
+            
+            if (!matchRecent) {
+              console.log("📩 Chamando updateChatMessages...");
+              updateChatMessages(activeChat.id, msg);
+              console.log("📩 updateChatMessages concluído!");
+            }
+          } else {
+            console.log("📩 Mensagem é do próprio usuário, ignorando...");
+          }
+        }
+      }
+      
+      // Sempre atualizamos a lista de chats para manter tudo sincronizado
+      console.log("📩 Atualizando lista de chats...");
+      fetchChats().then(() => {
+        console.log("📩 Lista de chats atualizada!");
+      });
+      
+      console.log("📩 ===== FIM PROCESSAMENTO MENSAGEM =====\n");
+    };
+
+    socket.on("receive_message", handleGlobalMessage);
+    console.log("🔌 Listener 'receive_message' configurado!");
+
+    // Listener para verificar conexão
+    socket.on("connect", () => {
+      console.log("🔌 Socket conectado com sucesso! ID:", socket.id);
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("🔌 Socket desconectado. Motivo:", reason);
+    });
+
+    return () => {
+      console.log("🔌 Removendo listeners do socket...");
+      socket.off("receive_message", handleGlobalMessage);
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, [user, activeChat]);
+
   return (
     <ChatContext.Provider
       value={{
         chats,
         activeChat,
         isTyping,
+        isSending,
         fetchChats,
         startChat,
         sendMessage,
@@ -398,6 +588,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchMessages,
         updateMessageStatus,
         broadcastTyping,
+        endProtocol,
       }}
     >
       {children}
