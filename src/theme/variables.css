@@ -299,5 +299,12 @@ ion-input {
 ion-input input {
   caret-color: var(--ion-color-primary) !important;
 }
+/* Estilo para o título do alert */
+.alert-title.sc-ion-alert-md,
+.alert-title.sc-ion-alert-ios {
+  color: #dd2273 !important;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
 
 
