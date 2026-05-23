@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   IonPage,
   IonHeader,
@@ -24,9 +24,14 @@ import "./QuizManagement.css";
 
 const AddPost: React.FC = () => {
   const history = useHistory();
+  const location = useLocation();
+  const state = location.state as { categoriaPreSelecionada?: string };
+  
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [categoria, setCategoria] = useState<"Notícia" | "Informativo">("Informativo");
+  const [categoria, setCategoria] = useState<"Notícia" | "Informativo">(
+    (state?.categoriaPreSelecionada as "Notícia" | "Informativo") || "Informativo"
+  );
   const [imageLink, setImageLink] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
