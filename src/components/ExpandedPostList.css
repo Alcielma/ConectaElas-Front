@@ -69,6 +69,24 @@
   transition: color 0.2s;
 }
 
+.delete-post-icon-expanded {
+  font-size: 25px;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 3px;
+  margin-left: 225px;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.delete-post-icon-expanded:hover {
+  transform: scale(1.15);
+  color: #c82333;
+}
+
+body.dark-theme .delete-post-icon-expanded {
+  color: #dc3545;
+}
+
 
 .comments-count {
   color: #303030;
