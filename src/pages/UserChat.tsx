@@ -25,6 +25,7 @@ const UserChat: React.FC = () => {
     selectChat,
     broadcastTyping,
     isTyping,
+    isSending,
   } = useChat();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
@@ -51,12 +52,16 @@ const UserChat: React.FC = () => {
       setIsKeyboardOpen(false);
     };
 
-    // Listeners do Capacitor Keyboard
-    Keyboard.addListener('keyboardDidShow', onKeyboardShow);
-    Keyboard.addListener('keyboardWillHide', onKeyboardHide);
+    // Listeners do Capacitor Keyboard (apenas se disponível)
+    if (Keyboard && Keyboard.addListener) {
+      Keyboard.addListener('keyboardDidShow', onKeyboardShow);
+      Keyboard.addListener('keyboardWillHide', onKeyboardHide);
+    }
 
     return () => {
-      Keyboard.removeAllListeners();
+      if (Keyboard && Keyboard.removeAllListeners) {
+        Keyboard.removeAllListeners();
+      }
     };
   }, []);
 
@@ -91,11 +96,22 @@ const UserChat: React.FC = () => {
     }
   }, [activeChat?.mensagens?.length]);
 
+  // Polling para verificar se o chat foi finalizado e atualizar mensagens
+  useEffect(() => {
+    if (!activeChat) return;
+
+    const intervalId = setInterval(async () => {
+      await selectChat(activeChat.id);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [activeChat?.id, selectChat]);
+
   const handleSendMessage = async (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
     
-    if (!message.trim()) return;
+    if (!message.trim() || isSending) return;
 
     // Manter o foco no input para não fechar o teclado
     const currentMessage = message;
@@ -234,12 +250,13 @@ const UserChat: React.FC = () => {
               size="large"
               className="send-icon"
               style={{ 
-                cursor: "pointer", 
+                cursor: (message.trim() && !isSending) ? "pointer" : "not-allowed", 
                 marginLeft: "8px",
-                color: message.trim() ? "var(--cor-secundaria)" : "#ccc",
-                transition: "color 0.3s ease"
+                color: (message.trim() && !isSending) ? "var(--cor-secundaria)" : "#ccc",
+                transition: "color 0.3s ease",
+                opacity: isSending ? 0.5 : 1
               }}
-              onClick={handleSendMessage}
+              onClick={!isSending ? handleSendMessage : undefined}
               onMouseDown={(e) => e.preventDefault()}
             />
           </div>
