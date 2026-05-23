@@ -15,6 +15,10 @@ ion-app ion-tab-bar {
   box-shadow: 0px 0px 20px -12px rgba(0, 0, 0, 1.25) !important;
 }
 
+body.modal-open ion-app ion-tab-bar {
+  display: none !important;
+}
+
 ion-app ion-tab-button {
   --color: var(--cor-principal);
   --color-selected: var(--cor-secundaria);
