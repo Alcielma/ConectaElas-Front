@@ -1,28 +1,33 @@
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #FFF0F5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  margin: 0;
-  padding: 0;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-end !important;
+  z-index: 9999999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .modal-content {
-  position: relative;
-  width: 95%;
-  max-width: 420px; 
-  max-height: 90vh;
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  overflow-y: auto;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: calc(100vh - 40px) !important;
+  max-height: calc(100vh - 40px) !important;
+  background: white !important;
+  border-radius: 0 !important;
+  border-top-left-radius: 24px !important;
+  border-top-right-radius: 24px !important;
+  padding: 16px !important;
+  padding-top: 16px !important;
+  overflow-y: auto !important;
+  box-shadow: 0px -4px 20px rgba(0,0,0,0.15) !important;
+  z-index: 9999999 !important;
 }
 
 .modal-description {
@@ -176,32 +181,32 @@
   color: #a1005f;
 }
 body.dark-theme .modal-overlay {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6) !important;
 }
 
 body.dark-theme .modal-content {
-  background: #1e1e1e;
-  color: #eaeaea;
-  border: 1px solid #2a2a2a;
-  box-shadow: none;
+  background: #1e1e1e !important;
+  color: #eaeaea !important;
+  border: 1px solid #2a2a2a !important;
+  box-shadow: none !important;
 }
 
 body.dark-theme .modal-header h2,
 body.dark-theme .modal-description,
 body.dark-theme .modal-comments h4 {
-  color: #eaeaea;
+  color: #eaeaea !important;
 }
 
 body.dark-theme .add-comment {
-  background-color: #1f1f1f;
-  box-shadow: none;
+  background-color: #1f1f1f !important;
+  box-shadow: none !important;
 }
 
 body.dark-theme .add-comment input {
-  background-color: #1f1f1f;
-  color: #f5f5f5;
+  background-color: #1f1f1f !important;
+  color: #f5f5f5 !important;
 }
 
 body.dark-theme .add-comment input::placeholder {
-  color: #b0b0b0;
+  color: #b0b0b0 !important;
 }
