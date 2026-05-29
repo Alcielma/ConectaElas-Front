@@ -185,7 +185,7 @@ body.dark-theme .chat-item {
 }
 
 body.dark-theme .chat-name {
-  color: #ffffff;
+  color: #dd2273;
 }
 
 body.dark-theme .chat-message {
@@ -255,6 +255,6 @@ body.dark-theme .unread-badge {
 }
 
 body.dark-theme .chat-arrow {
-  color: #ffffff;
+  color: #dd2273;
 }
 

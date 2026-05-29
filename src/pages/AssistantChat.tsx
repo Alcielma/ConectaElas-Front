@@ -38,12 +38,18 @@ const AssistantChat: React.FC = () => {
   const contentRef = useRef<HTMLIonContentElement>(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const selectChatRef = useRef(selectChat);
+  const pollingInFlightRef = useRef(false);
   const { chatId } = useParams<{ chatId: string }>();
   const isSentByCurrentUser = (msg: any) => {
     const remetenteId =
       typeof msg.remetente === "number" ? msg.remetente : msg.remetente?.id;
     return user?.id === remetenteId;
   };
+
+  useEffect(() => {
+    selectChatRef.current = selectChat;
+  }, [selectChat]);
 
   // Detectar quando o teclado abre/fecha
   useEffect(() => {
@@ -96,17 +102,19 @@ const AssistantChat: React.FC = () => {
     if (!activeChat) return;
 
     // Polling a cada 1 segundo
+    const chatId = activeChat.id;
     const intervalId = setInterval(async () => {
-      console.log("🔄 Polling (Assistente) para atualizar mensagens...");
+      if (pollingInFlightRef.current) return;
+      pollingInFlightRef.current = true;
       try {
-        await selectChat(activeChat.id);
-      } catch (error) {
-        console.error("Erro no polling (Assistente):", error);
+        await selectChatRef.current(chatId);
+      } finally {
+        pollingInFlightRef.current = false;
       }
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [activeChat?.id, selectChat]);
+  }, [activeChat?.id]);
 
   const handleSendMessage = async (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
