@@ -31,7 +31,7 @@ interface ChatContextType {
   fetchChats: () => void;
   startChat: (message: string) => Promise<Chat | null>;
   sendMessage: (chatId: number, message: string) => Promise<void>;
-  selectChat: (chatId: number) => Promise<void>;
+  selectChat: (chatId: number) => Promise<Chat | null>;
   fetchMessages: (chatId: number) => Promise<[]>;
   generateRandomName: (userId: number) => string;
   updateMessageStatus: (messageId: number, status: boolean) => Promise<void>;
@@ -52,7 +52,7 @@ export const useChat = (): ChatContextType => {
     fetchChats: () => {},
     startChat: async () => null,
     sendMessage: async () => {},
-    selectChat: async () => {},
+    selectChat: async () => null,
     fetchMessages: async () => [],
     generateRandomName: () => "Usuário",
     updateMessageStatus: async () => {},
@@ -157,6 +157,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       fetchChats();
     }
 
+    await selectChat(newChat.id);
+
     if (message.trim()) {
       await sendMessage(newChat.id, message);
     }
@@ -171,17 +173,15 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsSending(true);
     
     try {
-      let targetChat = activeChat;
+      let targetChat =
+        activeChat && activeChat.id === chatId ? activeChat : null;
       if (!targetChat) {
-        const found = chats.find((c) => c.id === chatId) || null;
-        if (!found) {
-          await selectChat(chatId);
-          targetChat = chats.find((c) => c.id === chatId) || null;
-        } else {
-          targetChat = found;
-        }
-        if (!targetChat) return;
+        targetChat = chats.find((c) => c.id === chatId) || null;
       }
+      if (!targetChat) {
+        targetChat = await selectChat(chatId);
+      }
+      if (!targetChat) return;
       const ProtocoloID = targetChat.ProtocoloID;
 
       // Salvar a mensagem no banco de dados primeiro
@@ -222,25 +222,35 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const selectChat = async (chatId: number) => {
+  const selectChat = async (chatId: number): Promise<Chat | null> => {
     try {
       const response = await api.get(
         `/protocolos?filters[id][$eq]=${chatId}&fields[0]=Status_Finalizado&fields[1]=ProtocoloID&populate[usuario][fields][0]=id&populate[mensagens][fields][0]=id&populate[mensagens][fields][1]=Mensagem&populate[mensagens][fields][2]=Data_Envio&populate[mensagens][fields][3]=Leitura&populate[mensagens][populate][remetente][fields]=id,Tipo`
       );
 
       if (!response.data || response.data.data.length === 0) {
-        return;
+        setActiveChat((prev) => (prev?.id === chatId ? null : prev));
+        setChats((prevChats) => prevChats.filter((c) => c.id !== chatId));
+        return null;
       }
 
       const selectedChat = response.data.data[0];
 
-      setActiveChat((prev) => ({
+      if (selectedChat.Status_Finalizado === true) {
+        setActiveChat((prev) => (prev?.id === chatId ? null : prev));
+        setChats((prevChats) => prevChats.filter((c) => c.id !== chatId));
+        return null;
+      }
+
+      const hydratedChat: Chat = {
         id: selectedChat.id,
         ProtocoloID: selectedChat.ProtocoloID,
         mensagens: selectedChat.mensagens || [],
         usuario: selectedChat.usuario,
         Status_Finalizado: selectedChat.Status_Finalizado,
-      }));
+      };
+
+      setActiveChat(() => hydratedChat);
 
       setChats((prevChats) =>
         deduplicateChats(prevChats.map((chat) =>
@@ -260,8 +270,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
           await updateMessageStatus(msg.id, true);
         }
       });
+
+      return hydratedChat;
     } catch (error) {
       console.error("Erro ao buscar mensagens do chat:", error);
+      return null;
     }
   };
 
@@ -474,6 +487,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     console.log("🔴 ID que será usado para DELETE:", idToUse);
     // Remove o chat localmente primeiro
     setChats((prev) => prev.filter((chat) => chat.id !== chatId));
+    setActiveChat((prev) => (prev?.id === chatId ? null : prev));
     const result = await ChatService.endProtocol(idToUse);
     console.log("🔴 Resultado da exclusão:", result);
     await fetchChats();
