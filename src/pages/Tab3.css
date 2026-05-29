@@ -65,7 +65,7 @@ ion-toolbar {
 .profile-label {
   font-size: 17px;
   font-weight: 900;
-  color: #666;
+  color: #720079;;
 }
 
 .profile-data {
@@ -217,7 +217,7 @@ body.dark-theme .profile-section {
 }
 
 body.dark-theme .profile-label {
-  color: #eaeaea;
+      color: #666;
 }
 
 body.dark-theme .profile-data,
