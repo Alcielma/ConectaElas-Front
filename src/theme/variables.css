@@ -6,6 +6,8 @@
   --cor-secundaria: #720079;
   --cor-secundaria-hover: #3d0341;
   --cor-fundo: #fff;
+  --header-title-color: #ffffff;
+  --header-action-color: #ffffff;
   /* Novas variáveis base de tema */
   --bg: #f5f7fa;
   --surface: #ffffff;
@@ -60,7 +62,7 @@ ion-page ion-header ion-toolbar ion-buttons {
 
 ion-app ion-header ion-toolbar ion-back-button,
 ion-page ion-header ion-toolbar ion-back-button {
-  --color: #ffffff !important;
+  --color: var(--header-action-color) !important;
   --padding-start: 8px !important;
   --padding-end: 8px !important;
   margin: 0 !important;
@@ -76,7 +78,7 @@ ion-page ion-header ion-toolbar ion-back-button {
 ion-app ion-header ion-toolbar ion-back-button ion-icon,
 ion-page ion-header ion-toolbar ion-back-button ion-icon {
   font-size: 28px !important;
-  color: #ffffff !important;
+  color: inherit !important;
   cursor: pointer !important;
   z-index: 500 !important;
   align-self: flex-start !important;
@@ -108,7 +110,7 @@ ion-page ion-header ion-toolbar ion-title,
   transform: translate(-50%, -50%) !important;
   width: calc(100% - 120px) !important; /* Deixa espaço para os botões */
   font-weight: 600 !important;
-  color: #ffffff !important;
+  color: var(--header-title-color) !important;
   font-size: 18px !important;
   line-height: 1.2 !important;
   margin: 0 !important;
@@ -245,8 +247,15 @@ ion-page ion-content {
   --text-color: #eaeaea !important;
   --muted-color: #b0b0b0 !important;
   --border-color: #2a2a2a !important;
+  --header-title-color: var(--cor-principal) !important;
+  --header-action-color: var(--cor-principal) !important;
 
   --ion-background-color: var(--bg) !important;
+}
+
+.topbar-action-icon {
+  color: var(--header-action-color) !important;
+  font-size: 24px;
 }
 
 /* Cabeçalho no tema escuro igual à TabBar */
