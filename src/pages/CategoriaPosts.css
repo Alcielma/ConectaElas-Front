@@ -8,6 +8,10 @@
   z-index: 1000;
 }
 
+body.dark-theme .voltar-seta {
+  color: #dd2273;
+}
+
 .custom-background {
   --background: #ffffff; /* Fundo branco */
 }
