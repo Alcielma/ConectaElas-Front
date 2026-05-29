@@ -19,6 +19,7 @@ import { Keyboard } from "@capacitor/keyboard";
 
 const UserChat: React.FC = () => {
   const {
+    chats,
     activeChat,
     startChat,
     sendMessage,
@@ -26,6 +27,7 @@ const UserChat: React.FC = () => {
     broadcastTyping,
     isTyping,
     isSending,
+    fetchChats,
   } = useChat();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
@@ -33,11 +35,17 @@ const UserChat: React.FC = () => {
   const inputRef = useRef<HTMLIonInputElement>(null);
   const contentRef = useRef<HTMLIonContentElement>(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const selectChatRef = useRef(selectChat);
+  const pollingInFlightRef = useRef(false);
   const isSentByCurrentUser = (msg: any) => {
     const remetenteId =
       typeof msg.remetente === "number" ? msg.remetente : msg.remetente?.id;
     return user?.id === remetenteId;
   };
+
+  useEffect(() => {
+    selectChatRef.current = selectChat;
+  }, [selectChat]);
 
   // Detectar quando o teclado abre/fecha
   useEffect(() => {
@@ -76,16 +84,15 @@ const UserChat: React.FC = () => {
   }, [isTyping]);
 
   useEffect(() => {
-    if (!activeChat) {
-      startChat("");
-    } else {
-      selectChat(activeChat.id);
-    }
+    fetchChats();
   }, []);
 
   useEffect(() => {
-    if (!activeChat) return;
-  }, [activeChat]);
+    if (activeChat) return;
+    if (chats.length > 0) {
+      selectChat(chats[0].id);
+    }
+  }, [activeChat, chats, selectChat]);
 
   // Scroll automático quando mensagens mudam
   useEffect(() => {
@@ -100,12 +107,19 @@ const UserChat: React.FC = () => {
   useEffect(() => {
     if (!activeChat) return;
 
+    const chatId = activeChat.id;
     const intervalId = setInterval(async () => {
-      await selectChat(activeChat.id);
+      if (pollingInFlightRef.current) return;
+      pollingInFlightRef.current = true;
+      try {
+        await selectChatRef.current(chatId);
+      } finally {
+        pollingInFlightRef.current = false;
+      }
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [activeChat?.id, selectChat]);
+  }, [activeChat?.id]);
 
   const handleSendMessage = async (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
