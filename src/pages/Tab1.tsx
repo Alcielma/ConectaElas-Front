@@ -152,7 +152,7 @@ const Tab1: React.FC = () => {
           {isAssistant && (
             <IonButtons slot="start">
               <IonButton onClick={openPopover} fill="clear">
-                <IonIcon icon={ellipsisVertical} style={{ color: 'white', fontSize: '24px' }} />
+                <IonIcon icon={ellipsisVertical} className="topbar-action-icon" />
               </IonButton>
               <IonPopover
                 isOpen={popoverOpen}
