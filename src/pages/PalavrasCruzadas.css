@@ -120,6 +120,84 @@
     color: #666 !important;
   }
 
+  .hint-lamp-float {
+    position: fixed;
+    left: 12px;
+    top: calc(env(safe-area-inset-top, 0px) + 72px);
+    z-index: 1002;
+    --padding-start: 6px;
+    --padding-end: 6px;
+    --color: #dd2273 !important;
+    color: #dd2273 !important;
+    margin: 0;
+    height: 44px;
+    min-height: 44px;
+    background: transparent;
+  }
+
+  .hint-lamp-icon {
+    font-size: 24px;
+    color: currentColor !important;
+  }
+
+  .hint-lamp-glow {
+    --color: #e3be00 !important;
+    color: #e3be00 !important;
+    animation: hintLampBlink 0.3s ease-in-out 4;
+  }
+
+  @keyframes hintLampBlink {
+    0% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(227, 190, 0, 0)); }
+    50% { transform: scale(1.12); opacity: 0.35; filter: drop-shadow(0 0 10px rgba(227, 190, 0, 0.9)); }
+    100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 0 rgba(227, 190, 0, 0)); }
+  }
+
+  .hint-popover-content {
+    padding: 12px 14px;
+    max-width: 260px;
+    font-size: 14px;
+    line-height: 1.35;
+    position: relative;
+    background: #fff7c2;
+    border: 1px solid rgba(255, 227, 120, 0.85);
+    border-radius: 12px;
+    color: #3d0341;
+  }
+
+  .hint-popover-content::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #fff7c2 transparent transparent;
+  }
+
+  .hint-popover-content::after {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 11px 11px 11px 0;
+    border-style: solid;
+    border-color: transparent rgba(255, 227, 120, 0.85) transparent transparent;
+  }
+
+  .hint-popover::part(content) {
+    --background: transparent;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    overflow: visible;
+  }
+
+  body.dark-theme .hint-popover-content {
+    color: #3d0341;
+  }
+
   /* End Modal Styles (Matches Memory Game) */
   .end-modal {
     --width: auto;
