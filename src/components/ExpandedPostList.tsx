@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { IonIcon } from "@ionic/react";
+import { IonIcon, IonAlert } from "@ionic/react";
 import { useHistory } from "react-router-dom";
-import { chatbubble, bookmark, bookmarkOutline } from "ionicons/icons";
+import { chatbubble, bookmark, bookmarkOutline, trashOutline } from "ionicons/icons";
 import CommentItem from "./CommentItem/CommentItem";
 import { addComment } from "../Services/CommentService";
+import { deletePost } from "../Services/postService";
 import { useAuth } from "../Contexts/AuthContext";
 import { isPostFavorited, addToFavorites, removeFromFavorites, isVideoUrl } from "../Services/FavoritesService";
 import api from "../Services/api";
@@ -18,6 +19,7 @@ interface Comment {
 
 interface Post {
   id: number;
+  documentId?: string; // Adiciona documentId
   title: string;
   description: string;
   imageUrl: string | null;
@@ -27,24 +29,37 @@ interface Post {
 interface ExpandedPostListProps {
   posts: Post[];
   onFavoriteToggle: () => void; 
+  onDelete?: (postId: number) => void;
 }
 
-const ExpandedPostList: React.FC<ExpandedPostListProps> = ({ posts, onFavoriteToggle }) => {
+const ExpandedPostList: React.FC<ExpandedPostListProps> = ({ posts, onFavoriteToggle, onDelete }) => {
   const { user } = useAuth();
 
   return (
     <div className="expanded-post-list">
       {posts.map((post) => (
-        <PostItem key={post.id} post={post} userId={user?.id} onFavoriteToggle={onFavoriteToggle} />
+        <PostItem 
+          key={post.id} 
+          post={post} 
+          userId={user?.id} 
+          onFavoriteToggle={onFavoriteToggle}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );
 };
 
-const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteToggle: () => void }> = ({
+const PostItem: React.FC<{ 
+  post: Post; 
+  userId: number | undefined; 
+  onFavoriteToggle: () => void;
+  onDelete?: (postId: number) => void;
+}> = ({
   post,
   userId,
   onFavoriteToggle,
+  onDelete,
 }) => {
   const [comments, setComments] = useState(
     [...post.comments].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -55,8 +70,9 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
   const [isLoading, setIsLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const commentsListRef = useRef<HTMLDivElement>(null);
-  const { user } = useAuth();
+  const { user, isAssistant } = useAuth();
   const history = useHistory();
 
   useEffect(() => {
@@ -121,6 +137,17 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
     }
   };
 
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(post.id, post.documentId);
+      if (onDelete) {
+        onDelete(post.id);
+      }
+    } catch (error) {
+      console.error("Erro ao deletar post:", error);
+    }
+  };
+
   const handleAddComment = async () => {
     if (!newComment.trim() || !userId) return;
 
@@ -182,6 +209,16 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
           className={`favorite-iconn ${isFavorite ? "favorited" : ""}`}
           onClick={toggleFavorite}
         />
+        {isAssistant && (
+          <IonIcon
+            icon={trashOutline}
+            className="delete-post-icon-expanded"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteAlert(true);
+            }}
+          />
+        )}
       </div>
 
       {expanded && (
@@ -211,6 +248,22 @@ const PostItem: React.FC<{ post: Post; userId: number | undefined; onFavoriteTog
           </div>
         </div>
       )}
+
+      <IonAlert
+        isOpen={showDeleteAlert}
+        onDidDismiss={() => setShowDeleteAlert(false)}
+        header="Confirmar exclusão"
+        message="Tem certeza que deseja apagar este post? Esta ação não pode ser desfeita."
+        buttons={[
+          { text: "Cancelar", role: "cancel" },
+          { 
+            text: "Apagar", 
+            handler: async () => {
+              await handleDeletePost();
+            } 
+          },
+        ]}
+      />
     </div>
   );
 };

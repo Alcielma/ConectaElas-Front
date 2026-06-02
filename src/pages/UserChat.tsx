@@ -19,12 +19,15 @@ import { Keyboard } from "@capacitor/keyboard";
 
 const UserChat: React.FC = () => {
   const {
+    chats,
     activeChat,
     startChat,
     sendMessage,
     selectChat,
     broadcastTyping,
     isTyping,
+    isSending,
+    fetchChats,
   } = useChat();
   const { user } = useAuth();
   const [message, setMessage] = useState("");
@@ -32,11 +35,17 @@ const UserChat: React.FC = () => {
   const inputRef = useRef<HTMLIonInputElement>(null);
   const contentRef = useRef<HTMLIonContentElement>(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const selectChatRef = useRef(selectChat);
+  const pollingInFlightRef = useRef(false);
   const isSentByCurrentUser = (msg: any) => {
     const remetenteId =
       typeof msg.remetente === "number" ? msg.remetente : msg.remetente?.id;
     return user?.id === remetenteId;
   };
+
+  useEffect(() => {
+    selectChatRef.current = selectChat;
+  }, [selectChat]);
 
   // Detectar quando o teclado abre/fecha
   useEffect(() => {
@@ -51,12 +60,16 @@ const UserChat: React.FC = () => {
       setIsKeyboardOpen(false);
     };
 
-    // Listeners do Capacitor Keyboard
-    Keyboard.addListener('keyboardDidShow', onKeyboardShow);
-    Keyboard.addListener('keyboardWillHide', onKeyboardHide);
+    // Listeners do Capacitor Keyboard (apenas se disponível)
+    if (Keyboard && Keyboard.addListener) {
+      Keyboard.addListener('keyboardDidShow', onKeyboardShow);
+      Keyboard.addListener('keyboardWillHide', onKeyboardHide);
+    }
 
     return () => {
-      Keyboard.removeAllListeners();
+      if (Keyboard && Keyboard.removeAllListeners) {
+        Keyboard.removeAllListeners();
+      }
     };
   }, []);
 
@@ -71,16 +84,15 @@ const UserChat: React.FC = () => {
   }, [isTyping]);
 
   useEffect(() => {
-    if (!activeChat) {
-      startChat("");
-    } else {
-      selectChat(activeChat.id);
-    }
+    fetchChats();
   }, []);
 
   useEffect(() => {
-    if (!activeChat) return;
-  }, [activeChat]);
+    if (activeChat) return;
+    if (chats.length > 0) {
+      selectChat(chats[0].id);
+    }
+  }, [activeChat, chats, selectChat]);
 
   // Scroll automático quando mensagens mudam
   useEffect(() => {
@@ -91,11 +103,29 @@ const UserChat: React.FC = () => {
     }
   }, [activeChat?.mensagens?.length]);
 
+  // Polling para verificar se o chat foi finalizado e atualizar mensagens
+  useEffect(() => {
+    if (!activeChat) return;
+
+    const chatId = activeChat.id;
+    const intervalId = setInterval(async () => {
+      if (pollingInFlightRef.current) return;
+      pollingInFlightRef.current = true;
+      try {
+        await selectChatRef.current(chatId);
+      } finally {
+        pollingInFlightRef.current = false;
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [activeChat?.id]);
+
   const handleSendMessage = async (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
     
-    if (!message.trim()) return;
+    if (!message.trim() || isSending) return;
 
     // Manter o foco no input para não fechar o teclado
     const currentMessage = message;
@@ -234,12 +264,13 @@ const UserChat: React.FC = () => {
               size="large"
               className="send-icon"
               style={{ 
-                cursor: "pointer", 
+                cursor: (message.trim() && !isSending) ? "pointer" : "not-allowed", 
                 marginLeft: "8px",
-                color: message.trim() ? "var(--cor-secundaria)" : "#ccc",
-                transition: "color 0.3s ease"
+                color: (message.trim() && !isSending) ? "var(--cor-secundaria)" : "#ccc",
+                transition: "color 0.3s ease",
+                opacity: isSending ? 0.5 : 1
               }}
-              onClick={handleSendMessage}
+              onClick={!isSending ? handleSendMessage : undefined}
               onMouseDown={(e) => e.preventDefault()}
             />
           </div>

@@ -9,6 +9,7 @@ import { useAuth } from "../Contexts/AuthContext";
 import { isPostFavorited, addToFavorites } from "../Services/FavoritesService";
 import api from "../Services/api";
 import "./PostModal.css";
+import { setPostModalOpen } from "../App";
 
 interface Comment {
     id: number;
@@ -43,20 +44,28 @@ const PostModal: React.FC<PostModalProps> = ({
   onFavoriteChange,
 }) => {
     const history = useHistory();
+    
+    const handleSetPostModalOpen = (open: boolean) => {
+      setPostModalOpen(open, () => handleSetPostModalOpen(false));
+      if (!open) {
+        onClose();
+      }
+    };
+    
     const { user } = useAuth();
     const [isFavorite, setIsFavorite] = useState(false);
     const [favoriteId, setFavoriteId] = useState<number | null>(null);
 
     useEffect(() => {
-        const handler = (ev: any) => {
-            ev.detail.register(10, () => {
-                onClose();
-                history.push("/tabs/tab1");
-            });
+        document.body.classList.add('modal-open');
+        handleSetPostModalOpen(true);
+        return () => {
+            document.body.classList.remove('modal-open');
+            handleSetPostModalOpen(false);
         };
-        document.addEventListener("ionBackButton", handler as any);
-        return () => document.removeEventListener("ionBackButton", handler as any);
-    }, [onClose, history]);
+    }, []);
+
+
 
     useEffect(() => {
         const checkFavoriteStatus = async () => {
@@ -102,7 +111,7 @@ const PostModal: React.FC<PostModalProps> = ({
                     <IonIcon
                         icon={arrowBack}
                         className="voltar-seta-modal"
-                        onClick={onClose}
+                        onClick={() => handleSetPostModalOpen(false)}
                     />
                     <div className="modal-title-row">
                       <h2>{title}</h2>

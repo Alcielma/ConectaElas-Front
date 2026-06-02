@@ -93,14 +93,33 @@
     transform: scale(1.1);
 }
 
+/* ÍCONE DELETAR POST */
+.delete-post-icon {
+    font-size: 24px;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.delete-post-icon:hover {
+    transform: scale(1.15);
+    color: #c82333;
+}
+
 /* MODO ESCURO (essencial) */
 body.dark-theme .post-container {
     background-color: #1e1e1e;
-    border: 1px solid #2a2a2a;
-    box-shadow: none;
+
+    box-shadow: 0 2px 14px rgba(221, 34, 115, 0.22);
 }
 
 body.dark-theme .post-title,
 body.dark-theme .post-description {
-    color: #eaeaea;
+    color: #ffffff;
+}
+
+body.dark-theme .post-title {
+    color: #b0b0b0;
 }

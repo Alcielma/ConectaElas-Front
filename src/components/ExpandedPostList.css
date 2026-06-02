@@ -16,7 +16,7 @@
 }
 
 .expanded-post h2 {
-  color: #303030;
+  color: #c41e65;
   font-family: var(--ion-font-family);
   font-size: 1.1rem;
   font-style: normal;
@@ -67,6 +67,24 @@
   color: #c3007a;
   cursor: pointer;
   transition: color 0.2s;
+}
+
+.delete-post-icon-expanded {
+  font-size: 25px;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 3px;
+  margin-left: 225px;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.delete-post-icon-expanded:hover {
+  transform: scale(1.15);
+  color: #c82333;
+}
+
+body.dark-theme .delete-post-icon-expanded {
+  color: #dc3545;
 }
 
 

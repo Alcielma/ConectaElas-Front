@@ -9,14 +9,16 @@ import {
   IonInput,
   IonButtons,
   IonBackButton,
+  IonButton,
+  IonIcon,
+  IonAlert,
 } from "@ionic/react";
 import { useChat } from "../Contexts/ChatContext";
 import { useAuth } from "../Contexts/AuthContext";
-import { IonIcon } from "@ionic/react";
-import { send } from "ionicons/icons";
+import { send, closeCircleOutline } from "ionicons/icons";
 import { Keyboard } from "@capacitor/keyboard";
 import "./UserChat.css";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 const AssistantChat: React.FC = () => {
   const {
@@ -25,19 +27,29 @@ const AssistantChat: React.FC = () => {
     selectChat,
     broadcastTyping,
     isTyping,
+    isSending,
+    endProtocol,
   } = useChat();
   const { user } = useAuth();
+  const history = useHistory();
   const [message, setMessage] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLIonInputElement>(null);
   const contentRef = useRef<HTMLIonContentElement>(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const selectChatRef = useRef(selectChat);
+  const pollingInFlightRef = useRef(false);
   const { chatId } = useParams<{ chatId: string }>();
   const isSentByCurrentUser = (msg: any) => {
     const remetenteId =
       typeof msg.remetente === "number" ? msg.remetente : msg.remetente?.id;
     return user?.id === remetenteId;
   };
+
+  useEffect(() => {
+    selectChatRef.current = selectChat;
+  }, [selectChat]);
 
   // Detectar quando o teclado abre/fecha
   useEffect(() => {
@@ -85,11 +97,30 @@ const AssistantChat: React.FC = () => {
     }
   }, [activeChat?.mensagens?.length]);
 
+  // Polling periódico para atualizar mensagens (fallback para o socket)
+  useEffect(() => {
+    if (!activeChat) return;
+
+    // Polling a cada 1 segundo
+    const chatId = activeChat.id;
+    const intervalId = setInterval(async () => {
+      if (pollingInFlightRef.current) return;
+      pollingInFlightRef.current = true;
+      try {
+        await selectChatRef.current(chatId);
+      } finally {
+        pollingInFlightRef.current = false;
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [activeChat?.id]);
+
   const handleSendMessage = async (e?: React.MouseEvent | React.KeyboardEvent) => {
     e?.preventDefault();
     e?.stopPropagation();
     
-    if (!message.trim()) return;
+    if (!message.trim() || isSending) return;
     if (activeChat === null) return;
 
     const currentMessage = message;
@@ -146,6 +177,29 @@ const AssistantChat: React.FC = () => {
         className="chat-content"
         scrollEvents={true}
       >
+        <div style={{ 
+          position: 'sticky', 
+          top: '16px', 
+          zIndex: 10,
+          padding: '0 16px',
+          display: 'flex', 
+          justifyContent: 'center' 
+        }}>
+          <IonButton
+            fill="solid"
+            onClick={() => setShowConfirmAlert(true)}
+            style={{
+              '--background': '#dc3545',
+              '--background-hover': '#c82333',
+              '--color': '#ffffff',
+              width: '80%',
+            }}
+          >
+            <IonIcon slot="start" icon={closeCircleOutline} />
+            Encerrar Chat
+          </IonButton>
+        </div>
+
         <div className={`messages-container ${isKeyboardOpen ? 'keyboard-open' : ''}`}>
           {(activeChat?.mensagens?.length ?? 0) ? (
             (activeChat?.mensagens ?? [])
@@ -221,17 +275,37 @@ const AssistantChat: React.FC = () => {
               size="large"
               className="send-icon"
               style={{ 
-                cursor: "pointer", 
+                cursor: (message.trim() && !isSending) ? "pointer" : "not-allowed", 
                 marginLeft: "8px",
-                color: message.trim() ? "var(--cor-secundaria)" : "#ccc",
-                transition: "color 0.3s ease"
+                color: (message.trim() && !isSending) ? "var(--cor-secundaria)" : "#ccc",
+                transition: "color 0.3s ease",
+                opacity: isSending ? 0.5 : 1
               }}
-              onClick={handleSendMessage}
+              onClick={!isSending ? handleSendMessage : undefined}
               onMouseDown={(e) => e.preventDefault()}
             />
           </div>
         </IonToolbar>
       </IonFooter>
+
+      <IonAlert
+        isOpen={showConfirmAlert}
+        onDidDismiss={() => setShowConfirmAlert(false)}
+        header="Confirmar encerramento"
+        message="Tem certeza que deseja encerrar este chat? Esta ação não pode ser desfeita."
+        buttons={[
+          { text: "Cancelar", role: "cancel" },
+          { 
+            text: "Encerrar", 
+            handler: async () => {
+              if (activeChat?.id) {
+                await endProtocol(activeChat.id);
+                history.replace("/assistantChats");
+              }
+            } 
+          },
+        ]}
+      />
     </IonPage>
   );
 };

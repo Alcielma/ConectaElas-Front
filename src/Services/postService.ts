@@ -21,6 +21,7 @@ export async function getAll() {
     const response = await api.get(`/posts?sort=updatedAt:desc&pagination[pageSize]=15&populate=*&_=${Date.now()}`);
     const formattedPosts = response.data.data.map((post: any) => ({
       id: post.id,
+      documentId: post.documentId, // Adiciona o documentId do Strapi!
       Titulo: post.Title,
       Descricao: post.Description,
       Categoria: post.Categoria || "",
@@ -82,6 +83,17 @@ export async function createPost(data: { Title: string; Description: string; Cat
     return response.data?.data;
   } catch (error) {
     console.error("Erro ao criar post:", error);
+    throw error;
+  }
+}
+
+export async function deletePost(id: number, documentId?: string) {
+  try {
+    const idToUse = documentId || id;
+    const response = await api.delete(`/posts/${idToUse}`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Erro ao deletar post:", error);
     throw error;
   }
 }

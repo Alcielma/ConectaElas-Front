@@ -10,7 +10,7 @@
   width: auto;
   height: auto;
   border-radius: 0;
-  color: #ffffff; 
+  color: var(--header-action-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -25,15 +25,16 @@
 
 .theme-toggle-btn ion-icon {
   font-size: 24px;
+  color: inherit;
 }
 
 body.dark-theme .theme-toggle-btn {
-  color: #eaeaea; 
+  color: var(--header-action-color);
   background: transparent;
   border: none;
   box-shadow: none;
 }
 
 body.dark-theme .theme-toggle-btn ion-icon {
-  color: #eaeaea;
+  color: inherit;
 }

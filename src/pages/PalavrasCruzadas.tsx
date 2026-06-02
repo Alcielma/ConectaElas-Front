@@ -13,10 +13,11 @@ import {
   IonButton,
   IonIcon,
   useIonViewDidLeave,
+  IonPopover,
 } from "@ionic/react";
 import "./PalavrasCruzadas.css";
 import { useParams, useHistory } from "react-router-dom";
-import { trophyOutline, refreshOutline, listOutline } from "ionicons/icons";
+import { trophyOutline, refreshOutline, listOutline, bulb } from "ionicons/icons";
 import { useAuth } from "../Contexts/AuthContext";
 import { criarPontuacao } from "../Services/PontuacaoService";
 
@@ -49,6 +50,7 @@ const PalavrasCruzadas: React.FC = () => {
   const [userGrid, setUserGrid] = useState<(string | null)[][]>([]);
   const [pistas, setPistas] = useState<Pista[]>([]);
   const [active, setActive] = useState<Pista | null>(null);
+  const [hintPulse, setHintPulse] = useState(false);
   const [status, setStatus] = useState<Record<number, "ok" | "err">>({});
   const [solvedCells, setSolvedCells] = useState<Set<string>>(new Set());
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -161,6 +163,13 @@ const PalavrasCruzadas: React.FC = () => {
       setShowCompletionModal(true);
     }
   }, [status, pistas]);
+
+  useEffect(() => {
+    if (!active) return;
+    setHintPulse(true);
+    const t = window.setTimeout(() => setHintPulse(false), 1200);
+    return () => window.clearTimeout(t);
+  }, [active?.number]);
 
   const restartGame = () => {
     if (!data) return;
@@ -381,6 +390,27 @@ const PalavrasCruzadas: React.FC = () => {
       </IonHeader>
 
       <IonContent>
+        <IonButton
+          id="hint-lamp-trigger"
+          fill="clear"
+          className={`hint-lamp-float ${hintPulse ? "hint-lamp-glow" : ""}`}
+        >
+          <IonIcon icon={bulb} className="hint-lamp-icon" />
+        </IonButton>
+
+        <IonPopover
+          side="right"
+          alignment="center"
+          reference="trigger"
+          trigger="hint-lamp-trigger"
+          triggerAction="click"
+          className="hint-popover"
+        >
+          <div className="hint-popover-content">
+            {active ? active.dica : "Selecione uma palavra para ver a dica."}
+          </div>
+        </IonPopover>
+
         <div className="cruzada-container">
           <div
             className="cruzada-grid"
@@ -496,35 +526,6 @@ const PalavrasCruzadas: React.FC = () => {
                 );
               }),
             )}
-          </div>
-
-          <div className="dicas">
-            <h3>Dicas</h3>
-            <ul>
-              {pistas.map((pista) => (
-                <li
-                  key={pista.number}
-                  className={status[pista.number] === "ok" ? "found" : ""}
-                  style={{
-                    cursor: "pointer",
-                    fontWeight:
-                      active?.number === pista.number ? "bold" : "normal",
-                    color:
-                      active?.number === pista.number
-                        ? "#dd2273"
-                        : "#666",
-                  }}
-                  onClick={() => {
-                    setActive(pista);
-                    const input =
-                      inputRefs.current[`cell-${pista.row}-${pista.col}`];
-                    input?.focus();
-                  }}
-                >
-                  <strong>{pista.number}.</strong> {pista.dica}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
 

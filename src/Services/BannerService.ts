@@ -3,6 +3,7 @@ import api from "./api";
 // Interface para o banner
 export interface Banner {
   id: number;
+  documentId?: string;
   Link: string;
   Titulo: string;
   imageUrl: string;
@@ -32,6 +33,7 @@ const BannerService = {
         .map((item: any) => {
           return {
             id: item.id || 0,
+            documentId: item.documentId,
             Link: item.Link || "#",
             Titulo: item.Titulo || "Título Padrão",
             imageUrl: item.Link_imagem 
@@ -56,6 +58,15 @@ const BannerService = {
       return response.data?.data;
     } catch (error) {
       console.error("Erro ao criar banner:", error);
+      throw error;
+    }
+  },
+  async deleteBanner(id: number, documentId?: string) {
+    try {
+      const idToUse = documentId || id;
+      await api.delete(`/banners/${idToUse}`);
+    } catch (error) {
+      console.error("Erro ao deletar banner:", error);
       throw error;
     }
   }

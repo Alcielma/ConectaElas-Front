@@ -24,6 +24,7 @@ interface Comment {
 
 interface Post {
   id: number;
+  documentId?: string; // Adiciona documentId
   Titulo: string;
   Descricao: string;
   Categoria: string;
@@ -40,22 +41,18 @@ const CategoriaPosts: React.FC = () => {
     try {
       if (categoria.toLowerCase() === "favoritos") {
         if (user?.id) {
-          // Buscar favoritos do usuário usando a API do Strapi
           const favorites = await getUserFavorites(user.id);
           let favoritePosts: Post[] = [];
           
           if (favorites && favorites.length > 0) {
-            // Extrair os posts dos favoritos
             favorites.forEach((favorite: any) => {
-              // Verificar se favorite.posts existe e é um array
               if (favorite.posts) {
-                // Se for um array, iterar sobre ele
                 if (Array.isArray(favorite.posts)) {
                   (favorite.posts as any[]).forEach((post: any) => {
-                    // Verificar se o post já existe na lista para evitar duplicatas
                     if (!favoritePosts.some(p => p.id === post.id)) {
                       favoritePosts.push({
                         id: post.id,
+                        documentId: post.documentId,
                         Titulo: post.Title || 'Sem título',
                         Descricao: post.Description || 'Sem descrição',
                         Categoria: post.Categoria || '',
@@ -70,12 +67,12 @@ const CategoriaPosts: React.FC = () => {
                     }
                   });
                 } 
-                // Se não for um array, pode ser um objeto único
                 else if (typeof favorite.posts === 'object' && favorite.posts !== null) {
                   const post = favorite.posts as any;
                   if (!favoritePosts.some(p => p.id === post.id)) {
                     favoritePosts.push({
                       id: post.id,
+                      documentId: post.documentId,
                       Titulo: post.Title || 'Sem título',
                       Descricao: post.Description || 'Sem descrição',
                       Categoria: post.Categoria || '',
@@ -99,7 +96,6 @@ const CategoriaPosts: React.FC = () => {
           setPostsFiltrados([]);
         }
       } else {
-        // Buscar posts normais por categoria
         const allPosts: Post[] = await getAll();
         const filtrados = allPosts.filter((p) => p.Categoria === categoria);
         setPostsFiltrados(filtrados);
@@ -108,6 +104,11 @@ const CategoriaPosts: React.FC = () => {
       console.error("Erro ao carregar posts:", error);
     }
   }, [categoria, user]);
+
+  const handleDeletePost = useCallback((postId: number) => {
+    setPostsFiltrados(prevPosts => prevPosts.filter(post => post.id !== postId));
+    fetchPosts();
+  }, [fetchPosts]);
 
   useEffect(() => {
     fetchPosts();
@@ -145,6 +146,7 @@ const CategoriaPosts: React.FC = () => {
           posts={postsFiltrados
             .map((post) => ({
               id: post.id,
+              documentId: post.documentId, // Passa documentId
               title: post.Titulo,
               description: post.Descricao,
               imageUrl: post.imageUrl,
@@ -152,6 +154,7 @@ const CategoriaPosts: React.FC = () => {
             }))
             .reverse()}
           onFavoriteToggle={handleFavoriteToggle}
+          onDelete={handleDeletePost}
         />
       </IonContent>
     </IonPage>

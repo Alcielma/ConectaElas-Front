@@ -19,7 +19,7 @@ const ChatService = {
   async getChats(userId?: number, isAssistant?: boolean) {
     try {
       const base =
-        `/protocolos?fields[0]=ProtocoloID&fields[1]=id&fields[2]=Status_Finalizado&fields[3]=updatedAt&fields[4]=createdAt&populate[usuario][fields][0]=id&populate[mensagens][fields]=Mensagem,Data_Envio,Leitura&sort=updatedAt:desc`;
+      `/protocolos?fields[0]=ProtocoloID&fields[1]=id&fields[2]=documentId&fields[3]=Status_Finalizado&fields[4]=updatedAt&fields[5]=createdAt&populate[usuario][fields][0]=id&populate[mensagens][fields]=Mensagem,Data_Envio,Leitura&populate[mensagens][populate][remetente][fields]=id,Tipo&sort=updatedAt:desc`;
 
       const query =
         isAssistant
@@ -34,14 +34,15 @@ const ChatService = {
     }
   },
 
-  async sendMessage(chatId: number, message: string, userId: number) {
+  async sendMessage(chatId: number, message: string, userId: number, tempId?: string) {
     try {
-      const response = await api.post("/mensagens", {
+      const response = await api.post("/mensagens?populate=remetente", {
         data: {
           Mensagem: message,
           Data_Envio: new Date().toISOString(),
           protocolo: { id: chatId },
           remetente: { id: userId },
+          tempId: tempId || null,
         },
       });
       return response.data.data;
@@ -60,6 +61,20 @@ const ChatService = {
     } catch (error) {
       console.error("Erro ao buscar mensagens:", error);
       return [];
+    }
+  },
+
+  async endProtocol(chatId: number | string) {
+    try {
+      const response = await api.put(`/protocolos/${chatId}`, {
+        data: {
+          Status_Finalizado: true
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao finalizar protocolo:", error);
+      return null;
     }
   },
 };

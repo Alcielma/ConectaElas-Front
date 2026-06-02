@@ -278,6 +278,8 @@ const QuizDetail: React.FC = () => {
                 <IonItem
                   key={index}
                   className={`option-item ${respostas[currentQuestion.id] === opcao ? 'selected' : ''}`}
+                  button
+                  onClick={() => handleRespostaChange(currentQuestion.id, opcao)}
                 >
                   <IonLabel>{opcao}</IonLabel>
                   <IonRadio slot="start" value={opcao} />
@@ -285,15 +287,27 @@ const QuizDetail: React.FC = () => {
               ))}
               {(!currentQuestion.opcoes || currentQuestion.opcoes.length === 0) && (
                 <>
-                  <IonItem className={`option-item ${respostas[currentQuestion.id] === "Sim" ? 'selected' : ''}`}>
+                  <IonItem
+                    className={`option-item ${respostas[currentQuestion.id] === "Sim" ? 'selected' : ''}`}
+                    button
+                    onClick={() => handleRespostaChange(currentQuestion.id, "Sim")}
+                  >
                     <IonLabel>Sim</IonLabel>
                     <IonRadio slot="start" value="Sim" />
                   </IonItem>
-                  <IonItem className={`option-item ${respostas[currentQuestion.id] === "Não" ? 'selected' : ''}`}>
+                  <IonItem
+                    className={`option-item ${respostas[currentQuestion.id] === "Não" ? 'selected' : ''}`}
+                    button
+                    onClick={() => handleRespostaChange(currentQuestion.id, "Não")}
+                  >
                     <IonLabel>Não</IonLabel>
                     <IonRadio slot="start" value="Não" />
                   </IonItem>
-                  <IonItem className={`option-item ${respostas[currentQuestion.id] === "Talvez" ? 'selected' : ''}`}>
+                  <IonItem
+                    className={`option-item ${respostas[currentQuestion.id] === "Talvez" ? 'selected' : ''}`}
+                    button
+                    onClick={() => handleRespostaChange(currentQuestion.id, "Talvez")}
+                  >
                     <IonLabel>Talvez</IonLabel>
                     <IonRadio slot="start" value="Talvez" />
                   </IonItem>

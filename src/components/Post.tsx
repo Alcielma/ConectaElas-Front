@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { addComment } from "../Services/CommentService";
+import { deletePost } from "../Services/postService";
 import { useAuth } from "../Contexts/AuthContext";
 import PostModal from "./PostModal";
 import Toast from "./Toast";
+import { IonIcon, IonAlert } from "@ionic/react";
+import { trashOutline } from "ionicons/icons";
 import "./Post.css";
 
 interface Comment {
@@ -14,20 +17,24 @@ interface Comment {
 
 interface PostProps {
   id: number;
+  documentId?: string; // Adiciona documentId
   title: string;
   description: string;
   imageUrl: string | null;
   comments: Comment[];
   onFavoriteChange?: () => void;
+  onDelete?: () => void;
 }
 
 const Post: React.FC<PostProps> = ({
   id,
+  documentId, // Recebe documentId
   title,
   description,
   imageUrl,
-  comments: initialComments, // Renamed to avoid conflict with state
+  comments: initialComments,
   onFavoriteChange,
+  onDelete,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -38,18 +45,40 @@ const Post: React.FC<PostProps> = ({
     )
   );
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [toast, setToast] = useState({
     isOpen: false,
     message: "",
     type: "success" as "success" | "error" | "info"
   });
 
-  const { user } = useAuth();
+  const { user, isAssistant } = useAuth();
 
   
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(id, documentId);
+      if (onDelete) {
+        onDelete();
+      }
+      setToast({
+        isOpen: true,
+        message: "Post apagado com sucesso!",
+        type: "success"
+      });
+    } catch (error) {
+      console.error("Erro ao deletar post:", error);
+      setToast({
+        isOpen: true,
+        message: "Erro ao apagar post",
+        type: "error"
+      });
+    }
+  };
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
@@ -126,7 +155,16 @@ const Post: React.FC<PostProps> = ({
             <h2 className="post-title">{title}</h2>
           </div>
 
-          
+          {isAssistant && (
+            <IonIcon
+              icon={trashOutline}
+              className="delete-post-icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDeleteAlert(true);
+              }}
+            />
+          )}
         </div>
 
         <p className="post-description">{description}</p>
@@ -146,6 +184,22 @@ const Post: React.FC<PostProps> = ({
           onFavoriteChange={onFavoriteChange}
         />
       )}
+
+      <IonAlert
+        isOpen={showDeleteAlert}
+        onDidDismiss={() => setShowDeleteAlert(false)}
+        header="Confirmar exclusão"
+        message="Tem certeza que deseja apagar este post? Esta ação não pode ser desfeita."
+        buttons={[
+          { text: "Cancelar", role: "cancel" },
+          { 
+            text: "Apagar", 
+            handler: async () => {
+              await handleDeletePost();
+            } 
+          },
+        ]}
+      />
 
       <Toast
         isOpen={toast.isOpen}

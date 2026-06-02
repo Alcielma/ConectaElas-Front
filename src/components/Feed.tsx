@@ -9,6 +9,7 @@ import "./Feed.css";
 
 interface PostData {
   id: number;
+  documentId?: string; // Adiciona documentId
   Titulo: string;
   Descricao: string;
   Categoria: string;
@@ -27,15 +28,17 @@ interface FeedProps {
   horizontalLimit?: number;
   favoritesVersion?: number;
   onAnyFavoriteChange?: () => void;
-  refreshKey?: number; // dispara refetch ao entrar na página
+  refreshKey?: number;
+  onDelete?: (postId: number) => void;
+  onAddPost?: (categoria: string) => void;
 }
 
-export default function Feed({ selectedCategory, horizontalLimit, favoritesVersion, onAnyFavoriteChange, refreshKey }: FeedProps) {
+export default function Feed({ selectedCategory, horizontalLimit, favoritesVersion, onAnyFavoriteChange, refreshKey, onDelete, onAddPost }: FeedProps) {
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [favoritesUpdated, setFavoritesUpdated] = useState<number>(0);
   const [lastFetch, setLastFetch] = useState<number>(0);
-  const { user } = useAuth();
+  const { user, isAssistant } = useAuth();
   
   // Força atualização dos favoritos
   const updateFavorites = useCallback(() => {
@@ -59,6 +62,7 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
                       const comentarios = await getCommentsByPostId(post.id);
                       favoritePosts.push({
                         id: post.id,
+                        documentId: post.documentId, // Adiciona documentId
                         Titulo: post.Title || 'Sem título',
                         Descricao: post.Description || 'Sem descrição',
                         Categoria: post.Categoria || '',
@@ -74,6 +78,7 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
                     const comentarios = await getCommentsByPostId(post.id);
                     favoritePosts.push({
                       id: post.id,
+                      documentId: post.documentId, // Adiciona documentId
                       Titulo: post.Title || 'Sem título',
                       Descricao: post.Description || 'Sem descrição',
                       Categoria: post.Categoria || '',
@@ -158,15 +163,28 @@ export default function Feed({ selectedCategory, horizontalLimit, favoritesVersi
           {filteredPosts.length === 0 && selectedCategory === "Favoritos" && (
             <p className="no-posts">Nenhum post favorito encontrado.</p>
           )}
+          {isAssistant && selectedCategory !== "Favoritos" && (
+            <div 
+              className="add-post-card" 
+              onClick={() => onAddPost?.(selectedCategory!)}
+            >
+              <div className="add-post-icon">
+                <img src="/adicionar.svg" alt="Adicionar" className="add-icon-img" />
+              </div>
+              <p className="add-post-text">Adicionar novo post</p>
+            </div>
+          )}
           {filteredPosts.map((post) => (
             <Post
               key={post.id}
               id={post.id}
+              documentId={post.documentId}
               title={post.Titulo}
               imageUrl={post.imageUrl}
               description={post.Descricao}
               comments={post.comentarios}
               onFavoriteChange={updateFavorites}
+              onDelete={() => onDelete?.(post.id)}
             />
           ))}
         </div>
