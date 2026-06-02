@@ -269,6 +269,13 @@ body.dark-theme .header-gradient {
   box-shadow: none !important;
 }
 
+/* Botão de fechar (X) nos modais de criar/editar jogos - cor rosa no tema escuro */
+body.dark-theme ion-app ion-header ion-toolbar ion-buttons ion-button,
+body.dark-theme ion-page ion-header ion-toolbar ion-buttons ion-button ion-icon {
+  --color: var(--cor-principal) !important;
+  color: var(--cor-principal) !important;
+}
+
 /* FORÇA A APLICAÇÃO EM TODOS OS ELEMENTOS */
 * {
   box-sizing: border-box;

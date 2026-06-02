@@ -26,7 +26,7 @@ import {
   IonNote,
   IonItem
 } from "@ionic/react";
-import { close, add, trash, create, gameController, moon, play, checkmark, addCircle } from "ionicons/icons";
+import { close, add, trash, create, gameController, play, checkmark, addCircle } from "ionicons/icons";
 import api from "../Services/api"; 
 import "./PalavrasCruzadasManagement.css";
 
@@ -387,11 +387,6 @@ const PalavrasCruzadasManagement: React.FC = () => {
             <IonBackButton defaultHref="/tabs/games" />
           </IonButtons>
           <IonTitle className="title-centered">Gerenciamento de Cruzadinhas</IonTitle>
-          <IonButtons slot="end">
-            <IonButton>
-              <IonIcon slot="icon-only" icon={moon} style={{ color: 'white' }} />
-            </IonButton>
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
 

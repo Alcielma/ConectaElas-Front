@@ -179,7 +179,9 @@ const Tab3: React.FC = () => {
               <div className="info-section">
                 <div className="info">
                   <h3 className="profile-label">Email: </h3>
-                  <p className="profile-data">{user?.email}</p>
+                  <p className="profile-data profile-data-ellipsis">
+                    {user?.email}
+                  </p>
                 </div>
                 <button
                   className="edit-button"

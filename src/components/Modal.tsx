@@ -44,18 +44,27 @@ const Modal: React.FC<ModalProps> = ({
   const hasContent = children && React.Children.count(children) > 0;
 
   return (
-    <div className={`modal-overlay ${closing ? "fadeOut" : "fadeIn"}`}>
-      <div className={`modal-content ${closing ? "slideDown" : "slideUp"} ${!hasContent ? "modal-content-compact" : ""}`}>
-        <div className="modal-header">
-          <h3>{title}</h3>
+    <div className={`app-modal-overlay ${closing ? "fadeOut" : "fadeIn"}`}>
+      <div
+        className={`app-modal-content ${closing ? "slideDown" : "slideUp"} ${
+          !hasContent ? "app-modal-content-compact" : ""
+        }`}
+      >
+        <div className="app-modal-header">
+          <h3 className="app-modal-title">{title}</h3>
+          <button
+            type="button"
+            className="app-modal-close-btn"
+            onClick={handleClose}
+            aria-label="Fechar"
+          >
+            <IonIcon icon={closeSharp} />
+          </button>
         </div>
         {hasContent && (
-          <div className="modal-body">{children}</div>
+          <div className="app-modal-body">{children}</div>
         )}
-        <div className="modal-footer">
-          <button className="cancel-btn" onClick={handleClose}>
-            Cancelar
-          </button>
+        <div className="app-modal-footer">
           <button className="confirm-btn" onClick={onConfirm}>
             Confirmar
           </button>
