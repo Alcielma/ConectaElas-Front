@@ -16,6 +16,7 @@ import {
 import { useChat } from "../Contexts/ChatContext";
 import { useAuth } from "../Contexts/AuthContext";
 import { send, closeCircleOutline } from "ionicons/icons";
+import { Capacitor } from "@capacitor/core";
 import { Keyboard } from "@capacitor/keyboard";
 import "./UserChat.css";
 import { useParams, useHistory } from "react-router-dom";
@@ -53,23 +54,29 @@ const AssistantChat: React.FC = () => {
 
   // Detectar quando o teclado abre/fecha
   useEffect(() => {
-    const onKeyboardShow = () => {
-      setIsKeyboardOpen(true);
-      if (contentRef.current) {
-        contentRef.current.scrollToBottom(300);
+    let showListener: any;
+    let hideListener: any;
+
+    const initKeyboard = async () => {
+      if (Capacitor.isNativePlatform()) {
+        showListener = await Keyboard.addListener('keyboardDidShow', () => {
+          setIsKeyboardOpen(true);
+          if (contentRef.current) {
+            contentRef.current.scrollToBottom(300);
+          }
+        });
+
+        hideListener = await Keyboard.addListener('keyboardWillHide', () => {
+          setIsKeyboardOpen(false);
+        });
       }
     };
 
-    const onKeyboardHide = () => {
-      setIsKeyboardOpen(false);
-    };
-
-    // Listeners do Capacitor Keyboard
-    Keyboard.addListener('keyboardDidShow', onKeyboardShow);
-    Keyboard.addListener('keyboardWillHide', onKeyboardHide);
+    initKeyboard();
 
     return () => {
-      Keyboard.removeAllListeners();
+      showListener?.remove();
+      hideListener?.remove();
     };
   }, []);
 

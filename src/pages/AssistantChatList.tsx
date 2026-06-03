@@ -53,7 +53,6 @@ const AssistantChatList: React.FC = () => {
   useEffect(() => {
     // Polling a cada 1 segundo para atualizar a lista
     const intervalId = setInterval(async () => {
-      console.log("🔄 Polling (Lista de Chats) para atualizar...");
       try {
         await fetchChats();
       } catch (error) {

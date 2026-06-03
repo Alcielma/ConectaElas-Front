@@ -15,6 +15,7 @@ import { useAuth } from "../Contexts/AuthContext";
 import "./UserChat.css";
 import { IonIcon } from "@ionic/react";
 import { send } from "ionicons/icons";
+import { Capacitor } from "@capacitor/core";
 import { Keyboard } from "@capacitor/keyboard";
 
 const UserChat: React.FC = () => {
@@ -49,27 +50,29 @@ const UserChat: React.FC = () => {
 
   // Detectar quando o teclado abre/fecha
   useEffect(() => {
-    const onKeyboardShow = () => {
-      setIsKeyboardOpen(true);
-      if (contentRef.current) {
-        contentRef.current.scrollToBottom(300);
+    let showListener: any;
+    let hideListener: any;
+
+    const initKeyboard = async () => {
+      if (Capacitor.isNativePlatform()) {
+        showListener = await Keyboard.addListener('keyboardDidShow', () => {
+          setIsKeyboardOpen(true);
+          if (contentRef.current) {
+            contentRef.current.scrollToBottom(300);
+          }
+        });
+
+        hideListener = await Keyboard.addListener('keyboardWillHide', () => {
+          setIsKeyboardOpen(false);
+        });
       }
     };
 
-    const onKeyboardHide = () => {
-      setIsKeyboardOpen(false);
-    };
-
-    // Listeners do Capacitor Keyboard (apenas se disponível)
-    if (Keyboard && Keyboard.addListener) {
-      Keyboard.addListener('keyboardDidShow', onKeyboardShow);
-      Keyboard.addListener('keyboardWillHide', onKeyboardHide);
-    }
+    initKeyboard();
 
     return () => {
-      if (Keyboard && Keyboard.removeAllListeners) {
-        Keyboard.removeAllListeners();
-      }
+      showListener?.remove();
+      hideListener?.remove();
     };
   }, []);
 
